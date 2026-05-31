@@ -4,163 +4,279 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOD — Start of Day Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060912;--card:#0c1220;--card2:#0f1729;--border:#162035;
-  --cyan:#00D4FF;--gold:#FFD700;--green:#00e5a0;--red:#ff4d6d;
-  --purple:#a78bfa;--orange:#fb923c;--pink:#f472b6;
-  --text:#e2e8f0;--muted:#4a5568;--dim:#2d3748;
+  --bg:#080c18;
+  --bg2:#0d1425;
+  --card:#0f1a2e;
+  --card2:#132040;
+  --border:#1a2d4a;
+  --border2:#203558;
+  --cyan:#00d4ff;
+  --cyan2:#0099cc;
+  --gold:#f5a623;
+  --green:#00e5a0;
+  --red:#ff4757;
+  --purple:#7c4dff;
+  --blue:#2979ff;
+  --pink:#ff6b9d;
+  --text:#e8f0fe;
+  --text2:#8fa3c0;
+  --dim:#3a5070;
 }
 html{visibility:hidden}
-body{background:var(--bg);font-family:'DM Mono',monospace;color:var(--text);min-height:100vh;padding-top:56px;display:flex;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 10% 10%,rgba(0,229,160,0.04) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 90% 90%,rgba(0,212,255,0.03) 0%,transparent 60%);pointer-events:none;z-index:0;}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(6,9,18,0.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;}
-nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,160,0.4),rgba(0,212,255,0.3),transparent);}
-.nav-logo{display:flex;align-items:center;gap:8px;}
-.nav-logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--green),var(--cyan));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;}
-.nav-logo-text{font-family:'Playfair Display',serif;font-size:0.95rem;letter-spacing:0.1em;}
-.nav-logo-text span{color:var(--green);}
-.nav-links{display:flex;align-items:center;gap:3px;}
-.nav-link{padding:6px 14px;border-radius:7px;font-size:0.7rem;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-decoration:none;color:var(--muted);background:transparent;border:1px solid transparent;transition:all 0.2s;}
-.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.04);}
-.nav-link.ds{color:var(--cyan);background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);}
-.nav-link.sod{color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.15);}
-.nav-link.eod{color:var(--gold);background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.15);}
-
-/* USER */
-.user-pill{display:flex;align-items:center;gap:8px;cursor:pointer;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.12);border-radius:50px;padding:5px 12px 5px 5px;transition:all 0.2s;position:relative;}
-.user-pill:hover{background:rgba(0,229,160,0.1);}
-.user-avatar{width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#060912;}
-.user-name{font-size:0.7rem;color:var(--text);}
-.user-desig{font-size:0.55rem;color:var(--green);letter-spacing:0.08em;text-transform:uppercase;}
-.user-menu{display:none;position:absolute;right:0;top:calc(100% + 10px);background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:8px;min-width:180px;z-index:9999;box-shadow:0 24px 48px rgba(0,0,0,0.6);}
-.menu-header{padding:9px 11px;border-bottom:1px solid var(--border);margin-bottom:6px;}
-.menu-name{font-size:0.76rem;color:var(--text);}
-.menu-desig{font-size:0.62rem;color:var(--muted);margin-top:2px;}
-.logout-btn{display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:7px;cursor:pointer;color:var(--red);font-size:0.72rem;transition:all 0.15s;}
-.logout-btn:hover{background:rgba(255,77,109,0.08);}
-
-/* SIDEBAR */
-.sidebar{
-  position:fixed;top:56px;left:0;bottom:0;
-  width:220px;background:var(--card);
-  border-right:1px solid var(--border);
-  z-index:100;overflow-y:auto;
-  padding:20px 0;
+body{
+  background:var(--bg);
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  padding-top:56px;
+  display:flex;
+  overflow-x:hidden;
 }
-.sidebar-title{
-  font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--muted);padding:0 20px;margin-bottom:12px;
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 50% 60% at 0% 0%,rgba(0,212,255,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 50% at 100% 100%,rgba(124,77,255,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 40% at 50% 50%,rgba(0,229,160,0.03) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(8,12,24,0.95);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(24px);
+  padding:0 28px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{
+  width:30px;height:30px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:0 0 16px rgba(0,229,160,0.3);
+}
+.nav-logo-text{font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.12em;font-weight:500;}
+.nav-logo-text span{color:var(--green);}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{
+  padding:7px 16px;border-radius:8px;font-size:0.72rem;
+  font-family:'DM Mono',monospace;letter-spacing:0.06em;
+  text-decoration:none;color:var(--text2);
+  background:transparent;border:1px solid transparent;
+  transition:all 0.2s;
+}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.04);}
+.nav-link.ds{color:var(--cyan);background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2);box-shadow:0 0 12px rgba(0,212,255,0.1);}
+.nav-link.sod{color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2);box-shadow:0 0 12px rgba(0,229,160,0.1);}
+.nav-link.eod{color:var(--gold);background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.2);box-shadow:0 0 12px rgba(245,166,35,0.1);}
+
+/* ── USER PILL ── */
+.user-pill{
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  background:rgba(0,212,255,0.05);
+  border:1px solid rgba(0,212,255,0.15);
+  border-radius:50px;padding:5px 14px 5px 5px;
+  transition:all 0.2s;position:relative;
+}
+.user-pill:hover{background:rgba(0,212,255,0.1);box-shadow:0 0 20px rgba(0,212,255,0.15);}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;color:#080c18;
+  box-shadow:0 0 10px rgba(0,229,160,0.3);
+}
+.user-name{font-size:0.72rem;color:var(--text);font-weight:500;}
+.user-desig{font-size:0.55rem;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;}
+.user-menu{
+  display:none;position:absolute;right:0;top:calc(100% + 10px);
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:14px;padding:8px;min-width:190px;
+  z-index:9999;box-shadow:0 24px 60px rgba(0,0,0,0.7);
+}
+.menu-hdr{padding:10px 12px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.menu-name{font-size:0.78rem;color:var(--text);font-weight:500;}
+.menu-desig{font-size:0.62rem;color:var(--text2);margin-top:2px;}
+.logout-item{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border-radius:8px;cursor:pointer;color:var(--red);font-size:0.74rem;transition:all 0.15s;
+}
+.logout-item:hover{background:rgba(255,71,87,0.08);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;top:56px;left:0;bottom:0;width:230px;
+  background:var(--bg2);border-right:1px solid var(--border);
+  z-index:100;overflow-y:auto;padding:20px 12px;
+}
+.sidebar-label{
+  font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--dim);padding:0 8px;margin-bottom:14px;font-weight:600;
 }
 .dept-btn{
-  width:100%;text-align:left;
-  padding:11px 20px;border:none;background:transparent;
-  color:var(--muted);font-family:'DM Mono',monospace;
-  font-size:0.75rem;cursor:pointer;transition:all 0.2s;
-  border-left:3px solid transparent;
-  display:flex;align-items:center;gap:10px;
+  width:100%;text-align:left;padding:11px 12px;
+  border:1px solid transparent;
+  background:transparent;border-radius:10px;
+  color:var(--text2);font-family:'Inter',sans-serif;
+  font-size:0.78rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:10px;margin-bottom:4px;
 }
-.dept-btn:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.dept-btn:hover{color:var(--text);background:rgba(255,255,255,0.04);border-color:var(--border);}
 .dept-btn.active{
-  color:var(--green);background:rgba(0,229,160,0.06);
-  border-left-color:var(--green);
+  color:var(--green);
+  background:linear-gradient(135deg,rgba(0,229,160,0.1),rgba(0,212,255,0.05));
+  border-color:rgba(0,229,160,0.25);
+  box-shadow:0 4px 16px rgba(0,229,160,0.1);
 }
-.dept-icon{font-size:1rem;width:20px;text-align:center;}
+.dept-icon{
+  width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;background:rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+.dept-btn.active .dept-icon{background:rgba(0,229,160,0.15);}
+.dept-name{font-weight:500;font-size:0.76rem;}
 
-/* MAIN CONTENT */
-.main-content{
-  margin-left:220px;flex:1;
+/* ── MAIN ── */
+.main{
+  margin-left:230px;flex:1;
   position:relative;z-index:1;
-  padding:24px;min-height:calc(100vh - 56px);
+  padding:24px;
 }
 
-/* PAGE HEADER */
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-.page-title{font-family:'Playfair Display',serif;font-size:1.5rem;background:linear-gradient(135deg,var(--green) 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
-.page-sub{color:var(--muted);font-size:0.65rem;letter-spacing:0.08em;}
-.live-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:20px;padding:5px 12px;font-size:0.62rem;color:var(--green);letter-spacing:0.06em;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s ease infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
-
-/* DEPT HEADER */
-.dept-header{
-  display:flex;align-items:center;gap:14px;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:14px;padding:18px 24px;margin-bottom:20px;
-}
-.dept-header-icon{font-size:1.8rem;}
-.dept-header-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green);}
-.dept-header-sub{font-size:0.65rem;color:var(--muted);margin-top:3px;}
-.refresh-info{margin-left:auto;font-size:0.6rem;color:var(--muted);}
-#lastUpdated{color:var(--green);}
-
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;}
-.stat-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:18px;
-  position:relative;overflow:hidden;
-  transition:transform 0.2s,box-shadow 0.2s;cursor:default;
-}
-.stat-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.stat-card.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
-.stat-card.cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
-.stat-card.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.stat-card.red::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
-.stat-card.purple::before{background:linear-gradient(90deg,transparent,var(--purple),transparent);}
-.stat-card.orange::before{background:linear-gradient(90deg,transparent,var(--orange),transparent);}
-.stat-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.stat-val{font-size:1.8rem;font-weight:500;line-height:1;margin-bottom:4px;}
-.stat-val.green{color:var(--green);}
-.stat-val.cyan{color:var(--cyan);}
-.stat-val.gold{color:var(--gold);}
-.stat-val.red{color:var(--red);}
-.stat-val.purple{color:var(--purple);}
-.stat-val.orange{color:var(--orange);}
-.stat-sub{font-size:0.6rem;color:var(--muted);}
-
-/* SECTIONS */
-.section-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.section-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.section-title{
-  padding:12px 16px;font-size:0.65rem;letter-spacing:0.1em;
-  text-transform:uppercase;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:8px;
-}
-.section-title.green{color:var(--green);background:rgba(0,229,160,0.05);}
-.section-title.cyan{color:var(--cyan);background:rgba(0,212,255,0.05);}
-.section-title.gold{color:var(--gold);background:rgba(255,215,0,0.05);}
-.section-title.red{color:var(--red);background:rgba(255,77,109,0.05);}
-.section-title.purple{color:var(--purple);background:rgba(167,139,250,0.05);}
-
-.metric-row{
+/* ── PAGE HEADER ── */
+.page-hdr{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;border-bottom:1px solid rgba(22,32,53,0.6);
-  font-size:0.78rem;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
 }
-.metric-row:last-child{border-bottom:none;}
-.metric-row:hover{background:rgba(0,229,160,0.02);}
-.metric-name{color:var(--muted);font-size:0.72rem;letter-spacing:0.04em;}
-.metric-val{font-weight:500;font-size:0.9rem;}
-.metric-val.green{color:var(--green);}
-.metric-val.cyan{color:var(--cyan);}
-.metric-val.gold{color:var(--gold);}
-.metric-val.red{color:var(--red);}
-.metric-val.purple{color:var(--purple);}
-.metric-val.orange{color:var(--orange);}
+.page-title{
+  font-size:1.4rem;font-weight:700;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.page-sub{color:var(--text2);font-size:0.7rem;margin-top:3px;letter-spacing:0.04em;}
+.live-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);
+  border-radius:20px;padding:5px 14px;font-size:0.64rem;color:var(--green);
+  letter-spacing:0.08em;font-weight:500;
+  box-shadow:0 0 12px rgba(0,229,160,0.1);
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s ease infinite;box-shadow:0 0 6px var(--green);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
 
-/* LOADING */
-.loading-state{display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:0.8rem;gap:10px;flex-direction:column;}
-.spin{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;}
+/* ── DEPT HEADER BAR ── */
+.dept-hdr{
+  display:flex;align-items:center;gap:16px;
+  background:linear-gradient(135deg,var(--card2),var(--card));
+  border:1px solid var(--border2);border-radius:14px;
+  padding:18px 24px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.dept-hdr::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--cyan),transparent);
+}
+.dept-hdr-icon{font-size:2rem;}
+.dept-hdr-name{font-size:1.1rem;font-weight:700;color:var(--green);}
+.dept-hdr-sub{font-size:0.65rem;color:var(--text2);margin-top:3px;}
+.dept-hdr-time{margin-left:auto;font-size:0.62rem;color:var(--text2);font-family:'DM Mono',monospace;}
+.dept-hdr-time span{color:var(--green);}
+
+/* ── KPI CARDS ── */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;margin-bottom:20px;
+}
+.kpi-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;padding:16px 14px;
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,box-shadow 0.2s;
+  cursor:default;
+}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi-card::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:40%;
+  background:linear-gradient(to top,rgba(255,255,255,0.02),transparent);
+  pointer-events:none;
+}
+.kpi-card.c-green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.kpi-card.c-cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.kpi-card.c-gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.kpi-card.c-purple::before{background:linear-gradient(90deg,transparent,var(--purple),transparent);}
+.kpi-card.c-red::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+.kpi-card.c-blue::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.kpi-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;}
+.kpi-val{font-size:2rem;font-weight:700;line-height:1;margin-bottom:6px;font-family:'DM Mono',monospace;}
+.kpi-val.green{color:var(--green);text-shadow:0 0 20px rgba(0,229,160,0.3);}
+.kpi-val.cyan{color:var(--cyan);text-shadow:0 0 20px rgba(0,212,255,0.3);}
+.kpi-val.gold{color:var(--gold);text-shadow:0 0 20px rgba(245,166,35,0.3);}
+.kpi-val.purple{color:var(--purple);text-shadow:0 0 20px rgba(124,77,255,0.3);}
+.kpi-val.red{color:var(--red);text-shadow:0 0 20px rgba(255,71,87,0.3);}
+.kpi-val.blue{color:var(--blue);text-shadow:0 0 20px rgba(41,121,255,0.3);}
+.kpi-sub{font-size:0.6rem;color:var(--dim);}
+
+/* ── DETAIL GRID ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.detail-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+}
+.detail-title{
+  padding:13px 16px;font-size:0.65rem;letter-spacing:0.1em;
+  text-transform:uppercase;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;font-weight:600;
+}
+.detail-title.green{color:var(--green);background:rgba(0,229,160,0.05);}
+.detail-title.cyan{color:var(--cyan);background:rgba(0,212,255,0.05);}
+.detail-title.gold{color:var(--gold);background:rgba(245,166,35,0.05);}
+.detail-title.red{color:var(--red);background:rgba(255,71,87,0.05);}
+.detail-title.purple{color:var(--purple);background:rgba(124,77,255,0.05);}
+
+.mrow{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;border-bottom:1px solid rgba(26,45,74,0.5);
+  transition:background 0.12s;
+}
+.mrow:last-child{border-bottom:none;}
+.mrow:hover{background:rgba(0,229,160,0.02);}
+.mrow-label{font-size:0.73rem;color:var(--text2);}
+.mrow-val{font-size:0.88rem;font-weight:600;font-family:'DM Mono',monospace;}
+.mrow-val.green{color:var(--green);}
+.mrow-val.cyan{color:var(--cyan);}
+.mrow-val.gold{color:var(--gold);}
+.mrow-val.red{color:var(--red);}
+.mrow-val.purple{color:var(--purple);}
+.mrow-val.blue{color:var(--blue);}
+.mrow-val.dim{color:var(--dim);}
+
+.divider-label{
+  padding:8px 16px;font-size:0.58rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--dim);border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,0.01);
+}
+
+/* ── LOADING ── */
+.loading-wrap{display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:14px;}
+.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;box-shadow:0 0 12px rgba(0,229,160,0.2);}
 @keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:0.75rem;color:var(--text2);}
 
-.empty-state{display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:0.8rem;flex-direction:column;gap:12px;}
-.empty-icon{font-size:2.5rem;opacity:0.3;}
+.empty-wrap{display:flex;align-items:center;justify-content:center;height:250px;flex-direction:column;gap:12px;color:var(--text2);}
+.empty-icon{font-size:2.5rem;opacity:0.2;}
 </style>
 </head>
 <body>
@@ -172,6 +288,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 })();
 </script>
 
+<!-- NAV -->
 <nav>
   <div class="nav-logo">
     <div class="nav-logo-icon">☀️</div>
@@ -189,14 +306,14 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
         <div class="user-name" id="uName"></div>
         <div class="user-desig" id="uDesig"></div>
       </div>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3a5070" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
     <div class="user-menu" id="uMenu">
-      <div class="menu-header">
+      <div class="menu-hdr">
         <div class="menu-name" id="mName"></div>
         <div class="menu-desig" id="mDesig"></div>
       </div>
-      <div class="logout-btn" onclick="doLogout()">
+      <div class="logout-item" onclick="doLogout()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </div>
@@ -206,46 +323,47 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-  <div class="sidebar-title">Departments</div>
-  <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','📥')" id="btn-Organic">
-    <span class="dept-icon">📥</span>Organic & Pop-Up
+  <div class="sidebar-label">Departments</div>
+  <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','📥','Organic')" id="btn-Organic">
+    <div class="dept-icon">📥</div>
+    <div class="dept-name">Organic & Pop-Up</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢')" id="btn-Marketing">
-    <span class="dept-icon">📢</span>Marketing
+  <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢','Marketing')" id="btn-Marketing">
+    <div class="dept-icon">📢</div>
+    <div class="dept-name">Marketing</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🏢')" id="btn-Qualifier">
-    <span class="dept-icon">🏢</span>Qualifier & 4th Floor
+  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🏢','Qualifier')" id="btn-Qualifier">
+    <div class="dept-icon">🏢</div>
+    <div class="dept-name">Qualifier & 4th Floor</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄')" id="btn-Revived">
-    <span class="dept-icon">🔄</span>Revived Leads
+  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄','Revived')" id="btn-Revived">
+    <div class="dept-icon">🔄</div>
+    <div class="dept-name">Revived Leads</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','✅')" id="btn-Closed">
-    <span class="dept-icon">✅</span>Closed Leads
+  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','✅','Closed')" id="btn-Closed">
+    <div class="dept-icon">✅</div>
+    <div class="dept-name">Closed Leads</div>
   </button>
 </div>
 
-<!-- MAIN -->
-<div class="main-content">
-  <div class="page-header">
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="page-hdr">
     <div>
       <div class="page-title">Start of Day Report</div>
-      <div class="page-sub">Live Department Dashboard · Auto-refreshes every 30 seconds</div>
+      <div class="page-sub">Live Department Intelligence · Auto-refreshes every 30 seconds</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div class="live-pill"><span class="live-dot"></span>LIVE</div>
-    </div>
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
   </div>
-
   <div id="deptContent">
-    <div class="loading-state"><div class="spin"></div>Loading department data...</div>
+    <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading department data...</div></div>
   </div>
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec';
 
-// User widget
-const u = JSON.parse(localStorage.getItem('ds_user')||'{}');
+const u=JSON.parse(localStorage.getItem('ds_user')||'{}');
 document.getElementById('uAvatar').textContent=(u.name||'U').charAt(0).toUpperCase();
 document.getElementById('uName').textContent=u.name||'User';
 document.getElementById('uDesig').textContent=u.designation||u.role||'';
@@ -256,267 +374,187 @@ function toggleMenu(){const m=document.getElementById('uMenu');m.style.display=m
 document.addEventListener('click',function(e){const p=document.querySelector('.user-pill');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.style.display='none';});
 function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
-let currentDept = 'SOD_INBOUND';
-let refreshTimer = null;
+let refreshTimer=null;
 
 function v(val){
-  if(val===0||val===''||val===null||val===undefined) return '<span style="color:var(--dim)">—</span>';
+  if(val===0||val===''||val===null||val===undefined) return '<span class="mrow-val dim">—</span>';
   return val;
 }
-
-function metricRow(label, val, colorClass='green'){
-  return `<div class="metric-row">
-    <span class="metric-name">${label}</span>
-    <span class="metric-val ${colorClass}">${v(val)}</span>
+function pct(val){
+  if(!val) return '—';
+  const n=parseFloat(val);
+  return n<=1&&n>0 ? Math.round(n*100)+'%' : val;
+}
+function mr(label,val,color='green'){
+  return `<div class="mrow"><span class="mrow-label">${label}</span><span class="mrow-val ${color}">${v(val)}</span></div>`;
+}
+function kpi(label,val,color,sub){
+  return `<div class="kpi-card c-${color}">
+    <div class="kpi-label">${label}</div>
+    <div class="kpi-val ${color}">${val}</div>
+    <div class="kpi-sub">${sub}</div>
   </div>`;
 }
 
-function renderInbound(data){
-  // Unique POP-UPS section (rows 2-4)
-  const popup_recv    = data[2]?.[2]  ?? 0;
-  const popup_qual    = data[3]?.[2]  ?? 0;
-  const popup_closed  = data[4]?.[2]  ?? 0;
+function renderOrganic(data){
+  const popup_recv   = data[2]?.[2]  ?? 0;
+  const popup_qual   = data[3]?.[2]  ?? 0;
+  const popup_closed = data[4]?.[2]  ?? 0;
+  const hot_recv     = data[8]?.[2]  ?? 0;
+  const hot_qual     = data[9]?.[2]  ?? 0;
+  const hot_closed   = data[10]?.[2] ?? 0;
 
-  // Unique HOT LEADS section (rows 8-10)
-  const hot_recv      = data[8]?.[2]  ?? 0;
-  const hot_qual      = data[9]?.[2]  ?? 0;
-  const hot_closed    = data[10]?.[2] ?? 0;
+  const popup_recv_overall = data[2]?.[5] ?? 0;
+  const popup_recv_monthly = data[3]?.[5] ?? 0;
+  const popup_recv_today   = data[4]?.[5] ?? 0;
+  const hot_recv_overall   = data[2]?.[8] ?? 0;
+  const hot_recv_monthly   = data[3]?.[8] ?? 0;
+  const hot_recv_today     = data[4]?.[8] ?? 0;
 
-  // POP-UPS Received Average (rows 2-4, col 5)
-  const popup_recv_overall  = data[2]?.[5]  ?? 0;
-  const popup_recv_monthly  = data[3]?.[5]  ?? 0;
-  const popup_recv_today    = data[4]?.[5]  ?? 0;
+  const popup_qual_overall = data[8]?.[5]  ?? 0;
+  const popup_qual_monthly = data[9]?.[5]  ?? 0;
+  const popup_qual_today   = data[10]?.[5] ?? 0;
+  const hot_qual_overall   = data[8]?.[8]  ?? 0;
+  const hot_qual_monthly   = data[9]?.[8]  ?? 0;
+  const hot_qual_today     = data[10]?.[8] ?? 0;
 
-  // Hot Leads Received Average (rows 2-4, col 8)
-  const hot_recv_overall    = data[2]?.[8]  ?? 0;
-  const hot_recv_monthly    = data[3]?.[8]  ?? 0;
-  const hot_recv_today      = data[4]?.[8]  ?? 0;
-
-  // POP-UPS Qualified Average (rows 8-10, col 5)
-  const popup_qual_overall  = data[8]?.[5]  ?? 0;
-  const popup_qual_monthly  = data[9]?.[5]  ?? 0;
-  const popup_qual_today    = data[10]?.[5] ?? 0;
-
-  // Hot Leads Qualified Average (rows 8-10, col 8)
-  const hot_qual_overall    = data[8]?.[8]  ?? 0;
-  const hot_qual_monthly    = data[9]?.[8]  ?? 0;
-  const hot_qual_today      = data[10]?.[8] ?? 0;
-
-  // TOTAL RECEIVED POP-UPS DETAIL (rows 16-19)
-  const total_popup_recv    = data[16]?.[2] ?? 0;
-  const valid_popups        = data[17]?.[2] ?? 0;
-  const repeated            = data[18]?.[2] ?? 0;
-  const invalid             = data[19]?.[2] ?? 0;
-
-  // Closing Ratios (rows 16-19, col 5)
-  const total_closed        = data[16]?.[5] ?? 0;
-  const last3months         = data[17]?.[5] ?? 0;
-  const current_month       = data[18]?.[5] ?? 0;
-  const today_closed        = data[19]?.[5] ?? 0;
-
-  const pct = (v) => typeof v === 'number' && v <= 1 && v > 0 ? Math.round(v*100)+'%' : v;
+  const total_popup_recv   = data[16]?.[2] ?? 0;
+  const valid_popups       = data[17]?.[2] ?? 0;
+  const repeated           = data[18]?.[2] ?? 0;
+  const invalid            = data[19]?.[2] ?? 0;
+  const total_closed       = data[16]?.[5] ?? 0;
+  const last3months        = data[17]?.[5] ?? 0;
+  const current_month      = data[18]?.[5] ?? 0;
+  const today_closed       = data[19]?.[5] ?? 0;
 
   return `
-    <div class="stats-grid">
-      <div class="stat-card green">
-        <div class="stat-label">POP-UP Received Today</div>
-        <div class="stat-val green">${popup_recv}</div>
-        <div class="stat-sub">Unique POP-UPs</div>
-      </div>
-      <div class="stat-card cyan">
-        <div class="stat-label">POP-UP Qualified Today</div>
-        <div class="stat-val cyan">${popup_qual}</div>
-        <div class="stat-sub">Unique POP-UPs</div>
-      </div>
-      <div class="stat-card gold">
-        <div class="stat-label">Hot Leads Received</div>
-        <div class="stat-val gold">${hot_recv}</div>
-        <div class="stat-sub">Today</div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-label">Hot Leads Qualified</div>
-        <div class="stat-val purple">${hot_qual}</div>
-        <div class="stat-sub">Today</div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-label">Today Closed</div>
-        <div class="stat-val red">${today_closed}</div>
-        <div class="stat-sub">Closed Leads</div>
-      </div>
-      <div class="stat-card orange">
-        <div class="stat-label">Total Closed Ratio</div>
-        <div class="stat-val orange">${pct(total_closed)}</div>
-        <div class="stat-sub">Overall</div>
-      </div>
+    <div class="kpi-grid">
+      ${kpi('POP-UP Received Today', popup_recv, 'green', 'Unique POP-UPs')}
+      ${kpi('POP-UP Qualified Today', popup_qual, 'cyan', 'Unique POP-UPs')}
+      ${kpi('Hot Leads Received', hot_recv, 'gold', 'Today')}
+      ${kpi('Hot Leads Qualified', hot_qual, 'purple', 'Today')}
+      ${kpi('Today Closed', today_closed, 'red', 'Closed Leads')}
+      ${kpi('Total Closed Ratio', pct(total_closed), 'blue', 'Overall')}
     </div>
 
-    <div class="section-grid">
-      <div class="section-card">
-        <div class="section-title green">📥 Unique POP-UPs</div>
-        ${metricRow('Today Received', popup_recv, 'green')}
-        ${metricRow('Today Qualified', popup_qual, 'cyan')}
-        ${metricRow('Today Closed', popup_closed, 'gold')}
-        ${metricRow('Total Received', total_popup_recv, 'purple')}
-        ${metricRow('Valid POP-UPs', valid_popups, 'green')}
-        ${metricRow('Repeated', repeated, 'red')}
-        ${metricRow('Invalid IP & Data', invalid, 'red')}
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-title green">📥 Unique POP-UPs</div>
+        ${mr('Today Received', popup_recv, 'green')}
+        ${mr('Today Qualified', popup_qual, 'cyan')}
+        ${mr('Today Closed', popup_closed, 'gold')}
+        <div class="divider-label">Monthly Breakdown</div>
+        ${mr('Total Received', total_popup_recv, 'green')}
+        ${mr('Valid POP-UPs', valid_popups, 'cyan')}
+        ${mr('Repeated', repeated, 'gold')}
+        ${mr('Invalid IP & Data', invalid, 'red')}
       </div>
 
-      <div class="section-card">
-        <div class="section-title gold">🔥 Unique HOT LEADS</div>
-        ${metricRow('Today Received', hot_recv, 'gold')}
-        ${metricRow('Today Qualified', hot_qual, 'cyan')}
-        ${metricRow('Today Closed', hot_closed, 'red')}
-        ${metricRow('Overall Recv Avg', hot_recv_overall, 'green')}
-        ${metricRow('Monthly Recv Avg', hot_recv_monthly, 'purple')}
-        ${metricRow('Today Recv Avg', hot_recv_today, 'orange')}
-        ${metricRow('Overall Qual Avg', hot_qual_overall, 'cyan')}
+      <div class="detail-card">
+        <div class="detail-title gold">🔥 Unique HOT LEADS</div>
+        ${mr('Today Received', hot_recv, 'gold')}
+        ${mr('Today Qualified', hot_qual, 'cyan')}
+        ${mr('Today Closed', hot_closed, 'red')}
+        <div class="divider-label">Closing Ratios</div>
+        ${mr('Total Closed', pct(total_closed), 'green')}
+        ${mr('Last 3 Months', pct(last3months), 'cyan')}
+        ${mr('Current Month', pct(current_month), 'gold')}
+        ${mr('TODAY Closed', today_closed, 'red')}
       </div>
 
-      <div class="section-card">
-        <div class="section-title cyan">📊 POP-UP Averages</div>
-        <div class="section-title cyan" style="font-size:0.58rem;border-top:none;padding-top:0;">Received</div>
-        ${metricRow('Overall', popup_recv_overall, 'green')}
-        ${metricRow('Monthly', popup_recv_monthly, 'cyan')}
-        ${metricRow('Today', popup_recv_today, 'gold')}
-        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
-        <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);">Qualified</div>
-        ${metricRow('Overall', popup_qual_overall, 'purple')}
-        ${metricRow('Monthly', popup_qual_monthly, 'red')}
-        ${metricRow('Today', popup_qual_today, 'orange')}
+      <div class="detail-card">
+        <div class="detail-title cyan">📊 POP-UP Averages</div>
+        <div class="divider-label">Received</div>
+        ${mr('Overall', popup_recv_overall, 'green')}
+        ${mr('Monthly', popup_recv_monthly, 'cyan')}
+        ${mr('Today', popup_recv_today, 'gold')}
+        <div class="divider-label">Qualified</div>
+        ${mr('Overall', popup_qual_overall, 'purple')}
+        ${mr('Monthly', popup_qual_monthly, 'red')}
+        ${mr('Today', popup_qual_today, 'blue')}
       </div>
 
-      <div class="section-card">
-        <div class="section-title red">📈 Closing Ratios</div>
-        ${metricRow('Total Closed', pct(total_closed), 'green')}
-        ${metricRow('Last 3 Months', pct(last3months), 'cyan')}
-        ${metricRow('Current Month', pct(current_month), 'gold')}
-        ${metricRow('TODAY Closed', today_closed, 'red')}
-        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
-        <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Hot Leads Averages</div>
-        ${metricRow('Overall Qual Avg', hot_qual_overall, 'purple')}
-        ${metricRow('Monthly Qual Avg', hot_qual_monthly, 'orange')}
-        ${metricRow('Today Qual Avg', hot_qual_today, 'cyan')}
+      <div class="detail-card">
+        <div class="detail-title purple">📈 Hot Lead Averages</div>
+        <div class="divider-label">Received</div>
+        ${mr('Overall', hot_recv_overall, 'green')}
+        ${mr('Monthly', hot_recv_monthly, 'cyan')}
+        ${mr('Today', hot_recv_today, 'gold')}
+        <div class="divider-label">Qualified</div>
+        ${mr('Overall', hot_qual_overall, 'purple')}
+        ${mr('Monthly', hot_qual_monthly, 'red')}
+        ${mr('Today', hot_qual_today, 'blue')}
       </div>
     </div>
   `;
 }
 
 function renderGeneric(data, deptName, icon){
-  // Generic renderer for other departments
-  const rows = data.filter(r => r.some(c => c !== ''));
-
-  let cards = '';
-  let sections = '';
-  let cardCount = 0;
-  const colors = ['green','cyan','gold','red','purple','orange'];
-
-  rows.forEach(row => {
-    const label = String(row[0]||'').trim();
+  const rows=data.filter(r=>r.some(c=>c!==''));
+  let cards=''; let metrics=''; let cardCount=0;
+  const colors=['green','cyan','gold','purple','red','blue'];
+  rows.forEach(row=>{
+    const label=String(row[0]||row[1]||'').trim();
     if(!label) return;
-
-    // Find first non-empty value
-    let val = '';
-    for(let i=1;i<row.length;i++){
-      if(row[i]!=='') { val=row[i]; break; }
-    }
-
-    if(val!=='' && cardCount < 6){
-      const col = colors[cardCount % colors.length];
-      cards += `<div class="stat-card ${col}">
-        <div class="stat-label">${label}</div>
-        <div class="stat-val ${col}">${val}</div>
-      </div>`;
+    let val='';
+    for(let i=1;i<row.length;i++){if(row[i]!==''){val=row[i];break;}}
+    if(val!==''&&cardCount<6){
+      cards+=kpi(label,val,colors[cardCount%colors.length],'');
       cardCount++;
     }
+    if(val!=='') metrics+=mr(label,val,'green');
   });
-
-  // Build metric rows for all data
-  rows.forEach(row => {
-    const label = String(row[0]||'').trim();
-    if(!label) return;
-    const vals = row.slice(1).filter(v=>v!=='');
-    if(vals.length > 0){
-      sections += metricRow(label, vals[0], 'green');
-    }
-  });
-
   return `
-    <div class="stats-grid">${cards || '<div style="color:var(--muted);padding:20px;">No data available</div>'}</div>
-    <div class="section-card" style="margin-bottom:20px;">
-      <div class="section-title green">${icon} ${deptName} — Full Detail</div>
-      ${sections || '<div style="padding:20px;color:var(--muted);">No detailed data</div>'}
+    <div class="kpi-grid">${cards||'<div style="color:var(--text2);padding:20px;grid-column:span 6;">No data available yet</div>'}</div>
+    <div class="detail-card" style="margin-bottom:20px;">
+      <div class="detail-title green">${icon} ${deptName} — Full Detail</div>
+      ${metrics||'<div style="padding:20px;color:var(--text2);">No detailed data</div>'}
     </div>
   `;
 }
 
-async function loadDept(sheetName, deptName, icon){
-  // Update active button
-  document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  currentDept = sheetName;
+async function loadDept(sheet, deptName, icon, btnId){
+  document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('btn-'+btnId);
+  if(btn) btn.classList.add('active');
 
-  // Show loading
-  document.getElementById('deptContent').innerHTML = `
-    <div class="dept-header">
-      <div class="dept-header-icon">${icon}</div>
-      <div><div class="dept-header-name">${deptName}</div><div class="dept-header-sub">Loading data...</div></div>
+  document.getElementById('deptContent').innerHTML=`
+    <div class="dept-hdr">
+      <div class="dept-hdr-icon">${icon}</div>
+      <div><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
     </div>
-    <div class="loading-state"><div class="spin"></div>Fetching ${deptName} data...</div>
-  `;
+    <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading ${deptName}...</div></div>`;
 
-  // Clear old timer
   if(refreshTimer) clearInterval(refreshTimer);
 
-  // Fetch and render
-  async function fetchAndRender(){
+  async function fetch_render(){
     try{
-      const res = await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheetName));
-      const json = await res.json();
-
+      const res=await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet));
+      const json=await res.json();
       if(!json.success){
-        document.getElementById('deptContent').innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">⚠️</div>
-            <div>Sheet "${sheetName}" not found</div>
-            <div style="font-size:0.65rem;color:var(--dim)">${json.error||''}</div>
-          </div>`;
+        document.getElementById('deptContent').innerHTML=`<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>${json.error||'Sheet not found'}</div></div>`;
         return;
       }
+      const now=new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      let content='';
+      if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
+      else content=renderGeneric(json.data,deptName,icon);
 
-      const data = json.data;
-      let content = '';
-
-      if(deptName === 'Organic & Pop-Up'){
-        content = renderInbound(data);
-      } else {
-        content = renderGeneric(data, deptName, icon);
-      }
-
-      const now = new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-
-      document.getElementById('deptContent').innerHTML = `
-        <div class="dept-header">
-          <div class="dept-header-icon">${icon}</div>
-          <div>
-            <div class="dept-header-name">${deptName}</div>
-            <div class="dept-header-sub">Live data · 30s auto-refresh</div>
-          </div>
-          <div class="refresh-info">Updated: <span style="color:var(--green)">${now}</span></div>
+      document.getElementById('deptContent').innerHTML=`
+        <div class="dept-hdr">
+          <div class="dept-hdr-icon">${icon}</div>
+          <div><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
+          <div class="dept-hdr-time">Updated: <span>${now}</span></div>
         </div>
-        ${content}
-      `;
-    } catch(e){
-      console.error('SOD fetch error:', e);
-    }
+        ${content}`;
+    }catch(e){console.error(e);}
   }
 
-  fetchAndRender();
-  refreshTimer = setInterval(fetchAndRender, 30000);
+  fetch_render();
+  refreshTimer=setInterval(fetch_render,30000);
 }
 
-// Load default department
-loadDept('SOD','Organic & Pop-Up','📥');
+loadDept('SOD','Organic & Pop-Up','📥','Organic');
 </script>
 </body>
 </html>
