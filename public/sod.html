@@ -431,59 +431,93 @@ function renderOrganic(data){
     <div class="kpi-grid">
       ${kpi('POP-UP Received Today', popup_recv, 'green', 'Unique POP-UPs')}
       ${kpi('POP-UP Qualified Today', popup_qual, 'cyan', 'Unique POP-UPs')}
-      ${kpi('Hot Leads Received', hot_recv, 'gold', 'Today')}
-      ${kpi('Hot Leads Qualified', hot_qual, 'purple', 'Today')}
-      ${kpi('Today Closed', today_closed, 'red', 'Closed Leads')}
-      ${kpi('Total Closed Ratio', pct(total_closed), 'blue', 'Overall')}
+      ${kpi('POP-UP Closed Today', popup_closed, 'gold', 'Closed Today')}
+      ${kpi('Hot Leads Received Today', hot_recv, 'purple', 'Unique Hot Leads')}
+      ${kpi('Hot Leads Qualified Today', hot_qual, 'red', 'Qualified Today')}
+      ${kpi('Hot Leads Closed Today', hot_closed, 'blue', 'Closed Today')}
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="detail-card">
+        <div class="detail-title green">📋 Today Received POP-UPS Breakdown</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Total Received</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${total_popup_recv}</div>
+          </div>
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Valid POP-UPs</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${valid_popups}</div>
+          </div>
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Repeated</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${repeated}</div>
+          </div>
+          <div style="padding:18px 20px;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Invalid IP & Data</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${invalid}</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="detail-grid">
       <div class="detail-card">
-        <div class="detail-title green">📥 Unique POP-UPs</div>
-        ${mr('Today Received', popup_recv, 'green')}
-        ${mr('Today Qualified', popup_qual, 'cyan')}
-        ${mr('Today Closed', popup_closed, 'gold')}
-        <div class="divider-label">Monthly Breakdown</div>
-        ${mr('Total Received', total_popup_recv, 'green')}
-        ${mr('Valid POP-UPs', valid_popups, 'cyan')}
-        ${mr('Repeated', repeated, 'gold')}
-        ${mr('Invalid IP & Data', invalid, 'red')}
-      </div>
-
-      <div class="detail-card">
-        <div class="detail-title gold">🔥 Unique HOT LEADS</div>
-        ${mr('Today Received', hot_recv, 'gold')}
-        ${mr('Today Qualified', hot_qual, 'cyan')}
-        ${mr('Today Closed', hot_closed, 'red')}
-        <div class="divider-label">Closing Ratios</div>
-        ${mr('Total Closed', pct(total_closed), 'green')}
-        ${mr('Last 3 Months', pct(last3months), 'cyan')}
-        ${mr('Current Month', pct(current_month), 'gold')}
-        ${mr('TODAY Closed', today_closed, 'red')}
-      </div>
-
-      <div class="detail-card">
         <div class="detail-title cyan">📊 POP-UP Averages</div>
-        <div class="divider-label">Received</div>
-        ${mr('Overall', popup_recv_overall, 'green')}
-        ${mr('Monthly', popup_recv_monthly, 'cyan')}
-        ${mr('Today', popup_recv_today, 'gold')}
-        <div class="divider-label">Qualified</div>
-        ${mr('Overall', popup_qual_overall, 'purple')}
-        ${mr('Monthly', popup_qual_monthly, 'red')}
-        ${mr('Today', popup_qual_today, 'blue')}
+        <div style="display:flex;gap:0;">
+          <div style="flex:1;border-right:1px solid var(--border);">
+            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(0,229,160,0.12);color:var(--green);border-bottom:1px solid var(--border);">Received</div>
+            ${mr('Overall', popup_recv_overall, 'green')}
+            ${mr('Monthly', popup_recv_monthly, 'green')}
+            ${mr('Today', popup_recv_today, 'green')}
+          </div>
+          <div style="flex:1;">
+            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(124,77,255,0.12);color:var(--purple);border-bottom:1px solid var(--border);">Qualified</div>
+            ${mr('Overall', popup_qual_overall, 'purple')}
+            ${mr('Monthly', popup_qual_monthly, 'purple')}
+            ${mr('Today', popup_qual_today, 'purple')}
+          </div>
+        </div>
       </div>
 
       <div class="detail-card">
         <div class="detail-title purple">📈 Hot Lead Averages</div>
-        <div class="divider-label">Received</div>
-        ${mr('Overall', hot_recv_overall, 'green')}
-        ${mr('Monthly', hot_recv_monthly, 'cyan')}
-        ${mr('Today', hot_recv_today, 'gold')}
-        <div class="divider-label">Qualified</div>
-        ${mr('Overall', hot_qual_overall, 'purple')}
-        ${mr('Monthly', hot_qual_monthly, 'red')}
-        ${mr('Today', hot_qual_today, 'blue')}
+        <div style="display:flex;gap:0;">
+          <div style="flex:1;border-right:1px solid var(--border);">
+            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(245,166,35,0.12);color:var(--gold);border-bottom:1px solid var(--border);">Received</div>
+            ${mr('Overall', hot_recv_overall, 'gold')}
+            ${mr('Monthly', hot_recv_monthly, 'gold')}
+            ${mr('Today', hot_recv_today, 'gold')}
+          </div>
+          <div style="flex:1;">
+            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(0,212,255,0.12);color:var(--cyan);border-bottom:1px solid var(--border);">Qualified</div>
+            ${mr('Overall', hot_qual_overall, 'cyan')}
+            ${mr('Monthly', hot_qual_monthly, 'cyan')}
+            ${mr('Today', hot_qual_today, 'cyan')}
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-card" style="grid-column:span 2;">
+        <div class="detail-title red">📈 Closing Ratios</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Total Closed</div>
+            <div style="font-size:1.6rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(total_closed)}</div>
+          </div>
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Last 3 Months</div>
+            <div style="font-size:1.6rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(last3months)}</div>
+          </div>
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Current Month</div>
+            <div style="font-size:1.6rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(current_month)}</div>
+          </div>
+          <div style="padding:16px 20px;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">TODAY Closed</div>
+            <div style="font-size:1.6rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${today_closed}</div>
+          </div>
+        </div>
       </div>
     </div>
   `;
