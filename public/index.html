@@ -484,6 +484,14 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
   }
 })();
 
+function dsLogout() {
+  const t = localStorage.getItem('ds_token');
+  fetch('/api/logout', { method: 'POST', headers: { 'authorization': t } });
+  localStorage.removeItem('ds_token');
+  localStorage.removeItem('ds_user');
+  window.location.replace('/login.html');
+}
+
 /* =========================================================================
    CONFIG
    To connect a live Google Sheet:
@@ -999,5 +1007,6 @@ input.focus();
   <line x1="59" y1="59" x2="76" y2="76" stroke="#FFD700" stroke-width="6" stroke-linecap="round"/>
 </svg>
 </template>
+<button id="logoutBtn" onclick="dsLogout()" style="position:fixed;bottom:20px;right:20px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;padding:8px 18px;border-radius:8px;font-size:0.72rem;cursor:pointer;z-index:9999;font-family:monospace;letter-spacing:0.05em;backdrop-filter:blur(8px);">Logout</button>
 </body>
 </html>
