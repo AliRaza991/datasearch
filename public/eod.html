@@ -3,85 +3,511 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataSearch — EOD</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>DataSearch — EOD Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0A0E1A;--card:#111827;--border:#1e2d45;--cyan:#00D4FF;--gold:#FFD700;--text:#e2e8f0;--muted:#64748b;}
-body{background:var(--bg);font-family:'DM Mono',monospace;color:var(--text);min-height:100vh;}
-body::after{content:'';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),transparent);}
+:root{
+  --bg:#0A0E1A;
+  --card:#0f1729;
+  --card2:#111827;
+  --border:#1e2d45;
+  --cyan:#00D4FF;
+  --gold:#FFD700;
+  --green:#00e5a0;
+  --red:#ff4d6d;
+  --purple:#a78bfa;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --maheen:#0ea5e9;
+  --khurram:#f59e0b;
+}
+html{visibility:hidden}
+body{
+  background:var(--bg);
+  font-family:'DM Mono',monospace;
+  color:var(--text);
+  min-height:100vh;
+  padding-top:56px;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(0,212,255,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,215,0,0.03) 0%,transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAVBAR */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(10,14,26,0.97);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  padding:0 24px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),transparent);}
+.nav-logo{display:flex;align-items:center;gap:8px;}
+.nav-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--cyan),var(--gold));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:1rem;letter-spacing:0.08em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{
+  padding:7px 16px;border-radius:8px;font-size:0.73rem;
+  font-family:'DM Mono',monospace;letter-spacing:0.05em;
+  text-decoration:none;color:var(--muted);
+  background:transparent;border:1px solid transparent;
+  transition:all 0.2s;cursor:pointer;
+}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-link.active-ds{color:var(--cyan);background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.2);}
+.nav-link.active-sod{color:var(--green);background:rgba(0,229,160,0.1);border-color:rgba(0,229,160,0.2);}
+.nav-link.active-eod{color:var(--gold);background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.2);}
+
+/* USER WIDGET */
+.user-pill{
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);
+  border-radius:50px;padding:5px 13px 5px 5px;transition:all 0.2s;position:relative;
+}
+.user-pill:hover{background:rgba(0,212,255,0.12);}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.78rem;font-weight:600;color:#0A0E1A;
+}
+.user-info{display:flex;flex-direction:column;line-height:1.2;}
+.user-name{font-size:0.72rem;color:var(--text);}
+.user-desig{font-size:0.56rem;color:var(--cyan);letter-spacing:0.08em;text-transform:uppercase;}
+.user-menu{
+  display:none;position:absolute;right:0;top:calc(100% + 10px);
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:12px;padding:8px;min-width:180px;
+  z-index:9999;box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+.user-menu-header{padding:10px 12px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.user-menu-name{font-size:0.78rem;color:var(--text);}
+.user-menu-desig{font-size:0.65rem;color:var(--muted);margin-top:2px;}
+.logout-item{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border-radius:8px;cursor:pointer;color:var(--red);
+  font-size:0.75rem;transition:all 0.15s;
+}
+.logout-item:hover{background:rgba(255,77,109,0.1);}
+
+/* MAIN CONTENT */
+main{position:relative;z-index:1;padding:24px;}
+
+/* PAGE HEADER */
+.page-header{text-align:center;margin-bottom:32px;}
+.page-title{
+  font-family:'Playfair Display',serif;font-size:1.8rem;
+  background:linear-gradient(135deg,var(--gold),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.page-subtitle{color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;}
+.live-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);
+  border-radius:20px;padding:4px 12px;font-size:0.65rem;
+  color:var(--green);margin-top:10px;letter-spacing:0.06em;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+
+/* OVERALL STATS */
+.overall-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  max-width:700px;margin:0 auto 32px;
+}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:20px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat-card.cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.stat-card.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.stat-card.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.stat-label{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.stat-value{font-size:2rem;font-weight:500;line-height:1;}
+.stat-value.cyan{color:var(--cyan);}
+.stat-value.gold{color:var(--gold);}
+.stat-value.green{color:var(--green);}
+
+/* TEAM SECTIONS */
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.team-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+}
+.team-header{
+  padding:16px 20px;display:flex;align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.team-header.maheen{background:linear-gradient(135deg,rgba(14,165,233,0.15),rgba(14,165,233,0.05));}
+.team-header.khurram{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));}
+.team-name{font-family:'Playfair Display',serif;font-size:1.1rem;}
+.team-name.maheen{color:var(--maheen);}
+.team-name.khurram{color:var(--khurram);}
+.team-stats{display:flex;gap:16px;}
+.team-stat{text-align:right;}
+.team-stat-val{font-size:1.2rem;font-weight:500;}
+.team-stat-val.maheen{color:var(--maheen);}
+.team-stat-val.khurram{color:var(--khurram);}
+.team-stat-label{font-size:0.58rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;padding:0 4px;}
+table{width:100%;border-collapse:collapse;font-size:0.72rem;}
+thead th{
+  padding:8px 10px;text-align:center;
+  font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+thead th.name-col{text-align:left;}
+thead th.section-maheen{color:var(--maheen);}
+thead th.section-khurram{color:var(--khurram);}
+tbody tr{border-bottom:1px solid rgba(30,45,69,0.4);transition:background 0.15s;}
+tbody tr:hover{background:rgba(0,212,255,0.03);}
+tbody tr.total-row{
+  border-top:1px solid var(--border);
+  font-weight:500;background:rgba(0,212,255,0.04);
+}
+tbody td{padding:9px 10px;text-align:center;white-space:nowrap;}
+tbody td.name-col{text-align:left;color:var(--text);font-size:0.75rem;}
+tbody td.total-row-name{color:var(--cyan);font-size:0.7rem;letter-spacing:0.06em;}
+.ratio-badge{
+  padding:2px 8px;border-radius:20px;font-size:0.65rem;
+  display:inline-block;
+}
+.ratio-high{background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.2);}
+.ratio-mid{background:rgba(255,215,0,0.12);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
+.ratio-low{background:rgba(255,77,109,0.1);color:var(--red);border:1px solid rgba(255,77,109,0.2);}
+.zero{color:var(--muted);}
+
+/* SECTION DIVIDER */
+.section-divider{
+  display:flex;align-items:center;gap:12px;
+  margin:0 0 12px;padding:0 20px;
+}
+.divider-label{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.divider-line{flex:1;height:1px;background:var(--border);}
+
+/* LOADING */
+.loading{
+  display:flex;align-items:center;justify-content:center;
+  height:200px;color:var(--muted);font-size:0.8rem;gap:10px;
+}
+.spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* REFRESH INFO */
+.refresh-info{
+  text-align:center;color:var(--muted);
+  font-size:0.65rem;margin-top:20px;letter-spacing:0.05em;
+}
+#lastUpdated{color:var(--cyan);}
 </style>
 </head>
 <body>
 <script>
-const _t = localStorage.getItem('ds_token');
-if (!_t) { document.documentElement.style.visibility='hidden'; window.location.replace('/login.html'); }
-else document.documentElement.style.visibility='visible';
+(function(){
+  const t=localStorage.getItem('ds_token');
+  if(!t){document.documentElement.style.visibility='hidden';window.location.replace('/login.html');}
+  else document.documentElement.style.visibility='visible';
+})();
 </script>
 
-<nav style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.95);border-bottom:1px solid #1e2d45;backdrop-filter:blur(12px);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <div style="width:32px;height:32px;background:linear-gradient(135deg,#00D4FF,#FFD700);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">⚡</div>
-    <span style="font-family:'Playfair Display',serif;font-size:1.1rem;letter-spacing:0.08em;">DATA<span style="color:#00D4FF;">SEARCH</span></span>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    <div class="nav-logo-text">DATA<span>SEARCH</span></div>
   </div>
-  <div style="display:flex;align-items:center;gap:4px;">
-    <a href="/index.html" style="padding:8px 20px;border-radius:8px;font-size:0.78rem;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-decoration:none;color:#64748b;background:transparent;border:1px solid transparent;transition:all 0.2s;" onmouseover="this.style.color='#e2e8f0';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.color='#64748b';this.style.background='transparent'">⚡ DataSearch</a>
-    <a href="/sod.html" style="padding:8px 20px;border-radius:8px;font-size:0.78rem;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-decoration:none;color:#64748b;background:transparent;border:1px solid transparent;transition:all 0.2s;" onmouseover="this.style.color='#e2e8f0';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.color='#64748b';this.style.background='transparent'">☀️ SOD</a>
-    <a href="/eod.html" style="padding:8px 20px;border-radius:8px;font-size:0.78rem;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-decoration:none;color:#FFD700;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);transition:all 0.2s;">🌙 EOD</a>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-link">⚡ DataSearch</a>
+    <a href="/sod.html" class="nav-link">☀️ SOD</a>
+    <a href="/eod.html" class="nav-link active-eod">🌙 EOD</a>
   </div>
-  <div id="userWidget" style="position:relative;display:flex;align-items:center;">
-    <div onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:50px;padding:6px 14px 6px 6px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.12)'" onmouseout="this.style.background='rgba(0,212,255,0.06)'">
-      <div id="userAvatar" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00D4FF,#FFD700);display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:600;color:#0A0E1A;font-family:monospace;"></div>
-      <div style="display:flex;flex-direction:column;line-height:1.2;">
-        <span id="userDisplayName" style="font-size:0.76rem;color:#e2e8f0;font-family:monospace;"></span>
-        <span id="userDisplayRole" style="font-size:0.58rem;color:#00D4FF;letter-spacing:0.08em;text-transform:uppercase;"></span>
+  <div style="position:relative;">
+    <div class="user-pill" onclick="toggleUserMenu()">
+      <div class="user-avatar" id="userAvatar"></div>
+      <div class="user-info">
+        <span class="user-name" id="userDisplayName"></span>
+        <span class="user-desig" id="userDisplayRole"></span>
       </div>
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
-    <div id="userMenu" style="display:none;position:absolute;right:0;top:calc(100% + 10px);background:#111827;border:1px solid #1e2d45;border-radius:12px;padding:8px;min-width:190px;z-index:9999;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
-      <div style="padding:10px 12px;border-bottom:1px solid #1e2d45;margin-bottom:6px;">
-        <div id="menuUserName" style="font-size:0.8rem;color:#e2e8f0;font-family:monospace;"></div>
-        <div id="menuUserDesig" style="font-size:0.68rem;color:#64748b;font-family:monospace;margin-top:2px;"></div>
+    <div class="user-menu" id="userMenu">
+      <div class="user-menu-header">
+        <div class="user-menu-name" id="menuUserName"></div>
+        <div class="user-menu-desig" id="menuUserDesig"></div>
       </div>
-      <div onclick="dsLogout()" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;color:#ff4d6d;font-size:0.78rem;font-family:monospace;transition:all 0.15s;" onmouseover="this.style.background='rgba(255,77,109,0.1)'" onmouseout="this.style.background='transparent'">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <div class="logout-item" onclick="dsLogout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </div>
     </div>
   </div>
 </nav>
 
-<div style="padding-top:56px;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;">
-  <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold);">EOD</h1>
-  <p style="color:var(--muted);font-size:0.85rem;">End of Day — Coming Soon</p>
-</div>
+<main>
+  <div class="page-header">
+    <div class="page-title">End of Day Report</div>
+    <div class="page-subtitle">Live Dashboard · Auto-refreshes every 30 seconds</div>
+    <div class="live-badge"><span class="live-dot"></span> LIVE</div>
+  </div>
+
+  <div class="overall-grid">
+    <div class="stat-card cyan">
+      <div class="stat-label">Total Qualified Leads</div>
+      <div class="stat-value cyan" id="overallQualified">—</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">Total Closed Leads</div>
+      <div class="stat-value gold" id="overallClosed">—</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Overall Closing Ratio</div>
+      <div class="stat-value green" id="overallRatio">—</div>
+    </div>
+  </div>
+
+  <div class="teams-grid">
+    <div class="team-card" id="maheenCard">
+      <div class="team-header maheen">
+        <div class="team-name maheen">Team Maheen</div>
+        <div class="team-stats">
+          <div class="team-stat">
+            <div class="team-stat-val maheen" id="maheenTotal">—</div>
+            <div class="team-stat-label">Qualified</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-val maheen" id="maheenClosed">—</div>
+            <div class="team-stat-label">Closed</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-val maheen" id="maheenRatio">—</div>
+            <div class="team-stat-label">Ratio</div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="name-col" rowspan="2">Member</th>
+              <th colspan="3" class="section-maheen">New Leads (Month)</th>
+              <th colspan="3" class="section-maheen">Revive Leads (Month)</th>
+              <th rowspan="2" class="section-maheen">Total Qualified</th>
+              <th colspan="2" class="section-maheen">Inbound Closed</th>
+              <th colspan="2" class="section-maheen">Outbound Closed</th>
+              <th rowspan="2" class="section-maheen">Total Closed</th>
+              <th rowspan="2" class="section-maheen">Ratio</th>
+            </tr>
+            <tr>
+              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th>
+              <th>Email</th><th>RC</th>
+            </tr>
+          </thead>
+          <tbody id="maheenBody">
+            <tr><td colspan="14"><div class="loading"><div class="spin"></div> Loading...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="team-card" id="khurramCard">
+      <div class="team-header khurram">
+        <div class="team-name khurram">Team Khurram</div>
+        <div class="team-stats">
+          <div class="team-stat">
+            <div class="team-stat-val khurram" id="khurramTotal">—</div>
+            <div class="team-stat-label">Qualified</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-val khurram" id="khurramClosed">—</div>
+            <div class="team-stat-label">Closed</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-val khurram" id="khurramRatio">—</div>
+            <div class="team-stat-label">Ratio</div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="name-col" rowspan="2">Member</th>
+              <th colspan="3" class="section-khurram">New Leads (Month)</th>
+              <th colspan="3" class="section-khurram">Revive Leads (Month)</th>
+              <th rowspan="2" class="section-khurram">Total Qualified</th>
+              <th colspan="2" class="section-khurram">Inbound Closed</th>
+              <th colspan="2" class="section-khurram">Outbound Closed</th>
+              <th rowspan="2" class="section-khurram">Total Closed</th>
+              <th rowspan="2" class="section-khurram">Ratio</th>
+            </tr>
+            <tr>
+              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th>
+              <th>Email</th><th>RC</th>
+            </tr>
+          </thead>
+          <tbody id="khurramBody">
+            <tr><td colspan="14"><div class="loading"><div class="spin"></div> Loading...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="refresh-info">Last updated: <span id="lastUpdated">—</span> · Auto-refresh every 30s</div>
+</main>
 
 <script>
-const dsUser = JSON.parse(localStorage.getItem('ds_user') || '{}');
-const initials = (dsUser.name || dsUser.username || 'U').charAt(0).toUpperCase();
-document.getElementById('userAvatar').textContent = initials;
-document.getElementById('userDisplayName').textContent = dsUser.name || dsUser.username || 'User';
-document.getElementById('userDisplayRole').textContent = dsUser.designation || dsUser.role || 'User';
-document.getElementById('menuUserName').textContent = dsUser.name || 'User';
-document.getElementById('menuUserDesig').textContent = dsUser.designation || dsUser.role || '';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyq7c00GRxW4Zx7l47GWGh-Wr83cy1tx4dhUY1a0sOvAa8sJgW8ACheQVNDzFa_ncwo/exec';
 
-function toggleUserMenu() {
-  const menu = document.getElementById('userMenu');
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+// User widget
+const dsUser = JSON.parse(localStorage.getItem('ds_user') || '{}');
+document.getElementById('userAvatar').textContent = (dsUser.name||'U').charAt(0).toUpperCase();
+document.getElementById('userDisplayName').textContent = dsUser.name || 'User';
+document.getElementById('userDisplayRole').textContent = dsUser.designation || dsUser.role || '';
+document.getElementById('menuUserName').textContent = dsUser.name || 'User';
+document.getElementById('menuUserDesig').textContent = dsUser.designation || '';
+
+function toggleUserMenu(){
+  const m=document.getElementById('userMenu');
+  m.style.display=m.style.display==='block'?'none':'block';
 }
-document.addEventListener('click', function(e) {
-  const widget = document.getElementById('userWidget');
-  if (widget && !widget.contains(e.target)) {
-    document.getElementById('userMenu').style.display = 'none';
-  }
+document.addEventListener('click',function(e){
+  const w=document.querySelector('.user-pill');
+  const m=document.getElementById('userMenu');
+  if(w&&!w.contains(e.target)&&m) m.style.display='none';
 });
-function dsLogout() {
-  const t = localStorage.getItem('ds_token');
-  fetch('/api/logout', { method: 'POST', headers: { 'authorization': t } });
+function dsLogout(){
+  const t=localStorage.getItem('ds_token');
+  fetch('/api/logout',{method:'POST',headers:{'authorization':t}});
   localStorage.removeItem('ds_token');
   localStorage.removeItem('ds_user');
   window.location.replace('/login.html');
 }
+
+function fmt(val){
+  if(val===0||val==='') return '<span class="zero">—</span>';
+  return val;
+}
+
+function ratioClass(ratio){
+  if(ratio>=0.3) return 'ratio-high';
+  if(ratio>=0.15) return 'ratio-mid';
+  return 'ratio-low';
+}
+
+function makeRow(row, isTotal=false){
+  const name = row[0];
+  if(!name || name==='') return '';
+  const ratio = parseFloat(row[13]) || 0;
+  const ratioDisplay = ratio > 0 ? `<span class="ratio-badge ${ratioClass(ratio)}">${Math.round(ratio*100)}%</span>` : '<span class="zero">—</span>';
+
+  if(isTotal){
+    return `<tr class="total-row">
+      <td class="name-col total-row-name">${name}</td>
+      <td>${fmt(row[1])}</td><td>${fmt(row[2])}</td><td>${fmt(row[3])}</td>
+      <td>${fmt(row[4])}</td><td>${fmt(row[5])}</td><td>${fmt(row[6])}</td>
+      <td style="color:var(--cyan);font-weight:600;">${fmt(row[7])}</td>
+      <td>${fmt(row[8])}</td><td>${fmt(row[9])}</td>
+      <td>${fmt(row[10])}</td><td>${fmt(row[11])}</td>
+      <td style="color:var(--gold);font-weight:600;">${fmt(row[12])}</td>
+      <td>${ratioDisplay}</td>
+    </tr>`;
+  }
+
+  return `<tr>
+    <td class="name-col">${name}</td>
+    <td>${fmt(row[1])}</td><td>${fmt(row[2])}</td><td>${fmt(row[3])}</td>
+    <td>${fmt(row[4])}</td><td>${fmt(row[5])}</td><td>${fmt(row[6])}</td>
+    <td style="color:var(--cyan);">${fmt(row[7])}</td>
+    <td>${fmt(row[8])}</td><td>${fmt(row[9])}</td>
+    <td>${fmt(row[10])}</td><td>${fmt(row[11])}</td>
+    <td style="color:var(--gold);">${fmt(row[12])}</td>
+    <td>${ratioDisplay}</td>
+  </tr>`;
+}
+
+async function loadData(){
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const json = await res.json();
+    if(!json.success) return;
+    const data = json.data;
+
+    // MAHEEN TEAM — rows 4 to 10 (index), total row 15
+    const maheenMembers = data.slice(4, 11).filter(r => r[0] && r[0] !== '');
+    const maheenTotal = data[15];
+
+    // KHURRAM TEAM — rows 20 to 26, total row 32
+    const khurramMembers = data.slice(20, 27).filter(r => r[0] && r[0] !== '' && r[0] !== '-');
+    const khurramTotal = data[32];
+
+    // OVERALL — row 34
+    const overall = data[34];
+
+    // Render Maheen
+    document.getElementById('maheenBody').innerHTML =
+      maheenMembers.map(r => makeRow(r)).join('') +
+      (maheenTotal ? makeRow(maheenTotal, true) : '');
+
+    if(maheenTotal){
+      document.getElementById('maheenTotal').textContent = maheenTotal[7] || 0;
+      document.getElementById('maheenClosed').textContent = maheenTotal[12] || 0;
+      const mr = parseFloat(maheenTotal[13])||0;
+      document.getElementById('maheenRatio').textContent = Math.round(mr*100)+'%';
+    }
+
+    // Render Khurram
+    document.getElementById('khurramBody').innerHTML =
+      khurramMembers.map(r => makeRow(r)).join('') +
+      (khurramTotal ? makeRow(khurramTotal, true) : '');
+
+    if(khurramTotal){
+      document.getElementById('khurramTotal').textContent = khurramTotal[7] || 0;
+      document.getElementById('khurramClosed').textContent = khurramTotal[12] || 0;
+      const kr = parseFloat(khurramTotal[13])||0;
+      document.getElementById('khurramRatio').textContent = Math.round(kr*100)+'%';
+    }
+
+    // Overall stats
+    if(overall){
+      document.getElementById('overallQualified').textContent = overall[7] || 0;
+      document.getElementById('overallClosed').textContent = overall[12] || 0;
+      const or = parseFloat(overall[13])||0;
+      document.getElementById('overallRatio').textContent = Math.round(or*100)+'%';
+    }
+
+    // Update timestamp
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent =
+      now.toLocaleTimeString('en-PK', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  } catch(e) {
+    console.error('EOD fetch error:', e);
+  }
+}
+
+// Load immediately then every 30 seconds
+loadData();
+setInterval(loadData, 30000);
 </script>
 </body>
 </html>
