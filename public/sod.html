@@ -486,7 +486,7 @@ async function loadDept(sheetName, deptName, icon){
       const data = json.data;
       let content = '';
 
-      if(sheetName === 'SOD_INBOUND'){
+      if(deptName === 'Organic & Pop-Up'){
         content = renderInbound(data);
       } else {
         content = renderGeneric(data, deptName, icon);
