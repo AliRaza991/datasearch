@@ -470,37 +470,6 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
 </div>
 
 <script>
-(function() {
-  const token = localStorage.getItem('ds_token');
-  if (!token) { window.location.href = '/login.html'; return; }
-
-  const user = JSON.parse(localStorage.getItem('ds_user') || '{}');
-
-  window.DS_TOKEN = token;
-  window.DS_USER = user;
-
-  document.addEventListener('DOMContentLoaded', function() {
-    if (user.role === 'admin') {
-      const adminLink = document.createElement('a');
-      adminLink.href = '/admin.html';
-      adminLink.style.cssText = 'position:fixed;bottom:20px;left:20px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:#FFD700;padding:6px 14px;border-radius:8px;font-size:0.7rem;text-decoration:none;z-index:9999;font-family:monospace;letter-spacing:0.05em;';
-      adminLink.textContent = '⚙ Admin Panel';
-      document.body.appendChild(adminLink);
-    }
-
-    const logoutBtn = document.createElement('button');
-    logoutBtn.style.cssText = 'position:fixed;bottom:20px;right:20px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;padding:6px 14px;border-radius:8px;font-size:0.7rem;cursor:pointer;z-index:9999;font-family:monospace;letter-spacing:0.05em;';
-    logoutBtn.textContent = 'Logout';
-    logoutBtn.onclick = function() {
-      fetch('/api/logout', { method: 'POST', headers: { 'authorization': token } });
-      localStorage.removeItem('ds_token');
-      localStorage.removeItem('ds_user');
-      window.location.href = '/login.html';
-    };
-    document.body.appendChild(logoutBtn);
-  });
-})();
-
 /* =========================================================================
    CONFIG
    To connect a live Google Sheet:
