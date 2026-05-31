@@ -1,21 +1,39 @@
 const express = require('express');
 const path = require('path');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET = process.env.SESSION_SECRET || 'datasearch-secret-key-2026';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://syedaliraza991_db_user:ADYX5obyb5mb4ohx@datasearch.yjc2tol.mongodb.net/datasearch?appName=datasearch';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const USERS = [
-  { id: 1, username: "admin", password: "admin123", role: "admin", active: true, name: "Admin User" },
-  { id: 2, username: "user1", password: "user123", role: "user", active: true, name: "Test User" }
-];
+const userSchema = new mongoose.Schema({
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: String, default: 'user' },
+  active: { type: Boolean, default: true }
+}, { timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('MongoDB connected!');
+    const exists = await User.findOne({ username: 'admin' });
+    if (!exists) {
+      await User.create({ username: 'admin', password: 'admin123', name: 'Admin User', role: 'admin', active: true });
+      console.log('Default admin created');
+    }
+  })
+  .catch(err => console.log('MongoDB error:', err));
 
 function createToken(user) {
-  const payload = JSON.stringify({ id: user.id, username: user.username, role: user.role, name: user.name, ts: Date.now() });
+  const payload = JSON.stringify({ id: user._id, username: user.username, role: user.role, name: user.name, ts: Date.now() });
   const encoded = Buffer.from(payload).toString('base64');
   const sig = crypto.createHmac('sha256', SECRET).update(encoded).digest('hex');
   return `${encoded}.${sig}`;
@@ -32,20 +50,31 @@ function verifyToken(token) {
   } catch(e) { return null; }
 }
 
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   const token = req.headers['authorization'];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  const user = verifyToken(token);
-  if (!user) return res.status(401).json({ error: 'Unauthorized' });
-  const dbUser = USERS.find(u => u.id === user.id && u.active);
-  if (!dbUser) return res.status(401).json({ error: 'Unauthorized' });
+  const payload = verifyToken(token);
+  if (!payload) return res.status(401).json({ error: 'Unauthorized' });
+  const user = await User.findById(payload.id);
+  if (!user || !user.active) return res.status(401).json({ error: 'Unauthorized' });
   req.user = user;
   next();
 }
 
-app.post('/api/login', (req, res) => {
+async function requireAdmin(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  const payload = verifyToken(token);
+  if (!payload) return res.status(401).json({ error: 'Unauthorized' });
+  const user = await User.findById(payload.id);
+  if (!user || !user.active || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  req.user = user;
+  next();
+}
+
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = USERS.find(u => u.username === username && u.password === password && u.active);
+  const user = await User.findOne({ username, password, active: true });
   if (!user) return res.status(401).json({ error: 'Invalid username or password' });
   const token = createToken(user);
   res.json({ token, user: { name: user.name, role: user.role, username: user.username } });
@@ -53,42 +82,41 @@ app.post('/api/login', (req, res) => {
 
 app.post('/api/logout', (req, res) => res.json({ success: true }));
 
-app.get('/api/me', requireAuth, (req, res) => res.json({ user: req.user }));
-
-app.get('/api/admin/users', requireAuth, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-  const safe = USERS.map(({ password, ...u }) => u);
-  res.json({ users: safe });
+app.get('/api/me', requireAuth, (req, res) => {
+  res.json({ user: { name: req.user.name, role: req.user.role, username: req.user.username } });
 });
 
-app.patch('/api/admin/users/:id', requireAuth, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-  const user = USERS.find(u => u.id === parseInt(req.params.id));
-  if (!user) return res.status(404).json({ error: 'Not found' });
-  if (req.body.username) user.username = req.body.username;
-  if (req.body.password) user.password = req.body.password;
-  if (req.body.name) user.name = req.body.name;
-  if (req.body.active !== undefined) user.active = req.body.active;
-  const { password, ...safe } = user;
-  res.json({ success: true, user: safe });
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+  const users = await User.find({}, '-password');
+  res.json({ users });
 });
 
-app.post('/api/admin/users', requireAuth, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+app.post('/api/admin/users', requireAdmin, async (req, res) => {
   const { username, password, name, role } = req.body;
   if (!username || !password || !name) return res.status(400).json({ error: 'All fields required' });
-  if (USERS.find(u => u.username === username)) return res.status(400).json({ error: 'Username exists' });
-  const newUser = { id: Date.now(), username, password, name, role: role || 'user', active: true };
-  USERS.push(newUser);
-  const { password: _, ...safe } = newUser;
-  res.json({ success: true, user: safe });
+  try {
+    const user = await User.create({ username, password, name, role: role || 'user', active: true });
+    const { password: _, ...safe } = user.toObject();
+    res.json({ success: true, user: safe });
+  } catch(e) {
+    res.status(400).json({ error: 'Username already exists' });
+  }
 });
 
-app.delete('/api/admin/users/:id', requireAuth, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-  const idx = USERS.findIndex(u => u.id === parseInt(req.params.id));
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  USERS.splice(idx, 1);
+app.patch('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  const { username, password, name, active } = req.body;
+  const update = {};
+  if (username) update.username = username;
+  if (password) update.password = password;
+  if (name) update.name = name;
+  if (active !== undefined) update.active = active;
+  const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).select('-password');
+  if (!user) return res.status(404).json({ error: 'Not found' });
+  res.json({ success: true, user });
+});
+
+app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });
 
