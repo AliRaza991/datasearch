@@ -820,10 +820,17 @@ function renderResults(query, matched, data, cls){
   const rows = matched.slice(0, CAP);
   const capped = n > CAP;
 
-  const headHtml = `<tr><th class="rownum">#</th>${cols.map(h => `<th><span class="hcol">${esc(h)}</span></th>`).join('')}</tr>`;
+  // Skip internal DB columns (e.g. values like "syedaliraza991_db_user")
+  const skipPatterns = ['db_user', 'syedaliraza'];
+  const visCols = cols.filter(h => {
+    if (skipPatterns.some(p => String(h).toLowerCase().includes(p))) return false;
+    return !rows.some(r => skipPatterns.some(p => String(r[h] || '').toLowerCase().includes(p)));
+  });
+
+  const headHtml = `<tr><th class="rownum">#</th>${visCols.map(h => `<th><span class="hcol">${esc(h)}</span></th>`).join('')}</tr>`;
 
   const bodyHtml = rows.map((r, i) => {
-    const cells = cols.map(h => {
+    const cells = visCols.map(h => {
       const raw = r[h];
       const hit = matchHit(raw, q, qDigits, phoneMode);
       const display = maskCell(h, raw, phoneSet);
