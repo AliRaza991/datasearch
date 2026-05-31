@@ -50,7 +50,7 @@ main{position:relative;z-index:1;padding:20px 20px 40px;}
 /* PAGE HEADER */
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
 .header-left{}
-.page-title{font-family:'Playfair Display',serif;font-size:1.5rem;background:linear-gradient(135deg,var(--gold) 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.page-title{font-family:'Playfair Display',serif;font-size:1.7rem;background:linear-gradient(135deg,var(--gold) 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
 .page-sub{color:var(--muted);font-size:0.65rem;letter-spacing:0.08em;}
 .header-right{display:flex;align-items:center;gap:10px;}
 .live-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:20px;padding:5px 12px;font-size:0.62rem;color:var(--green);letter-spacing:0.06em;}
@@ -61,16 +61,16 @@ main{position:relative;z-index:1;padding:20px 20px 40px;}
 
 /* OVERALL CARDS */
 .overall-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
-.ov-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s;}
-.ov-card:hover{transform:translateY(-2px);}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;cursor:default;}
+.ov-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
 .ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .ov-card.c1::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
 .ov-card.c2::before{background:linear-gradient(90deg,transparent,var(--maheen),transparent);}
 .ov-card.c3::before{background:linear-gradient(90deg,transparent,var(--khurram),transparent);}
 .ov-card.c4::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 .ov-card.c5::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
-.ov-label{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.ov-val{font-size:1.6rem;font-weight:500;line-height:1;}
+.ov-label{font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.ov-val{font-size:1.8rem;font-weight:500;line-height:1;}
 .ov-val.cyan{color:var(--cyan);}
 .ov-val.maheen{color:var(--maheen);}
 .ov-val.khurram{color:var(--khurram);}
@@ -80,7 +80,7 @@ main{position:relative;z-index:1;padding:20px 20px 40px;}
 
 /* TEAM SECTION */
 .team-section{margin-bottom:28px;}
-.team-header-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:12px 12px 0 0;border:1px solid var(--border);border-bottom:none;}
+.team-header-bar{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-radius:12px 12px 0 0;border:1px solid var(--border);border-bottom:none;}
 .team-header-bar.m{background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.04));}
 .team-header-bar.k{background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04));}
 .team-title{font-family:'Playfair Display',serif;font-size:1.1rem;}
@@ -88,33 +88,34 @@ main{position:relative;z-index:1;padding:20px 20px 40px;}
 .team-title.k{color:var(--khurram);}
 .team-kpis{display:flex;gap:20px;}
 .kpi{text-align:right;}
-.kpi-val{font-size:1.1rem;font-weight:500;}
+.kpi-val{font-size:1.2rem;font-weight:500;}
 .kpi-val.m{color:var(--maheen);}
 .kpi-val.k{color:var(--khurram);}
-.kpi-label{font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.kpi-label{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
 
 /* TABLE WRAPPER */
 .tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;overflow:hidden;}
 .tbl-scroll{overflow-x:auto;}
 
-table{width:100%;border-collapse:collapse;font-size:0.68rem;}
+table{width:100%;border-collapse:collapse;font-size:0.78rem;}
 
 /* Section headers */
-.sec-head{text-align:center;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--border);}
+.sec-head{text-align:center;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--border);}
 .sec-head.month{background:rgba(0,212,255,0.05);color:var(--cyan);}
 .sec-head.today{background:rgba(0,229,160,0.05);color:var(--green);}
 .sec-head.closed{background:rgba(255,215,0,0.05);color:var(--gold);}
 
-thead th{padding:7px 8px;text-align:center;font-size:0.58rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--card);}
+thead th{padding:7px 8px;text-align:center;font-size:0.66rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--card);}
 thead th.name-h{text-align:left;padding-left:16px;min-width:130px;}
 
 tbody tr{border-bottom:1px solid rgba(22,32,53,0.8);transition:background 0.12s;}
 tbody tr:hover{background:rgba(0,212,255,0.03);}
+tbody tr:nth-child(even){background:rgba(255,255,255,0.01);}
 tbody tr.total-row{background:rgba(0,212,255,0.04);border-top:1px solid var(--border);}
 tbody tr.total-row:hover{background:rgba(0,212,255,0.07);}
 
-tbody td{padding:9px 8px;text-align:center;white-space:nowrap;}
-tbody td.name-td{text-align:left;padding-left:16px;color:var(--text);font-size:0.72rem;}
+tbody td{padding:9px 8px;text-align:center;white-space:nowrap;font-size:0.76rem;}
+tbody td.name-td{text-align:left;padding-left:16px;color:var(--text);font-size:0.82rem;}
 tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;}
 
 /* Column group colors */
@@ -202,22 +203,22 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
     <div class="ov-card c1">
       <div class="ov-label">Total Qualified</div>
       <div class="ov-val cyan" id="ovQ">—</div>
-      <div class="ov-sub">Both Teams</div>
-    </div>
-    <div class="ov-card c2">
-      <div class="ov-label">Team Maheen</div>
-      <div class="ov-val maheen" id="mQ">—</div>
-      <div class="ov-sub" id="mR">Closing —</div>
-    </div>
-    <div class="ov-card c3">
-      <div class="ov-label">Team Khurram</div>
-      <div class="ov-val khurram" id="kQ">—</div>
-      <div class="ov-sub" id="kR">Closing —</div>
+      <div class="ov-sub">Both Teams · Month</div>
     </div>
     <div class="ov-card c4">
       <div class="ov-label">Total Closed</div>
       <div class="ov-val gold" id="ovC">—</div>
-      <div class="ov-sub">Both Teams</div>
+      <div class="ov-sub">Both Teams · Month</div>
+    </div>
+    <div class="ov-card c2">
+      <div class="ov-label">Maheen Team Closed</div>
+      <div class="ov-val maheen" id="mClosedCard">—</div>
+      <div class="ov-sub" id="mRatioCard">Closing —</div>
+    </div>
+    <div class="ov-card c3">
+      <div class="ov-label">Khurram Team Closed</div>
+      <div class="ov-val khurram" id="kClosedCard">—</div>
+      <div class="ov-sub" id="kRatioCard">Closing —</div>
     </div>
     <div class="ov-card c5">
       <div class="ov-label">Overall Ratio</div>
@@ -415,16 +416,25 @@ async function loadData(){
     if(!json.success) return;
     const d=json.data;
 
-    // Maheen: rows 4-10, total row 15
-    const mMembers=d.slice(4,11).filter(r=>r[0]&&r[0]!=='');
-    const mTotal=d[15];
+    // Find team rows dynamically
+    let mStartIdx=-1, mTotalIdx=-1;
+    let kStartIdx=-1, kTotalIdx=-1;
+    let ovIdx=-1;
 
-    // Khurram: rows 20-26, total row 32
-    const kMembers=d.slice(20,27).filter(r=>r[0]&&r[0]!==''&&r[0]!=='-');
-    const kTotal=d[32];
+    for(let i=0;i<d.length;i++){
+      const cell=String(d[i][0]||'').trim();
+      if(cell.toLowerCase().includes('maheen')&&mStartIdx===-1) mStartIdx=i+3;
+      if(cell.toLowerCase().includes('khurram')&&kStartIdx===-1) kStartIdx=i+3;
+      if(cell.toLowerCase().includes('total leads')&&mStartIdx>0&&mTotalIdx===-1) mTotalIdx=i;
+      if(cell.toLowerCase().includes('total leads')&&kStartIdx>0&&mTotalIdx>0&&kTotalIdx===-1) kTotalIdx=i;
+      if(cell.toLowerCase().includes('overall')) ovIdx=i;
+    }
 
-    // Overall row 34
-    const ov=d[34];
+    const mMembers=mStartIdx>0?d.slice(mStartIdx,mTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-'):[];
+    const mTotal=mTotalIdx>0?d[mTotalIdx]:null;
+    const kMembers=kStartIdx>0?d.slice(kStartIdx,kTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-'):[];
+    const kTotal=kTotalIdx>0?d[kTotalIdx]:null;
+    const ov=ovIdx>0?d[ovIdx]:null;
 
     // Render Maheen
     document.getElementById('maheenBody').innerHTML=
@@ -432,12 +442,12 @@ async function loadData(){
       (mTotal?makeRow(mTotal,true):'');
 
     if(mTotal){
+      document.getElementById('mClosedCard').textContent=mTotal[12]||0;
+      document.getElementById('mRatioCard').textContent='Closing '+pct(mTotal[13]);
       document.getElementById('mTotal').textContent=mTotal[7]||0;
       document.getElementById('mClosed').textContent=mTotal[12]||0;
       document.getElementById('mRatio').textContent=pct(mTotal[13]);
       document.getElementById('mQToday').textContent=mTotal[25]||0;
-      document.getElementById('mQ').textContent=mTotal[7]||0;
-      document.getElementById('mR').textContent='Closing '+pct(mTotal[13]);
     }
 
     // Render Khurram
@@ -446,12 +456,12 @@ async function loadData(){
       (kTotal?makeRow(kTotal,true):'');
 
     if(kTotal){
+      document.getElementById('kClosedCard').textContent=kTotal[12]||0;
+      document.getElementById('kRatioCard').textContent='Closing '+pct(kTotal[13]);
       document.getElementById('kTotal').textContent=kTotal[7]||0;
       document.getElementById('kClosed').textContent=kTotal[12]||0;
       document.getElementById('kRatio').textContent=pct(kTotal[13]);
       document.getElementById('kQToday').textContent=kTotal[25]||0;
-      document.getElementById('kQ').textContent=kTotal[7]||0;
-      document.getElementById('kR').textContent='Closing '+pct(kTotal[13]);
     }
 
     // Overall
