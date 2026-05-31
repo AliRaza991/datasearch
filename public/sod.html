@@ -207,19 +207,19 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-title">Departments</div>
-  <button class="dept-btn active" onclick="loadDept('SOD_INBOUND','Organic & Pop-Up','📥')" id="btn-SOD_INBOUND">
+  <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','📥')" id="btn-Organic">
     <span class="dept-icon">📥</span>Organic & Pop-Up
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD_MARKETING','Marketing','📢')" id="btn-SOD_MARKETING">
+  <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢')" id="btn-Marketing">
     <span class="dept-icon">📢</span>Marketing
   </button>
-  <button class="dept-btn" onclick="loadDept('QUALIFIER_4TH_FLOOR','Qualifier & 4th Floor','🏢')" id="btn-QUALIFIER_4TH_FLOOR">
+  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🏢')" id="btn-Qualifier">
     <span class="dept-icon">🏢</span>Qualifier & 4th Floor
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD_REVIVED_LEADS','Revived Leads','🔄')" id="btn-SOD_REVIVED_LEADS">
+  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄')" id="btn-Revived">
     <span class="dept-icon">🔄</span>Revived Leads
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD_CLOSED_LEADS','Closed Leads','✅')" id="btn-SOD_CLOSED_LEADS">
+  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','✅')" id="btn-Closed">
     <span class="dept-icon">✅</span>Closed Leads
   </button>
 </div>
@@ -433,8 +433,7 @@ function renderGeneric(data, deptName, icon){
 async function loadDept(sheetName, deptName, icon){
   // Update active button
   document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('btn-'+sheetName);
-  if(btn) btn.classList.add('active');
+  event.currentTarget.classList.add('active');
   currentDept = sheetName;
 
   // Show loading
@@ -497,7 +496,7 @@ async function loadDept(sheetName, deptName, icon){
 }
 
 // Load default department
-loadDept('SOD_INBOUND','Organic & Pop-Up','📥');
+loadDept('SOD','Organic & Pop-Up','📥');
 </script>
 </body>
 </html>
