@@ -21,7 +21,11 @@ function generateToken() {
 
 function requireAuth(req, res, next) {
   const token = req.headers['authorization'];
-  if (!token || !sessions[token]) return res.status(401).json({ error: 'Unauthorized' });
+  console.log('Auth token received:', token ? 'YES' : 'NO');
+  if (!token || !sessions[token]) {
+    console.log('Session not found for token');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
   req.user = sessions[token];
   next();
 }
