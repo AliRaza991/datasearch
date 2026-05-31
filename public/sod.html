@@ -272,130 +272,131 @@ function metricRow(label, val, colorClass='green'){
 }
 
 function renderInbound(data){
-  // Row indices based on actual sheet data:
-  // Row 2: TOTAL POP-UP RECEIVED = data[2][10]
-  // Row 3: Today RECEIVED popup=data[3][2], hot=data[3][6], VALID=data[3][10], Total Closed=data[3][13]
-  // Row 4: Today QUALIFIED popup=data[4][2], hot=data[4][6], REPEATED=data[4][10], Last 3 Months=data[4][13]
-  // Row 5: Today CLOSED popup=data[5][2], hot=data[5][6], INVALID=data[5][10], Current Month=data[5][13]
-  // Row 6: OVERALL Received AVG popup=data[6][2], hot=data[6][6], TODAY Closed=data[6][13]
-  // Row 7: MONTHLY Received AVG popup=data[7][2], hot=data[7][6]
-  // Row 8: TODAY Received AVG popup=data[8][2], hot=data[8][6]
-  // Row 9: OVERALL Qualified AVG popup=data[9][2], hot=data[9][6]
-  // Row 10: MONTHLY Qualified AVG popup=data[10][2], hot=data[10][6]
-  // Row 11: TODAY Qualified AVG popup=data[11][2], hot=data[11][6]
+  // Unique POP-UPS section (rows 2-4)
+  const popup_recv    = data[2]?.[2]  ?? 0;
+  const popup_qual    = data[3]?.[2]  ?? 0;
+  const popup_closed  = data[4]?.[2]  ?? 0;
 
-  const total_popup_received = data[2]?.[10] ?? 0;
-  const today_recv_popup     = data[3]?.[2]  ?? 0;
-  const today_recv_hot       = data[3]?.[6]  ?? 0;
-  const valid_popups         = data[3]?.[10] ?? 0;
-  const total_closed_ratio   = data[3]?.[13] ?? 0;
+  // Unique HOT LEADS section (rows 8-10)
+  const hot_recv      = data[8]?.[2]  ?? 0;
+  const hot_qual      = data[9]?.[2]  ?? 0;
+  const hot_closed    = data[10]?.[2] ?? 0;
 
-  const today_qual_popup     = data[4]?.[2]  ?? 0;
-  const today_qual_hot       = data[4]?.[6]  ?? 0;
-  const repeated             = data[4]?.[10] ?? 0;
-  const last3months          = data[4]?.[13] ?? 0;
+  // POP-UPS Received Average (rows 2-4, col 5)
+  const popup_recv_overall  = data[2]?.[5]  ?? 0;
+  const popup_recv_monthly  = data[3]?.[5]  ?? 0;
+  const popup_recv_today    = data[4]?.[5]  ?? 0;
 
-  const today_closed_popup   = data[5]?.[2]  ?? 0;
-  const today_closed_hot     = data[5]?.[6]  ?? 0;
-  const invalid              = data[5]?.[10] ?? 0;
-  const current_month        = data[5]?.[13] ?? 0;
+  // Hot Leads Received Average (rows 2-4, col 8)
+  const hot_recv_overall    = data[2]?.[8]  ?? 0;
+  const hot_recv_monthly    = data[3]?.[8]  ?? 0;
+  const hot_recv_today      = data[4]?.[8]  ?? 0;
 
-  const overall_recv_popup   = data[6]?.[2]  ?? 0;
-  const overall_recv_hot     = data[6]?.[6]  ?? 0;
-  const today_closed_final   = data[6]?.[13] ?? 0;
+  // POP-UPS Qualified Average (rows 8-10, col 5)
+  const popup_qual_overall  = data[8]?.[5]  ?? 0;
+  const popup_qual_monthly  = data[9]?.[5]  ?? 0;
+  const popup_qual_today    = data[10]?.[5] ?? 0;
 
-  const monthly_recv_popup   = data[7]?.[2]  ?? 0;
-  const monthly_recv_hot     = data[7]?.[6]  ?? 0;
+  // Hot Leads Qualified Average (rows 8-10, col 8)
+  const hot_qual_overall    = data[8]?.[8]  ?? 0;
+  const hot_qual_monthly    = data[9]?.[8]  ?? 0;
+  const hot_qual_today      = data[10]?.[8] ?? 0;
 
-  const today_recv_avg_popup = data[8]?.[2]  ?? 0;
-  const today_recv_avg_hot   = data[8]?.[6]  ?? 0;
+  // TOTAL RECEIVED POP-UPS DETAIL (rows 16-19)
+  const total_popup_recv    = data[16]?.[2] ?? 0;
+  const valid_popups        = data[17]?.[2] ?? 0;
+  const repeated            = data[18]?.[2] ?? 0;
+  const invalid             = data[19]?.[2] ?? 0;
 
-  const overall_qual_popup   = data[9]?.[2]  ?? 0;
-  const overall_qual_hot     = data[9]?.[6]  ?? 0;
+  // Closing Ratios (rows 16-19, col 5)
+  const total_closed        = data[16]?.[5] ?? 0;
+  const last3months         = data[17]?.[5] ?? 0;
+  const current_month       = data[18]?.[5] ?? 0;
+  const today_closed        = data[19]?.[5] ?? 0;
 
-  const monthly_qual_popup   = data[10]?.[2] ?? 0;
-  const monthly_qual_hot     = data[10]?.[6] ?? 0;
-
-  const today_qual_avg_popup = data[11]?.[2] ?? 0;
-  const today_qual_avg_hot   = data[11]?.[6] ?? 0;
-
-  const pct = (v) => typeof v === 'number' && v < 2 ? Math.round(v*100)+'%' : v;
+  const pct = (v) => typeof v === 'number' && v <= 1 && v > 0 ? Math.round(v*100)+'%' : v;
 
   return `
     <div class="stats-grid">
       <div class="stat-card green">
-        <div class="stat-label">Total POP-UP Received</div>
-        <div class="stat-val green">${total_popup_received}</div>
-        <div class="stat-sub">This Month</div>
+        <div class="stat-label">POP-UP Received Today</div>
+        <div class="stat-val green">${popup_recv}</div>
+        <div class="stat-sub">Unique POP-UPs</div>
       </div>
       <div class="stat-card cyan">
-        <div class="stat-label">Today Received</div>
-        <div class="stat-val cyan">${today_recv_popup}</div>
+        <div class="stat-label">POP-UP Qualified Today</div>
+        <div class="stat-val cyan">${popup_qual}</div>
         <div class="stat-sub">Unique POP-UPs</div>
       </div>
       <div class="stat-card gold">
-        <div class="stat-label">Today Hot Leads</div>
-        <div class="stat-val gold">${today_recv_hot}</div>
-        <div class="stat-sub">Received Today</div>
+        <div class="stat-label">Hot Leads Received</div>
+        <div class="stat-val gold">${hot_recv}</div>
+        <div class="stat-sub">Today</div>
       </div>
       <div class="stat-card purple">
-        <div class="stat-label">Today Qualified</div>
-        <div class="stat-val purple">${today_qual_popup}</div>
-        <div class="stat-sub">POP-UP Qualified</div>
+        <div class="stat-label">Hot Leads Qualified</div>
+        <div class="stat-val purple">${hot_qual}</div>
+        <div class="stat-sub">Today</div>
       </div>
       <div class="stat-card red">
         <div class="stat-label">Today Closed</div>
-        <div class="stat-val red">${today_closed_final}</div>
-        <div class="stat-sub">Closed Today</div>
+        <div class="stat-val red">${today_closed}</div>
+        <div class="stat-sub">Closed Leads</div>
       </div>
       <div class="stat-card orange">
         <div class="stat-label">Total Closed Ratio</div>
-        <div class="stat-val orange">${pct(total_closed_ratio)}</div>
+        <div class="stat-val orange">${pct(total_closed)}</div>
         <div class="stat-sub">Overall</div>
       </div>
     </div>
 
     <div class="section-grid">
       <div class="section-card">
-        <div class="section-title green">📥 POP-UP Breakdown</div>
-        ${metricRow('Total Received', total_popup_received, 'green')}
-        ${metricRow('Valid POP-UPs', valid_popups, 'cyan')}
-        ${metricRow('Repeated', repeated, 'gold')}
+        <div class="section-title green">📥 Unique POP-UPs</div>
+        ${metricRow('Today Received', popup_recv, 'green')}
+        ${metricRow('Today Qualified', popup_qual, 'cyan')}
+        ${metricRow('Today Closed', popup_closed, 'gold')}
+        ${metricRow('Total Received', total_popup_recv, 'purple')}
+        ${metricRow('Valid POP-UPs', valid_popups, 'green')}
+        ${metricRow('Repeated', repeated, 'red')}
         ${metricRow('Invalid IP & Data', invalid, 'red')}
-        ${metricRow('Today Received', today_recv_popup, 'green')}
-        ${metricRow('Today Qualified', today_qual_popup, 'purple')}
-        ${metricRow('Today Closed', today_closed_popup, 'orange')}
       </div>
 
       <div class="section-card">
-        <div class="section-title gold">🔥 Hot Leads</div>
-        ${metricRow('Today Received', today_recv_hot, 'gold')}
-        ${metricRow('Today Qualified', today_qual_hot, 'cyan')}
-        ${metricRow('Today Closed', today_closed_hot, 'red')}
-        ${metricRow('Overall Recv Avg', overall_recv_hot, 'green')}
-        ${metricRow('Monthly Recv Avg', monthly_recv_hot, 'purple')}
-        ${metricRow('Today Recv Avg', today_recv_avg_hot, 'orange')}
-        ${metricRow('Overall Qual Avg', overall_qual_hot, 'cyan')}
+        <div class="section-title gold">🔥 Unique HOT LEADS</div>
+        ${metricRow('Today Received', hot_recv, 'gold')}
+        ${metricRow('Today Qualified', hot_qual, 'cyan')}
+        ${metricRow('Today Closed', hot_closed, 'red')}
+        ${metricRow('Overall Recv Avg', hot_recv_overall, 'green')}
+        ${metricRow('Monthly Recv Avg', hot_recv_monthly, 'purple')}
+        ${metricRow('Today Recv Avg', hot_recv_today, 'orange')}
+        ${metricRow('Overall Qual Avg', hot_qual_overall, 'cyan')}
       </div>
 
       <div class="section-card">
         <div class="section-title cyan">📊 POP-UP Averages</div>
-        ${metricRow('Overall Recv Avg', overall_recv_popup, 'green')}
-        ${metricRow('Monthly Recv Avg', monthly_recv_popup, 'cyan')}
-        ${metricRow('Today Recv Avg', today_recv_avg_popup, 'gold')}
-        ${metricRow('Overall Qual Avg', overall_qual_popup, 'purple')}
-        ${metricRow('Monthly Qual Avg', monthly_qual_popup, 'red')}
-        ${metricRow('Today Qual Avg', today_qual_avg_popup, 'orange')}
+        <div class="section-title cyan" style="font-size:0.58rem;border-top:none;padding-top:0;">Received</div>
+        ${metricRow('Overall', popup_recv_overall, 'green')}
+        ${metricRow('Monthly', popup_recv_monthly, 'cyan')}
+        ${metricRow('Today', popup_recv_today, 'gold')}
+        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+        <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);">Qualified</div>
+        ${metricRow('Overall', popup_qual_overall, 'purple')}
+        ${metricRow('Monthly', popup_qual_monthly, 'red')}
+        ${metricRow('Today', popup_qual_today, 'orange')}
       </div>
 
       <div class="section-card">
         <div class="section-title red">📈 Closing Ratios</div>
-        ${metricRow('Total Closed', pct(total_closed_ratio), 'green')}
+        ${metricRow('Total Closed', pct(total_closed), 'green')}
         ${metricRow('Last 3 Months', pct(last3months), 'cyan')}
         ${metricRow('Current Month', pct(current_month), 'gold')}
-        ${metricRow('Today Closed', today_closed_final, 'red')}
-        ${metricRow('Monthly Qual Avg', monthly_qual_hot, 'purple')}
-        ${metricRow('Today Qual Avg', today_qual_avg_hot, 'orange')}
+        ${metricRow('TODAY Closed', today_closed, 'red')}
+        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+        <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Hot Leads Averages</div>
+        ${metricRow('Overall Qual Avg', hot_qual_overall, 'purple')}
+        ${metricRow('Monthly Qual Avg', hot_qual_monthly, 'orange')}
+        ${metricRow('Today Qual Avg', hot_qual_today, 'cyan')}
       </div>
     </div>
   `;
