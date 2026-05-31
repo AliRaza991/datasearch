@@ -4,29 +4,42 @@ const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SECRET = process.env.SESSION_SECRET || 'datasearch-secret-key-2026';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const sessions = {};
 
 const USERS = [
   { id: 1, username: "admin", password: "admin123", role: "admin", active: true, name: "Admin User" },
   { id: 2, username: "user1", password: "user123", role: "user", active: true, name: "Test User" }
 ];
 
-function generateToken() {
-  return crypto.randomBytes(32).toString('hex');
+function createToken(user) {
+  const payload = JSON.stringify({ id: user.id, username: user.username, role: user.role, name: user.name, ts: Date.now() });
+  const encoded = Buffer.from(payload).toString('base64');
+  const sig = crypto.createHmac('sha256', SECRET).update(encoded).digest('hex');
+  return `${encoded}.${sig}`;
+}
+
+function verifyToken(token) {
+  try {
+    const [encoded, sig] = token.split('.');
+    const expected = crypto.createHmac('sha256', SECRET).update(encoded).digest('hex');
+    if (sig !== expected) return null;
+    const payload = JSON.parse(Buffer.from(encoded, 'base64').toString());
+    if (Date.now() - payload.ts > 8 * 60 * 60 * 1000) return null;
+    return payload;
+  } catch(e) { return null; }
 }
 
 function requireAuth(req, res, next) {
   const token = req.headers['authorization'];
-  console.log('Auth token received:', token ? 'YES' : 'NO');
-  if (!token || !sessions[token]) {
-    console.log('Session not found for token');
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-  req.user = sessions[token];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  const user = verifyToken(token);
+  if (!user) return res.status(401).json({ error: 'Unauthorized' });
+  const dbUser = USERS.find(u => u.id === user.id && u.active);
+  if (!dbUser) return res.status(401).json({ error: 'Unauthorized' });
+  req.user = user;
   next();
 }
 
@@ -34,29 +47,20 @@ app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const user = USERS.find(u => u.username === username && u.password === password && u.active);
   if (!user) return res.status(401).json({ error: 'Invalid username or password' });
-
-  const token = generateToken();
-  sessions[token] = { id: user.id, username: user.username, name: user.name, role: user.role };
-  setTimeout(() => delete sessions[token], 8 * 60 * 60 * 1000);
-
+  const token = createToken(user);
   res.json({ token, user: { name: user.name, role: user.role, username: user.username } });
 });
 
-app.post('/api/logout', requireAuth, (req, res) => {
-  delete sessions[req.headers['authorization']];
-  res.json({ success: true });
-});
+app.post('/api/logout', (req, res) => res.json({ success: true }));
 
 app.get('/api/me', requireAuth, (req, res) => res.json({ user: req.user }));
 
-// Get all users
 app.get('/api/admin/users', requireAuth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   const safe = USERS.map(({ password, ...u }) => u);
   res.json({ users: safe });
 });
 
-// Update user (username, password, name)
 app.patch('/api/admin/users/:id', requireAuth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   const user = USERS.find(u => u.id === parseInt(req.params.id));
@@ -69,7 +73,6 @@ app.patch('/api/admin/users/:id', requireAuth, (req, res) => {
   res.json({ success: true, user: safe });
 });
 
-// Add new user
 app.post('/api/admin/users', requireAuth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   const { username, password, name, role } = req.body;
@@ -81,7 +84,6 @@ app.post('/api/admin/users', requireAuth, (req, res) => {
   res.json({ success: true, user: safe });
 });
 
-// Delete user
 app.delete('/api/admin/users/:id', requireAuth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   const idx = USERS.findIndex(u => u.id === parseInt(req.params.id));
@@ -91,9 +93,6 @@ app.delete('/api/admin/users/:id', requireAuth, (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 app.listen(PORT, () => console.log(`DataSearch running on port ${PORT}`));
