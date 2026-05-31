@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataSearch — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0E1A;--card:#111827;--border:#1e2d45;--cyan:#00D4FF;--gold:#FFD700;--text:#e2e8f0;--muted:#64748b;--error:#ff4d6d;--success:#00e5a0}
+body{background:var(--bg);font-family:'DM Mono',monospace;color:var(--text);min-height:100vh}
+body::after{content:'';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),transparent)}
+header{background:rgba(17,24,39,0.95);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{font-family:'Playfair Display',serif;font-size:1.2rem;letter-spacing:0.08em}
+.logo span{color:var(--cyan)}
+.gold{color:var(--gold);font-size:0.7rem;margin-left:8px}
+.hbtns{display:flex;gap:10px}
+.hbtn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.72rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.hbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.hbtn.red:hover{border-color:var(--error);color:var(--error)}
+main{max-width:960px;margin:40px auto;padding:0 24px}
+h2{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:6px}
+.sub{color:var(--muted);font-size:0.73rem;margin-bottom:32px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden}
+.section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.3),transparent)}
+.sec-title{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fg{display:flex;flex-direction:column;gap:6px}
+label{font-size:0.67rem;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase}
+input,select{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;transition:all 0.2s}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+select option{background:var(--card)}
+.btn-add{background:linear-gradient(135deg,var(--cyan),#0099bb);border:none;border-radius:8px;padding:10px 24px;color:#0A0E1A;font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;margin-top:6px}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,255,0.25)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);padding:10px 14px;border-bottom:1px solid var(--border)}
+td{padding:14px;border-bottom:1px solid rgba(30,45,69,0.5);font-size:0.82rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,212,255,0.02)}
+.badge{padding:2px 10px;border-radius:20px;font-size:0.63rem}
+.badge-admin{background:rgba(255,215,0,0.12);color:var(--gold);border:1px solid rgba(255,215,0,0.2)}
+.badge-user{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.2)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot-on{background:var(--success);box-shadow:0 0 6px rgba(0,229,160,0.5)}
+.dot-off{background:var(--error)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.bs{padding:4px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.65rem;cursor:pointer;border:1px solid;transition:all 0.15s}
+.bs-edit{border-color:rgba(0,212,255,0.4);color:var(--cyan);background:rgba(0,212,255,0.08)}
+.bs-edit:hover{background:rgba(0,212,255,0.15)}
+.bs-dis{border-color:rgba(255,215,0,0.4);color:var(--gold);background:rgba(255,215,0,0.08)}
+.bs-dis:hover{background:rgba(255,215,0,0.15)}
+.bs-en{border-color:rgba(0,229,160,0.4);color:var(--success);background:rgba(0,229,160,0.08)}
+.bs-en:hover{background:rgba(0,229,160,0.15)}
+.bs-del{border-color:rgba(255,77,109,0.4);color:var(--error);background:rgba(255,77,109,0.08)}
+.bs-del:hover{background:rgba(255,77,109,0.15)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(4px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:420px;position:relative}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:20px;color:var(--cyan)}
+.modal .fg{margin-bottom:14px}
+.modal-btns{display:flex;gap:10px;margin-top:20px}
+.btn-save{background:linear-gradient(135deg,var(--cyan),#0099bb);border:none;border-radius:8px;padding:9px 20px;color:#0A0E1A;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:500;cursor:pointer;flex:1}
+.btn-cancel{background:transparent;border:1px solid var(--border);border-radius:8px;padding:9px 20px;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.78rem;cursor:pointer;flex:1}
+.btn-cancel:hover{border-color:var(--error);color:var(--error)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:0.78rem;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:9999}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-color:rgba(0,229,160,0.4);color:var(--success)}
+.toast.err{border-color:rgba(255,77,109,0.4);color:var(--error)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">DATA<span>SEARCH</span><span class="gold">⚙ ADMIN</span></div>
+  <div class="hbtns">
+    <a href="/" class="hbtn">← Search</a>
+    <button class="hbtn red" onclick="logout()">Logout</button>
+  </div>
+</header>
+<main>
+  <h2>User Management</h2>
+  <p class="sub">Add users, change passwords, enable or disable access instantly</p>
+
+  <div class="section">
+    <div class="sec-title">⊕ Add New User</div>
+    <div class="form-row">
+      <div class="fg"><label>Full Name</label><input id="nName" placeholder="e.g. Ahmed Khan"></div>
+      <div class="fg"><label>Username</label><input id="nUser" placeholder="e.g. ahmed"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Password</label><input id="nPass" placeholder="Strong password"></div>
+      <div class="fg"><label>Role</label>
+        <select id="nRole">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-add" onclick="addUser()">+ Add User</button>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">👥 All Users</div>
+    <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="tbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</main>
+
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <h3>Edit User</h3>
+    <input type="hidden" id="editId">
+    <div class="fg"><label>Full Name</label><input id="editName" placeholder="Full name"></div>
+    <div class="fg" style="margin-top:14px"><label>Username</label><input id="editUsername" placeholder="Username"></div>
+    <div class="fg" style="margin-top:14px"><label>New Password (leave blank to keep)</label><input id="editPass" placeholder="New password" type="password"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const token = localStorage.getItem('ds_token');
+const user = JSON.parse(localStorage.getItem('ds_user') || '{}');
+if (!token) window.location.href = '/login.html';
+if (user.role !== 'admin') window.location.href = '/';
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function api(url, opts={}) {
+  return fetch(url, { ...opts, headers: { 'authorization': token, 'Content-Type': 'application/json', ...(opts.headers||{}) } });
+}
+
+async function load() {
+  const res = await api('/api/admin/users');
+  const data = await res.json();
+  const tb = document.getElementById('tbody');
+  if (!data.users?.length) { tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No users</td></tr>'; return; }
+  tb.innerHTML = data.users.map(u => `
+    <tr>
+      <td>${u.name}</td>
+      <td style="color:var(--cyan)">${u.username}</td>
+      <td><span class="badge badge-${u.role}">${u.role}</span></td>
+      <td><span class="dot ${u.active?'dot-on':'dot-off'}"></span>${u.active?'Active':'Disabled'}</td>
+      <td><div class="acts">
+        <button class="bs bs-edit" onclick="openEdit(${u.id},'${u.name}','${u.username}')">Edit</button>
+        ${u.active
+          ? `<button class="bs bs-dis" onclick="toggle(${u.id},false)">Disable</button>`
+          : `<button class="bs bs-en" onclick="toggle(${u.id},true)">Enable</button>`}
+        <button class="bs bs-del" onclick="del(${u.id},'${u.username}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+async function addUser() {
+  const name=document.getElementById('nName').value.trim();
+  const username=document.getElementById('nUser').value.trim();
+  const password=document.getElementById('nPass').value.trim();
+  const role=document.getElementById('nRole').value;
+  if (!name||!username||!password) { toast('All fields required','err'); return; }
+  const res = await api('/api/admin/users', { method:'POST', body: JSON.stringify({name,username,password,role}) });
+  const data = await res.json();
+  if (!res.ok) { toast(data.error,'err'); return; }
+  toast('✓ User created');
+  document.getElementById('nName').value='';
+  document.getElementById('nUser').value='';
+  document.getElementById('nPass').value='';
+  load();
+}
+
+function openEdit(id, name, username) {
+  document.getElementById('editId').value = id;
+  document.getElementById('editName').value = name;
+  document.getElementById('editUsername').value = username;
+  document.getElementById('editPass').value = '';
+  document.getElementById('editModal').classList.add('show');
+}
+
+function closeModal() { document.getElementById('editModal').classList.remove('show'); }
+
+async function saveEdit() {
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('editName').value.trim();
+  const username = document.getElementById('editUsername').value.trim();
+  const password = document.getElementById('editPass').value.trim();
+  const body = { name, username };
+  if (password) body.password = password;
+  const res = await api(`/api/admin/users/${id}`, { method:'PATCH', body: JSON.stringify(body) });
+  const data = await res.json();
+  if (!res.ok) { toast(data.error,'err'); return; }
+  toast('✓ User updated');
+  closeModal();
+  load();
+}
+
+async function toggle(id, active) {
+  const res = await api(`/api/admin/users/${id}`, { method:'PATCH', body: JSON.stringify({active}) });
+  if (!res.ok) { toast('Failed','err'); return; }
+  toast(active ? '✓ User enabled' : '✓ User disabled');
+  load();
+}
+
+async function del(id, username) {
+  if (!confirm(`Delete "${username}"?`)) return;
+  const res = await api(`/api/admin/users/${id}`, { method:'DELETE' });
+  if (!res.ok) { toast('Failed','err'); return; }
+  toast(`✓ "${username}" deleted`);
+  load();
+}
+
+async function logout() {
+  await api('/api/logout', { method:'POST' });
+  localStorage.removeItem('ds_token');
+  localStorage.removeItem('ds_user');
+  window.location.href = '/login.html';
+}
+
+load();
+</script>
+</body>
+</html>

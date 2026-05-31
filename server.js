@@ -45,6 +45,47 @@ app.post('/api/logout', requireAuth, (req, res) => {
 
 app.get('/api/me', requireAuth, (req, res) => res.json({ user: req.user }));
 
+// Get all users
+app.get('/api/admin/users', requireAuth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const safe = USERS.map(({ password, ...u }) => u);
+  res.json({ users: safe });
+});
+
+// Update user (username, password, name)
+app.patch('/api/admin/users/:id', requireAuth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const user = USERS.find(u => u.id === parseInt(req.params.id));
+  if (!user) return res.status(404).json({ error: 'Not found' });
+  if (req.body.username) user.username = req.body.username;
+  if (req.body.password) user.password = req.body.password;
+  if (req.body.name) user.name = req.body.name;
+  if (req.body.active !== undefined) user.active = req.body.active;
+  const { password, ...safe } = user;
+  res.json({ success: true, user: safe });
+});
+
+// Add new user
+app.post('/api/admin/users', requireAuth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const { username, password, name, role } = req.body;
+  if (!username || !password || !name) return res.status(400).json({ error: 'All fields required' });
+  if (USERS.find(u => u.username === username)) return res.status(400).json({ error: 'Username exists' });
+  const newUser = { id: Date.now(), username, password, name, role: role || 'user', active: true };
+  USERS.push(newUser);
+  const { password: _, ...safe } = newUser;
+  res.json({ success: true, user: safe });
+});
+
+// Delete user
+app.delete('/api/admin/users/:id', requireAuth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const idx = USERS.findIndex(u => u.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Not found' });
+  USERS.splice(idx, 1);
+  res.json({ success: true });
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => {
