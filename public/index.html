@@ -470,6 +470,9 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
 </div>
 
 <script>
+const _t = localStorage.getItem('ds_token');
+if (!_t) window.location.replace('/login.html');
+
 /* =========================================================================
    CONFIG
    To connect a live Google Sheet:

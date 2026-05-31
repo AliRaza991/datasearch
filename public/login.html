@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DataSearch — Login</title>
+<style>
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:#0A0E1A; color:#eaf0fb;
+  font-family:'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+.card{
+  background:#1A2035; border:1px solid rgba(255,255,255,.07);
+  border-radius:18px; padding:40px 36px; width:min(420px, 92vw);
+  box-shadow:0 24px 60px -28px rgba(0,0,0,.9);
+}
+.logo{
+  display:flex; align-items:center; gap:10px; margin-bottom:32px; justify-content:center;
+}
+.logo-mark{
+  width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
+  background:linear-gradient(150deg, rgba(0,212,255,.22), rgba(255,215,0,.12));
+  border:1px solid rgba(0,212,255,.4);
+  box-shadow:0 0 22px rgba(0,212,255,.25);
+  font-size:18px;
+}
+.logo-name{ font-size:14px; letter-spacing:.32em; text-transform:uppercase; }
+.logo-name b{ color:#00D4FF; }
+h1{ font-size:22px; font-weight:600; margin-bottom:8px; text-align:center; }
+.sub{ color:#aab4cc; font-size:13px; text-align:center; margin-bottom:28px; }
+label{ display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#6b7693; margin-bottom:6px; }
+input{
+  width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+  border-radius:10px; padding:12px 14px; color:#eaf0fb; font-family:inherit; font-size:14px;
+  outline:none; transition:.2s; margin-bottom:18px;
+}
+input:focus{ border-color:rgba(0,212,255,.5); box-shadow:0 0 0 3px rgba(0,212,255,.1); }
+button{
+  width:100%; padding:14px; border:0; border-radius:12px; cursor:pointer;
+  background:linear-gradient(135deg, #00D4FF, #6fe6ff); color:#04121a;
+  font-family:inherit; font-weight:500; font-size:14px; letter-spacing:.06em;
+  box-shadow:0 8px 26px -8px rgba(0,212,255,.7);
+  transition:transform .18s, filter .18s;
+}
+button:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+button:disabled{ opacity:.55; cursor:wait; }
+.err{ color:#ff9a8a; font-size:12.5px; text-align:center; margin-top:14px; min-height:18px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-mark">◎</div>
+    <div class="logo-name">Data<b>Search</b></div>
+  </div>
+  <h1>Sign in</h1>
+  <p class="sub">Enter your credentials to continue</p>
+  <form id="loginForm">
+    <label for="username">Username</label>
+    <input id="username" type="text" autocomplete="username" required />
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required />
+    <button id="loginBtn" type="submit">Sign in</button>
+    <div class="err" id="errMsg"></div>
+  </form>
+</div>
+<script>
+  if (localStorage.getItem('ds_token')) window.location.replace('/');
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    const errMsg = document.getElementById('errMsg');
+    btn.disabled = true;
+    errMsg.textContent = '';
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) { errMsg.textContent = data.message || 'Invalid credentials.'; btn.disabled = false; return; }
+      localStorage.setItem('ds_token', data.token);
+      localStorage.setItem('ds_user', JSON.stringify(data.user || {}));
+      window.location.href = '/';
+    } catch (err) {
+      errMsg.textContent = 'Could not reach server. Try again.';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
