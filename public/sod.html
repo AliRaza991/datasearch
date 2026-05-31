@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataSearch — SOD</title>
+<title>SOD — Start of Day Report</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0A0E1A;--card:#111827;--border:#1e2d45;--cyan:#00D4FF;--gold:#FFD700;--text:#e2e8f0;--muted:#64748b;}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:0.95rem;letter-spacing:0.1em;}
+.nav-logo-text span{color:var(--cyan);}
 body{background:var(--bg);font-family:'DM Mono',monospace;color:var(--text);min-height:100vh;}
 body::after{content:'';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),transparent);}
 </style>
@@ -22,7 +24,7 @@ else document.documentElement.style.visibility='visible';
 <nav style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.95);border-bottom:1px solid #1e2d45;backdrop-filter:blur(12px);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;">
   <div style="display:flex;align-items:center;gap:8px;">
     <div style="width:32px;height:32px;background:linear-gradient(135deg,#00D4FF,#FFD700);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">⚡</div>
-    <span style="font-family:'Playfair Display',serif;font-size:1.1rem;letter-spacing:0.08em;">DATA<span style="color:#00D4FF;">SEARCH</span></span>
+    <div class="nav-logo-text">START OF <span>DAY</span></div>
   </div>
   <div style="display:flex;align-items:center;gap:4px;">
     <a href="/index.html" style="padding:8px 20px;border-radius:8px;font-size:0.78rem;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-decoration:none;color:#64748b;background:transparent;border:1px solid transparent;transition:all 0.2s;" onmouseover="this.style.color='#e2e8f0';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.color='#64748b';this.style.background='transparent'">⚡ DataSearch</a>
