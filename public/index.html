@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html{visibility:hidden}</style>
+<script>
+  if(localStorage.getItem('ds_token')) {
+    document.documentElement.style.visibility = 'visible';
+  }
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DataSearch — Record Lookup</title>
@@ -470,8 +476,13 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
 </div>
 
 <script>
-const _t = localStorage.getItem('ds_token');
-if (!_t) window.location.replace('/login.html');
+(function() {
+  const _t = localStorage.getItem('ds_token');
+  if (!_t) {
+    document.documentElement.style.visibility = 'hidden';
+    window.location.replace('/login.html');
+  }
+})();
 
 /* =========================================================================
    CONFIG
