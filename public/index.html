@@ -450,6 +450,29 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
       <div class="brand-name" id="brandName">Data<b>Search</b></div>
     </div>
 
+    <div id="userWidget" style="display:flex;align-items:center;gap:12px;">
+  <div style="position:relative;">
+    <div onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:50px;padding:6px 14px 6px 6px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.12)'" onmouseout="this.style.background='rgba(0,212,255,0.06)'">
+      <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#00D4FF,#FFD700);display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:600;color:#0A0E1A;font-family:monospace;"></div>
+      <div style="display:flex;flex-direction:column;line-height:1.2;">
+        <span id="userDisplayName" style="font-size:0.78rem;color:#e2e8f0;font-family:monospace;letter-spacing:0.03em;"></span>
+        <span id="userDisplayRole" style="font-size:0.6rem;color:#00D4FF;letter-spacing:0.08em;text-transform:uppercase;"></span>
+      </div>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="margin-left:2px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </div>
+    <div id="userMenu" style="display:none;position:absolute;right:0;top:calc(100% + 8px);background:#111827;border:1px solid #1e2d45;border-radius:12px;padding:8px;min-width:180px;z-index:9999;box-shadow:0 20px 40px rgba(0,0,0,0.4);">
+      <div style="padding:10px 12px;border-bottom:1px solid #1e2d45;margin-bottom:6px;">
+        <div id="menuUserName" style="font-size:0.8rem;color:#e2e8f0;font-family:monospace;"></div>
+        <div id="menuUserDesig" style="font-size:0.68rem;color:#64748b;font-family:monospace;margin-top:2px;"></div>
+      </div>
+      <div onclick="dsLogout()" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;color:#ff4d6d;font-size:0.78rem;font-family:monospace;transition:all 0.15s;" onmouseover="this.style.background='rgba(255,77,109,0.1)'" onmouseout="this.style.background='transparent'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Logout
+      </div>
+    </div>
+  </div>
+</div>
+
     <h1 class="tagline">Find every <em>record</em>, instantly.</h1>
     <p class="sub">Look up a complete history by email or phone number. Enter a contact below — DataSearch detects the format and retrieves every matching record from your database.</p>
 
@@ -484,6 +507,24 @@ table.sheet tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--cyan);
   }
 })();
 
+const dsUser = JSON.parse(localStorage.getItem('ds_user') || '{}');
+const initials = (dsUser.name || dsUser.username || 'U').charAt(0).toUpperCase();
+document.getElementById('userAvatar').textContent = initials;
+document.getElementById('userDisplayName').textContent = dsUser.name || dsUser.username || 'User';
+document.getElementById('userDisplayRole').textContent = dsUser.designation || dsUser.role || 'User';
+document.getElementById('menuUserName').textContent = dsUser.name || 'User';
+document.getElementById('menuUserDesig').textContent = dsUser.designation || dsUser.role || '';
+
+function toggleUserMenu() {
+  const menu = document.getElementById('userMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', function(e) {
+  const widget = document.getElementById('userWidget');
+  if (widget && !widget.contains(e.target)) {
+    document.getElementById('userMenu').style.display = 'none';
+  }
+});
 function dsLogout() {
   const t = localStorage.getItem('ds_token');
   fetch('/api/logout', { method: 'POST', headers: { 'authorization': t } });
@@ -1007,6 +1048,5 @@ input.focus();
   <line x1="59" y1="59" x2="76" y2="76" stroke="#FFD700" stroke-width="6" stroke-linecap="round"/>
 </svg>
 </template>
-<button id="logoutBtn" onclick="dsLogout()" style="position:fixed;bottom:20px;right:20px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;padding:8px 18px;border-radius:8px;font-size:0.72rem;cursor:pointer;z-index:9999;font-family:monospace;letter-spacing:0.05em;backdrop-filter:blur(8px);">Logout</button>
 </body>
 </html>

@@ -95,13 +95,16 @@ tr:hover td{background:rgba(0,212,255,0.02)}
         </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="fg"><label>Designation</label><input id="nDesig" placeholder="e.g. Sales Manager"></div>
+    </div>
     <button class="btn-add" onclick="addUser()">+ Add User</button>
   </div>
 
   <div class="section">
     <div class="sec-title">👥 All Users</div>
-    <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-    <tbody id="tbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Loading...</td></tr></tbody>
+    <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Designation</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px">Loading...</td></tr></tbody>
     </table>
   </div>
 </main>
@@ -112,6 +115,7 @@ tr:hover td{background:rgba(0,212,255,0.02)}
     <input type="hidden" id="editId">
     <div class="fg"><label>Full Name</label><input id="editName" placeholder="Full name"></div>
     <div class="fg" style="margin-top:14px"><label>Username</label><input id="editUsername" placeholder="Username"></div>
+    <div class="fg" style="margin-top:14px"><label>Designation</label><input id="editDesignation" placeholder="e.g. Sales Manager"></div>
     <div class="fg" style="margin-top:14px"><label>New Password (leave blank to keep)</label><input id="editPass" placeholder="New password" type="password"></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -142,15 +146,16 @@ async function load() {
   const res = await api('/api/admin/users');
   const data = await res.json();
   const tb = document.getElementById('tbody');
-  if (!data.users?.length) { tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No users</td></tr>'; return; }
+  if (!data.users?.length) { tb.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px">No users</td></tr>'; return; }
   tb.innerHTML = data.users.map(u => `
     <tr>
       <td>${u.name}</td>
       <td style="color:var(--cyan)">${u.username}</td>
       <td><span class="badge badge-${u.role}">${u.role}</span></td>
+      <td>${u.designation || '—'}</td>
       <td><span class="dot ${u.active?'dot-on':'dot-off'}"></span>${u.active?'Active':'Disabled'}</td>
       <td><div class="acts">
-        <button class="bs bs-edit" onclick="openEdit('${u._id}','${u.name}','${u.username}')">Edit</button>
+        <button class="bs bs-edit" onclick="openEdit('${u._id}','${u.name}','${u.username}','${u.designation||''}')">Edit</button>
         ${u.active
           ? `<button class="bs bs-dis" onclick="toggle('${u._id}',false)">Disable</button>`
           : `<button class="bs bs-en" onclick="toggle('${u._id}',true)">Enable</button>`}
@@ -164,21 +169,24 @@ async function addUser() {
   const username=document.getElementById('nUser').value.trim();
   const password=document.getElementById('nPass').value.trim();
   const role=document.getElementById('nRole').value;
+  const designation=document.getElementById('nDesig').value.trim();
   if (!name||!username||!password) { toast('All fields required','err'); return; }
-  const res = await api('/api/admin/users', { method:'POST', body: JSON.stringify({name,username,password,role}) });
+  const res = await api('/api/admin/users', { method:'POST', body: JSON.stringify({name,username,password,role,designation}) });
   const data = await res.json();
   if (!res.ok) { toast(data.error,'err'); return; }
   toast('✓ User created');
   document.getElementById('nName').value='';
   document.getElementById('nUser').value='';
   document.getElementById('nPass').value='';
+  document.getElementById('nDesig').value='';
   load();
 }
 
-function openEdit(id, name, username) {
+function openEdit(id, name, username, designation) {
   document.getElementById('editId').value = id;
   document.getElementById('editName').value = name;
   document.getElementById('editUsername').value = username;
+  document.getElementById('editDesignation').value = designation || '';
   document.getElementById('editPass').value = '';
   document.getElementById('editModal').classList.add('show');
 }
@@ -190,7 +198,8 @@ async function saveEdit() {
   const name = document.getElementById('editName').value.trim();
   const username = document.getElementById('editUsername').value.trim();
   const password = document.getElementById('editPass').value.trim();
-  const body = { name, username };
+  const designation = document.getElementById('editDesignation').value.trim();
+  const body = { name, username, designation };
   if (password) body.password = password;
   const res = await api(`/api/admin/users/${id}`, { method:'PATCH', body: JSON.stringify(body) });
   const data = await res.json();

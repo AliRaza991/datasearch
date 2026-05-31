@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
+  designation: { type: String, default: '' },
   role: { type: String, default: 'user' },
   active: { type: Boolean, default: true }
 }, { timestamps: true });
@@ -26,14 +27,14 @@ mongoose.connect(MONGO_URI)
     console.log('MongoDB connected!');
     const exists = await User.findOne({ username: 'admin' });
     if (!exists) {
-      await User.create({ username: 'admin', password: 'admin123', name: 'Admin User', role: 'admin', active: true });
+      await User.create({ username: 'admin', password: 'admin123', name: 'Admin User', designation: 'Super Admin', role: 'admin', active: true });
       console.log('Default admin created');
     }
   })
   .catch(err => console.log('MongoDB error:', err));
 
 function createToken(user) {
-  const payload = JSON.stringify({ id: user._id, username: user.username, role: user.role, name: user.name, ts: Date.now() });
+  const payload = JSON.stringify({ id: user._id, username: user.username, role: user.role, name: user.name, designation: user.designation, ts: Date.now() });
   const encoded = Buffer.from(payload).toString('base64');
   const sig = crypto.createHmac('sha256', SECRET).update(encoded).digest('hex');
   return `${encoded}.${sig}`;
@@ -85,7 +86,7 @@ app.post('/api/login', async (req, res) => {
   const user = await User.findOne({ username, password, active: true });
   if (!user) return res.status(401).json({ error: 'Invalid username or password' });
   const token = createToken(user);
-  res.json({ token, user: { name: user.name, role: user.role, username: user.username } });
+  res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
 });
 
 app.post('/api/logout', (req, res) => res.json({ success: true }));
@@ -118,6 +119,7 @@ app.patch('/api/admin/users/:id', requireAdmin, async (req, res) => {
   if (password) update.password = password;
   if (name) update.name = name;
   if (active !== undefined) update.active = active;
+  if (req.body.designation !== undefined) update.designation = req.body.designation;
   const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).select('-password');
   if (!user) return res.status(404).json({ error: 'Not found' });
   res.json({ success: true, user });
