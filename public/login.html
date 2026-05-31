@@ -85,6 +85,8 @@ button:disabled{ opacity:.55; cursor:wait; }
       });
       const data = await response.json();
       if (!response.ok) { errMsg.textContent = data.error || data.message || 'Invalid credentials.'; btn.disabled = false; return; }
+      localStorage.removeItem('ds_token');
+      localStorage.removeItem('ds_user');
       localStorage.setItem('ds_token', data.token);
       localStorage.setItem('ds_user', JSON.stringify(data.user || {}));
       window.location.href = '/';

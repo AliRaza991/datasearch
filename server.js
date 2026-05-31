@@ -55,10 +55,14 @@ async function requireAuth(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   const payload = verifyToken(token);
   if (!payload) return res.status(401).json({ error: 'Unauthorized' });
-  const user = await User.findById(payload.id);
-  if (!user || !user.active) return res.status(401).json({ error: 'Unauthorized' });
-  req.user = user;
-  next();
+  try {
+    const user = await User.findById(payload.id);
+    if (!user || !user.active) return res.status(401).json({ error: 'Unauthorized' });
+    req.user = user;
+    next();
+  } catch(e) {
+    return res.status(401).json({ error: 'Unauthorized - please login again' });
+  }
 }
 
 async function requireAdmin(req, res, next) {
@@ -66,10 +70,14 @@ async function requireAdmin(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   const payload = verifyToken(token);
   if (!payload) return res.status(401).json({ error: 'Unauthorized' });
-  const user = await User.findById(payload.id);
-  if (!user || !user.active || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-  req.user = user;
-  next();
+  try {
+    const user = await User.findById(payload.id);
+    if (!user || !user.active || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    req.user = user;
+    next();
+  } catch(e) {
+    return res.status(401).json({ error: 'Unauthorized - please login again' });
+  }
 }
 
 app.post('/api/login', async (req, res) => {
