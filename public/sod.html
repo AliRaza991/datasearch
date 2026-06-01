@@ -524,86 +524,86 @@ function renderOrganic(data){
 }
 
 function renderMarketing(data){
-  // TA CLASS ADS - row 30=header, 31=recv, 32=qual, 33=closed, 34=uncat
-  const ta_recv   = data[31]?.[2] ?? 0;
-  const ta_qual   = data[32]?.[2] ?? 0;
-  const ta_closed = data[33]?.[2] ?? 0;
-  const ta_a      = data[31]?.[5] ?? 0;
-  const ta_b      = data[32]?.[5] ?? 0;
-  const ta_c      = data[33]?.[5] ?? 0;
-  const ta_uncat  = data[34]?.[5] ?? 0;
-  const ta_recv_overall = data[31]?.[8] ?? 0;
-  const ta_recv_monthly = data[32]?.[8] ?? 0;
-  const ta_recv_today   = data[33]?.[8] ?? 0;
-  const ta_qual_overall = data[31]?.[10] ?? 0;
-  const ta_qual_monthly = data[32]?.[10] ?? 0;
-  const ta_qual_today   = data[33]?.[10] ?? 0;
+  // TA - rows 32-35 (array index 31-34)
+  const ta_recv         = data[31]?.[2]  ?? 0;
+  const ta_qual         = data[32]?.[2]  ?? 0;
+  const ta_closed       = data[33]?.[2]  ?? 0;
+  const ta_a            = data[31]?.[5]  ?? 0;
+  const ta_b            = data[32]?.[5]  ?? 0;
+  const ta_c            = data[33]?.[5]  ?? 0;
+  const ta_uncat        = data[34]?.[5]  ?? 0;
+  const ta_recv_overall = data[31]?.[8]  ?? 0;
+  const ta_recv_monthly = data[32]?.[8]  ?? 0;
+  const ta_recv_today   = data[33]?.[8]  ?? 0;
+  const ta_qual_overall = data[31]?.[11] ?? 0;
+  const ta_qual_monthly = data[32]?.[11] ?? 0;
+  const ta_qual_today   = data[33]?.[11] ?? 0;
 
-  // MTC CLASS ADS - row 37=header, 38=recv, 39=qual, 40=closed, 41=uncat
-  const mtc_recv   = data[38]?.[2] ?? 0;
-  const mtc_qual   = data[39]?.[2] ?? 0;
-  const mtc_closed = data[40]?.[2] ?? 0;
-  const mtc_a      = data[38]?.[5] ?? 0;
-  const mtc_b      = data[39]?.[5] ?? 0;
-  const mtc_c      = data[40]?.[5] ?? 0;
-  const mtc_uncat  = data[41]?.[5] ?? 0;
-  const mtc_recv_overall = data[38]?.[8] ?? 0;
-  const mtc_recv_monthly = data[39]?.[8] ?? 0;
-  const mtc_recv_today   = data[40]?.[8] ?? 0;
-  const mtc_qual_overall = data[38]?.[10] ?? 0;
-  const mtc_qual_monthly = data[39]?.[10] ?? 0;
-  const mtc_qual_today   = data[40]?.[10] ?? 0;
+  // MTC - rows 39-42 (array index 38-41)
+  const mtc_recv         = data[38]?.[2]  ?? 0;
+  const mtc_qual         = data[39]?.[2]  ?? 0;
+  const mtc_closed       = data[40]?.[2]  ?? 0;
+  const mtc_a            = data[38]?.[5]  ?? 0;
+  const mtc_b            = data[39]?.[5]  ?? 0;
+  const mtc_c            = data[40]?.[5]  ?? 0;
+  const mtc_uncat        = data[41]?.[5]  ?? 0;
+  const mtc_recv_overall = data[38]?.[8]  ?? 0;
+  const mtc_recv_monthly = data[39]?.[8]  ?? 0;
+  const mtc_recv_today   = data[40]?.[8]  ?? 0;
+  const mtc_qual_overall = data[38]?.[11] ?? 0;
+  const mtc_qual_monthly = data[39]?.[11] ?? 0;
+  const mtc_qual_today   = data[40]?.[11] ?? 0;
 
-  // WHATSAPP - row 44=header, 45=recv, 46=qual, 47=closed, 48=uncat
-  const wa_recv   = data[45]?.[2] ?? 0;
-  const wa_qual   = data[46]?.[2] ?? 0;
-  const wa_closed = data[47]?.[2] ?? 0;
-  const wa_a      = data[45]?.[5] ?? 0;
-  const wa_b      = data[46]?.[5] ?? 0;
-  const wa_c      = data[47]?.[5] ?? 0;
-  const wa_uncat  = data[48]?.[5] ?? 0;
-  const wa_recv_overall = data[45]?.[8] ?? 0;
-  const wa_recv_monthly = data[46]?.[8] ?? 0;
-  const wa_recv_today   = data[47]?.[8] ?? 0;
-  const wa_qual_overall = data[45]?.[10] ?? 0;
-  const wa_qual_monthly = data[46]?.[10] ?? 0;
-  const wa_qual_today   = data[47]?.[10] ?? 0;
+  // WHATSAPP - rows 47-50 (array index 46-49)
+  const wa_recv         = data[46]?.[2]  ?? 0;
+  const wa_qual         = data[47]?.[2]  ?? 0;
+  const wa_closed       = data[48]?.[2]  ?? 0;
+  const wa_a            = data[46]?.[5]  ?? 0;
+  const wa_b            = data[47]?.[5]  ?? 0;
+  const wa_c            = data[48]?.[5]  ?? 0;
+  const wa_uncat        = data[49]?.[5]  ?? 0;
+  const wa_recv_overall = data[46]?.[8]  ?? 0;
+  const wa_recv_monthly = data[47]?.[8]  ?? 0;
+  const wa_recv_today   = data[48]?.[8]  ?? 0;
+  const wa_qual_overall = data[46]?.[11] ?? 0;
+  const wa_qual_monthly = data[47]?.[11] ?? 0;
+  const wa_qual_today   = data[48]?.[11] ?? 0;
 
-  // PRECEPTOR - row 51=header, 52=recv, 53=qual, 54=closed, 55=uncat
-  const pre_recv   = data[52]?.[2] ?? 0;
-  const pre_qual   = data[53]?.[2] ?? 0;
-  const pre_closed = data[54]?.[2] ?? 0;
-  const pre_a      = data[52]?.[5] ?? 0;
-  const pre_b      = data[53]?.[5] ?? 0;
-  const pre_c      = data[54]?.[5] ?? 0;
-  const pre_uncat  = data[55]?.[5] ?? 0;
-  const pre_recv_overall = data[52]?.[8] ?? 0;
-  const pre_recv_monthly = data[53]?.[8] ?? 0;
-  const pre_recv_today   = data[54]?.[8] ?? 0;
-  const pre_qual_overall = data[52]?.[10] ?? 0;
-  const pre_qual_monthly = data[53]?.[10] ?? 0;
-  const pre_qual_today   = data[54]?.[10] ?? 0;
+  // PRECEPTOR - rows 54-57 (array index 53-56)
+  const pre_recv         = data[53]?.[2]  ?? 0;
+  const pre_qual         = data[54]?.[2]  ?? 0;
+  const pre_closed       = data[55]?.[2]  ?? 0;
+  const pre_a            = data[53]?.[5]  ?? 0;
+  const pre_b            = data[54]?.[5]  ?? 0;
+  const pre_c            = data[55]?.[5]  ?? 0;
+  const pre_uncat        = data[56]?.[5]  ?? 0;
+  const pre_recv_overall = data[53]?.[8]  ?? 0;
+  const pre_recv_monthly = data[54]?.[8]  ?? 0;
+  const pre_recv_today   = data[55]?.[8]  ?? 0;
+  const pre_qual_overall = data[53]?.[11] ?? 0;
+  const pre_qual_monthly = data[54]?.[11] ?? 0;
+  const pre_qual_today   = data[55]?.[11] ?? 0;
 
-  // TIKTOK - row 58=header, 59=recv, 60=qual, 61=closed, 62=uncat
-  const tt_recv   = data[59]?.[2] ?? 0;
-  const tt_qual   = data[60]?.[2] ?? 0;
-  const tt_closed = data[61]?.[2] ?? 0;
-  const tt_a      = data[59]?.[5] ?? 0;
-  const tt_b      = data[60]?.[5] ?? 0;
-  const tt_c      = data[61]?.[5] ?? 0;
-  const tt_uncat  = data[62]?.[5] ?? 0;
-  const tt_recv_overall = data[59]?.[8] ?? 0;
-  const tt_recv_monthly = data[60]?.[8] ?? 0;
-  const tt_recv_today   = data[61]?.[8] ?? 0;
-  const tt_qual_overall = data[59]?.[10] ?? 0;
-  const tt_qual_monthly = data[60]?.[10] ?? 0;
-  const tt_qual_today   = data[61]?.[10] ?? 0;
+  // TIKTOK - rows 61-64 (array index 60-63)
+  const tt_recv         = data[60]?.[2]  ?? 0;
+  const tt_qual         = data[61]?.[2]  ?? 0;
+  const tt_closed       = data[62]?.[2]  ?? 0;
+  const tt_a            = data[60]?.[5]  ?? 0;
+  const tt_b            = data[61]?.[5]  ?? 0;
+  const tt_c            = data[62]?.[5]  ?? 0;
+  const tt_uncat        = data[63]?.[5]  ?? 0;
+  const tt_recv_overall = data[60]?.[8]  ?? 0;
+  const tt_recv_monthly = data[61]?.[8]  ?? 0;
+  const tt_recv_today   = data[62]?.[8]  ?? 0;
+  const tt_qual_overall = data[60]?.[11] ?? 0;
+  const tt_qual_monthly = data[61]?.[11] ?? 0;
+  const tt_qual_today   = data[62]?.[11] ?? 0;
 
-  // CLOSED LEADS FROM PAID DATA - row 64=header, 65=total, 66=3months, 67=month, 68=today
-  const cl_total   = data[65]?.[2] ?? 0;
-  const cl_3months = data[66]?.[2] ?? 0;
-  const cl_month   = data[67]?.[2] ?? 0;
-  const cl_today   = data[68]?.[2] ?? 0;
+  // CLOSED LEADS - rows 69-72 (array index 68-71)
+  const cl_total   = data[68]?.[2] ?? 0;
+  const cl_3months = data[69]?.[2] ?? 0;
+  const cl_month   = data[70]?.[2] ?? 0;
+  const cl_today   = data[71]?.[2] ?? 0;
 
   const platforms = [
     { name:'TA', label:'TA Class Ads', color:'gold',
