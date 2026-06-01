@@ -375,6 +375,8 @@ document.addEventListener('click',function(e){const p=document.querySelector('.u
 function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
 let refreshTimer=null;
+const dataCache = {};
+const CACHE_TTL = 30000;
 
 function v(val){
   if(val===0||val===''||val===null||val===undefined) return '<span class="mrow-val dim">—</span>';
@@ -1028,26 +1030,28 @@ function renderClosed(data){
         <!-- Right: AVG Breakdown -->
         <div>
           <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--gold);background:rgba(245,166,35,0.05);border-bottom:1px solid var(--border);">Overall AVG Breakdown</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-            <div style="padding:12px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Email</div>
-              <div style="font-size:1.2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email_ov}</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);">
+            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--cyan);margin-bottom:5px;letter-spacing:0.06em;">Email</div>
+              <div style="font-size:1.3rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email_ov}</div>
             </div>
-            <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">ST</div>
-              <div style="font-size:1.2rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st_ov}</div>
+            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--purple);margin-bottom:5px;letter-spacing:0.06em;">ST</div>
+              <div style="font-size:1.3rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st_ov}</div>
             </div>
-            <div style="padding:12px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">WhatsApp</div>
-              <div style="font-size:1.2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${wa_ov}</div>
+            <div style="padding:12px 8px;text-align:center;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--green);margin-bottom:5px;letter-spacing:0.06em;">WhatsApp</div>
+              <div style="font-size:1.3rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${wa_ov}</div>
             </div>
-            <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Unique</div>
-              <div style="font-size:1.2rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${uniq_ov}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;">
+            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--gold);margin-bottom:5px;letter-spacing:0.06em;">Unique</div>
+              <div style="font-size:1.3rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${uniq_ov}</div>
             </div>
-            <div style="padding:12px 14px;grid-column:span 2;text-align:center;">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Revived</div>
-              <div style="font-size:1.2rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${rev_ov}</div>
+            <div style="padding:12px 8px;text-align:center;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:5px;letter-spacing:0.06em;">Revived</div>
+              <div style="font-size:1.3rem;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;">${rev_ov}</div>
             </div>
           </div>
         </div>
@@ -1140,8 +1144,17 @@ async function loadDept(sheet, deptName, icon, btnId){
 
   async function fetch_render(){
     try{
-      const res=await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet));
-      const json=await res.json();
+      const cacheKey = sheet;
+      const now = Date.now();
+      let json;
+
+      if(dataCache[cacheKey] && (now - dataCache[cacheKey].ts) < CACHE_TTL){
+        json = dataCache[cacheKey].data;
+      } else {
+        const res = await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet));
+        json = await res.json();
+        if(json.success) dataCache[cacheKey] = { data: json, ts: now };
+      }
       if(!json.success){
         document.getElementById('deptContent').innerHTML=`<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>${json.error||'Sheet not found'}</div></div>`;
         return;
