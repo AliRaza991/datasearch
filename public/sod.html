@@ -524,6 +524,7 @@ function renderOrganic(data){
 }
 
 function renderMarketing(data){
+  // TA CLASS ADS - rows 31-34
   const ta_recv   = data[31]?.[2] ?? 0;
   const ta_qual   = data[32]?.[2] ?? 0;
   const ta_closed = data[33]?.[2] ?? 0;
@@ -538,6 +539,7 @@ function renderMarketing(data){
   const ta_qual_monthly = data[32]?.[10] ?? 0;
   const ta_qual_today   = data[33]?.[10] ?? 0;
 
+  // MTC CLASS ADS - rows 37-40
   const mtc_recv   = data[37]?.[2] ?? 0;
   const mtc_qual   = data[38]?.[2] ?? 0;
   const mtc_closed = data[39]?.[2] ?? 0;
@@ -552,6 +554,7 @@ function renderMarketing(data){
   const mtc_qual_monthly = data[38]?.[10] ?? 0;
   const mtc_qual_today   = data[39]?.[10] ?? 0;
 
+  // WHATSAPP - rows 44-47
   const wa_recv   = data[44]?.[2] ?? 0;
   const wa_qual   = data[45]?.[2] ?? 0;
   const wa_closed = data[46]?.[2] ?? 0;
@@ -566,6 +569,7 @@ function renderMarketing(data){
   const wa_qual_monthly = data[45]?.[10] ?? 0;
   const wa_qual_today   = data[46]?.[10] ?? 0;
 
+  // PRECEPTOR - rows 51-54
   const pre_recv   = data[51]?.[2] ?? 0;
   const pre_qual   = data[52]?.[2] ?? 0;
   const pre_closed = data[53]?.[2] ?? 0;
@@ -580,6 +584,7 @@ function renderMarketing(data){
   const pre_qual_monthly = data[52]?.[10] ?? 0;
   const pre_qual_today   = data[53]?.[10] ?? 0;
 
+  // TIKTOK - rows 58-61
   const tt_recv   = data[58]?.[2] ?? 0;
   const tt_qual   = data[59]?.[2] ?? 0;
   const tt_closed = data[60]?.[2] ?? 0;
@@ -594,86 +599,109 @@ function renderMarketing(data){
   const tt_qual_monthly = data[59]?.[10] ?? 0;
   const tt_qual_today   = data[60]?.[10] ?? 0;
 
+  // CLOSED LEADS - rows 65-68
   const cl_total   = data[65]?.[2] ?? 0;
   const cl_3months = data[66]?.[2] ?? 0;
   const cl_month   = data[67]?.[2] ?? 0;
   const cl_today   = data[68]?.[2] ?? 0;
 
-  const total_recv_today = ta_recv + mtc_recv + wa_recv + pre_recv + tt_recv;
-  const total_qual_today = ta_qual + mtc_qual + wa_qual + pre_qual + tt_qual;
+  const platforms = [
+    { name:'TA', label:'TA Class Ads', color:'gold',
+      recv:ta_recv, qual:ta_qual, closed:ta_closed,
+      a:ta_a, b:ta_b, c:ta_c, uncat:ta_uncat,
+      recv_ov:ta_recv_overall, recv_mn:ta_recv_monthly, recv_td:ta_recv_today,
+      qual_ov:ta_qual_overall, qual_mn:ta_qual_monthly, qual_td:ta_qual_today },
+    { name:'MTC', label:'MTC Class Ads', color:'purple',
+      recv:mtc_recv, qual:mtc_qual, closed:mtc_closed,
+      a:mtc_a, b:mtc_b, c:mtc_c, uncat:mtc_uncat,
+      recv_ov:mtc_recv_overall, recv_mn:mtc_recv_monthly, recv_td:mtc_recv_today,
+      qual_ov:mtc_qual_overall, qual_mn:mtc_qual_monthly, qual_td:mtc_qual_today },
+    { name:'WhatsApp', label:'WhatsApp Ads', color:'green',
+      recv:wa_recv, qual:wa_qual, closed:wa_closed,
+      a:wa_a, b:wa_b, c:wa_c, uncat:wa_uncat,
+      recv_ov:wa_recv_overall, recv_mn:wa_recv_monthly, recv_td:wa_recv_today,
+      qual_ov:wa_qual_overall, qual_mn:wa_qual_monthly, qual_td:wa_qual_today },
+    { name:'Preceptor', label:'Preceptor Ads', color:'cyan',
+      recv:pre_recv, qual:pre_qual, closed:pre_closed,
+      a:pre_a, b:pre_b, c:pre_c, uncat:pre_uncat,
+      recv_ov:pre_recv_overall, recv_mn:pre_recv_monthly, recv_td:pre_recv_today,
+      qual_ov:pre_qual_overall, qual_mn:pre_qual_monthly, qual_td:pre_qual_today },
+    { name:'TikTok', label:'TikTok Ads', color:'pink',
+      recv:tt_recv, qual:tt_qual, closed:tt_closed,
+      a:tt_a, b:tt_b, c:tt_c, uncat:tt_uncat,
+      recv_ov:tt_recv_overall, recv_mn:tt_recv_monthly, recv_td:tt_recv_today,
+      qual_ov:tt_qual_overall, qual_mn:tt_qual_monthly, qual_td:tt_qual_today },
+  ];
 
-  function platformCard(name, recv, qual, closed, a, b, c, uncat, recv_ov, recv_mn, recv_td, qual_ov, qual_mn, qual_td, color){
+  function platCard(p){
     return `
-    <div class="detail-card">
-      <div class="detail-title ${color}" style="justify-content:space-between;">
-        <span>📱 ${name}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:0.8rem;">Recv: <span style="color:var(--${color})">${recv}</span> · Qual: <span style="color:var(--${color})">${qual}</span></span>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${p.color}),transparent);"></div>
+
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.78rem;font-weight:700;color:var(--${p.color});letter-spacing:0.04em;">📱 ${p.label}</span>
+        <span style="font-size:0.65rem;color:var(--text2);font-family:'DM Mono',monospace;">
+          R:<span style="color:var(--${p.color});margin:0 4px;">${p.recv}</span>
+          Q:<span style="color:var(--${p.color});margin:0 4px;">${p.qual}</span>
+          C:<span style="color:var(--red);margin-left:4px;">${p.closed}</span>
+        </span>
       </div>
-      <div style="display:flex;gap:0;">
-        <div style="flex:1.2;border-right:1px solid var(--border);">
-          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text2);border-bottom:1px solid var(--border);">Today</div>
-          ${mr('Received', recv, color)}
-          ${mr('Qualified', qual, color)}
-          ${mr('Closed', closed, 'red')}
+
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.3fr 1.3fr;gap:0;">
+        <div style="border-right:1px solid var(--border);">
+          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--${p.color});background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">${p.name} Today</div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Received</span><span class="mrow-val ${p.color}">${p.recv}</span></div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Qualified</span><span class="mrow-val ${p.color}">${p.qual}</span></div>
+          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Closed</span><span class="mrow-val red">${p.closed}</span></div>
         </div>
-        <div style="flex:1;border-right:1px solid var(--border);">
-          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text2);border-bottom:1px solid var(--border);">Categories</div>
-          ${mr('A', a, 'green')}
-          ${mr('B', b, 'gold')}
-          ${mr('C', c, 'red')}
-          ${mr('Un-cat', uncat, 'dim')}
+        <div style="border-right:1px solid var(--border);">
+          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">Categories</div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">A</span><span class="mrow-val green">${p.a}</span></div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">B</span><span class="mrow-val gold">${p.b}</span></div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">C</span><span class="mrow-val red">${p.c}</span></div>
+          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Un-cat</span><span class="mrow-val dim">${p.uncat}</span></div>
         </div>
-        <div style="flex:1.4;">
-          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(0,229,160,0.08);color:var(--green);border-bottom:1px solid var(--border);">Recv Avg</div>
-          ${mr('Overall', recv_ov, 'green')}
-          ${mr('Monthly', recv_mn, 'green')}
-          ${mr('Today', recv_td, 'green')}
-          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(124,77,255,0.08);color:var(--purple);border-bottom:1px solid var(--border);">Qual Avg</div>
-          ${mr('Overall', qual_ov, 'purple')}
-          ${mr('Monthly', qual_mn, 'purple')}
-          ${mr('Today', qual_td, 'purple')}
+        <div style="border-right:1px solid var(--border);">
+          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--green);background:rgba(0,229,160,0.08);border-bottom:1px solid var(--border);">${p.name} Recv Avg</div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Overall</span><span class="mrow-val green">${p.recv_ov}</span></div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Monthly</span><span class="mrow-val green">${p.recv_mn}</span></div>
+          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Today</span><span class="mrow-val green">${p.recv_td}</span></div>
+        </div>
+        <div>
+          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--purple);background:rgba(124,77,255,0.08);border-bottom:1px solid var(--border);">${p.name} Qual Avg</div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Overall</span><span class="mrow-val purple">${p.qual_ov}</span></div>
+          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Monthly</span><span class="mrow-val purple">${p.qual_mn}</span></div>
+          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Today</span><span class="mrow-val purple">${p.qual_td}</span></div>
         </div>
       </div>
     </div>`;
   }
 
   return `
-    <div class="kpi-grid">
-      ${kpi('Total Received Today', total_recv_today, 'green', 'All Platforms')}
-      ${kpi('Total Qualified Today', total_qual_today, 'cyan', 'All Platforms')}
-      ${kpi('TA Received', ta_recv, 'gold', 'Today')}
-      ${kpi('MTC Received', mtc_recv, 'purple', 'Today')}
-      ${kpi('WhatsApp Received', wa_recv, 'blue', 'Today')}
-      ${kpi('Preceptor Received', pre_recv, 'red', 'Today')}
-    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      ${platforms.map(p => platCard(p)).join('')}
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-      ${platformCard('TA Class Ads', ta_recv, ta_qual, ta_closed, ta_a, ta_b, ta_c, ta_uncat, ta_recv_overall, ta_recv_monthly, ta_recv_today, ta_qual_overall, ta_qual_monthly, ta_qual_today, 'gold')}
-      ${platformCard('MTC Class Ads', mtc_recv, mtc_qual, mtc_closed, mtc_a, mtc_b, mtc_c, mtc_uncat, mtc_recv_overall, mtc_recv_monthly, mtc_recv_today, mtc_qual_overall, mtc_qual_monthly, mtc_qual_today, 'purple')}
-      ${platformCard('WhatsApp Ads', wa_recv, wa_qual, wa_closed, wa_a, wa_b, wa_c, wa_uncat, wa_recv_overall, wa_recv_monthly, wa_recv_today, wa_qual_overall, wa_qual_monthly, wa_qual_today, 'cyan')}
-      ${platformCard('Preceptor Ads', pre_recv, pre_qual, pre_closed, pre_a, pre_b, pre_c, pre_uncat, pre_recv_overall, pre_recv_monthly, pre_recv_today, pre_qual_overall, pre_qual_monthly, pre_qual_today, 'blue')}
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      ${platformCard('TikTok Ads', tt_recv, tt_qual, tt_closed, tt_a, tt_b, tt_c, tt_uncat, tt_recv_overall, tt_recv_monthly, tt_recv_today, tt_qual_overall, tt_qual_monthly, tt_qual_today, 'pink')}
-      <div class="detail-card">
-        <div class="detail-title red">📈 Closed Leads — Paid Data</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-          <div style="padding:16px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Total Closed</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(cl_total)}</div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);"></div>
+        <div style="padding:13px 16px;border-bottom:1px solid var(--border);background:rgba(255,71,87,0.05);">
+          <span style="font-size:0.65rem;font-weight:600;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;">📈 Closed Leads — Paid Data</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Total Closed</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(cl_total)}</div>
           </div>
-          <div style="padding:16px 20px;border-bottom:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Last 3 Months</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(cl_3months)}</div>
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Last 3 Months</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(cl_3months)}</div>
           </div>
-          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Current Month</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(cl_month)}</div>
+          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Current Month</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(cl_month)}</div>
           </div>
-          <div style="padding:16px 20px;text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">TODAY Closed</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${cl_today}</div>
+          <div style="padding:18px 20px;text-align:center;">
+            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">TODAY Closed</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${cl_today}</div>
           </div>
         </div>
       </div>
