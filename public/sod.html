@@ -890,46 +890,48 @@ function renderRevived(data){
   }
 
   return `
-    <!-- TOP SUMMARY CARD -->
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;margin-bottom:14px;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--cyan),transparent);"></div>
       <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(0,229,160,0.05);">
         <span style="font-size:0.65rem;font-weight:600;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;">🔄 Total Revived Leads Summary</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
-        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Revived Today</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border);">
+        <div style="padding:16px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Revived Today</div>
           <div style="font-size:2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${rv_today}</div>
         </div>
-        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Email</div>
+        <div style="padding:16px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Email</div>
           <div style="font-size:2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${rv_email}</div>
         </div>
-        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">ST</div>
+        <div style="padding:16px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">ST</div>
           <div style="font-size:2rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${rv_st}</div>
         </div>
-        <div style="padding:16px 20px;text-align:center;">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Duplicate</div>
+        <div style="padding:16px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Duplicate</div>
           <div style="font-size:2rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${rv_duplicate}</div>
         </div>
+        <div style="padding:16px 12px;text-align:center;">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Existing</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${rv_existing}</div>
+        </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
-        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Existing</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${rv_existing}</div>
+      <div style="padding:8px 20px;background:rgba(0,212,255,0.04);border-bottom:1px solid var(--border);">
+        <span style="font-size:0.58rem;font-weight:600;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;">📊 Averages</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
+        <div style="padding:14px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Overall Avg</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${rv_overall_avg}</div>
         </div>
-        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Overall Avg</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${rv_overall_avg}</div>
+        <div style="padding:14px 12px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Monthly Avg</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${rv_monthly_avg}</div>
         </div>
-        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Monthly Avg</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${rv_monthly_avg}</div>
-        </div>
-        <div style="padding:14px 20px;text-align:center;">
-          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Today Avg</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${rv_today_avg}</div>
+        <div style="padding:14px 12px;text-align:center;">
+          <div style="font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Today Avg</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${rv_today_avg}</div>
         </div>
       </div>
     </div>
