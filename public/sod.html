@@ -709,6 +709,117 @@ function renderMarketing(data){
   `;
 }
 
+function renderQualifier(data){
+  // QUALIFIER DEPARTMENT - rows 82-88 (array index 81-87)
+  const q_today_qual    = data[82]?.[2] ?? 0;
+  const q_email         = data[83]?.[2] ?? 0;
+  const q_st            = data[84]?.[2] ?? 0;
+  const q_overall_avg   = data[85]?.[2] ?? 0;
+  const q_monthly_avg   = data[86]?.[2] ?? 0;
+  const q_today_avg     = data[87]?.[2] ?? 0;
+
+  // QUALIFIER CLOSING - rows 90-94 (array index 89-93)
+  const q_cl_total      = data[90]?.[2] ?? 0;
+  const q_cl_3months    = data[91]?.[2] ?? 0;
+  const q_cl_month      = data[92]?.[2] ?? 0;
+  const q_cl_today      = data[93]?.[2] ?? 0;
+
+  // 4TH FLOOR - rows 97-103 (array index 96-102)
+  const f_today_qual    = data[97]?.[2] ?? 0;
+  const f_email         = data[98]?.[2] ?? 0;
+  const f_st            = data[99]?.[2] ?? 0;
+  const f_overall_avg   = data[100]?.[2] ?? 0;
+  const f_monthly_avg   = data[101]?.[2] ?? 0;
+  const f_today_avg     = data[102]?.[2] ?? 0;
+
+  // 4TH FLOOR CLOSING - rows 105-109 (array index 104-108)
+  const f_cl_total      = data[105]?.[2] ?? 0;
+  const f_cl_3months    = data[106]?.[2] ?? 0;
+  const f_cl_month      = data[107]?.[2] ?? 0;
+  const f_cl_today      = data[108]?.[2] ?? 0;
+
+  function deptCard(name, color, today_qual, email, st, overall_avg, monthly_avg, today_avg, cl_total, cl_3months, cl_month, cl_today){
+    return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
+
+      <!-- Header -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.9rem;font-weight:700;color:var(--${color});letter-spacing:0.04em;">🏢 ${name}</span>
+        <span style="font-size:0.72rem;color:var(--text2);font-family:'DM Mono',monospace;">
+          Today Qualified: <span style="color:var(--${color});font-weight:700;font-size:1rem;margin-left:6px;">${today_qual}</span>
+        </span>
+      </div>
+
+      <!-- Body: 2 sections side by side -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+        <!-- Left: Qualified Breakdown -->
+        <div style="border-right:1px solid var(--border);">
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--${color});background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">Qualified Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border);">
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Today Total</div>
+              <div style="font-size:1.8rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${today_qual}</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Email</div>
+              <div style="font-size:1.8rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email}</div>
+            </div>
+            <div style="padding:16px;text-align:center;">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">ST</div>
+              <div style="font-size:1.8rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st}</div>
+            </div>
+          </div>
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.01);border-bottom:1px solid var(--border);">Qualified Averages</div>
+          ${mr('Overall Average', overall_avg, color)}
+          ${mr('Monthly Average', monthly_avg, color)}
+          ${mr('Today Average', today_avg, color)}
+        </div>
+
+        <!-- Right: Closing Ratios -->
+        <div>
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--red);background:rgba(255,71,87,0.05);border-bottom:1px solid var(--border);">Closing Ratios</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Total Closed</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(cl_total)}</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-bottom:1px solid var(--border);">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Last 3 Months</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(cl_3months)}</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Current Month</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(cl_month)}</div>
+            </div>
+            <div style="padding:16px;text-align:center;">
+              <div style="font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">TODAY Closed</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${cl_today}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <div class="kpi-grid">
+      ${kpi('Qualifier Today Qualified', q_today_qual, 'cyan', 'Total')}
+      ${kpi('Qualifier Email', q_email, 'green', 'Today')}
+      ${kpi('Qualifier ST', q_st, 'purple', 'Today')}
+      ${kpi('4th Floor Today Qualified', f_today_qual, 'gold', 'Total')}
+      ${kpi('4th Floor Email', f_email, 'blue', 'Today')}
+      ${kpi('4th Floor ST', f_st, 'red', 'Today')}
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      ${deptCard('Qualifier Department', 'cyan', q_today_qual, q_email, q_st, q_overall_avg, q_monthly_avg, q_today_avg, q_cl_total, q_cl_3months, q_cl_month, q_cl_today)}
+      ${deptCard('4th Floor', 'gold', f_today_qual, f_email, f_st, f_overall_avg, f_monthly_avg, f_today_avg, f_cl_total, f_cl_3months, f_cl_month, f_cl_today)}
+    </div>
+  `;
+}
+
 function renderGeneric(data, deptName, icon){
   const rows=data.filter(r=>r.some(c=>c!==''));
   let cards=''; let metrics=''; let cardCount=0;
@@ -759,6 +870,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       let content='';
       if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
       else if(deptName==='Marketing') content=renderMarketing(json.data);
+      else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
       else content=renderGeneric(json.data,deptName,icon);
 
       document.getElementById('deptContent').innerHTML=`
