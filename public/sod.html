@@ -1155,11 +1155,13 @@ async function loadDept(sheet, deptName, icon, btnId){
         json = await res.json();
         if(json.success) dataCache[cacheKey] = { data: json, ts: now };
       }
-      if(!json.success){
-        document.getElementById('deptContent').innerHTML=`<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>${json.error||'Sheet not found'}</div></div>`;
+
+      if(!json || !json.success){
+        document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>Data load failed</div></div>';
         return;
       }
-      const now=new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+      const now2=new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
       let content='';
       if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
       else if(deptName==='Marketing') content=renderMarketing(json.data);
@@ -1172,10 +1174,13 @@ async function loadDept(sheet, deptName, icon, btnId){
         <div class="dept-hdr">
           <div class="dept-hdr-icon">${icon}</div>
           <div><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
-          <div class="dept-hdr-time">Updated: <span>${now}</span></div>
+          <div class="dept-hdr-time">Updated: <span>${now2}</span></div>
         </div>
         ${content}`;
-    }catch(e){console.error(e);}
+    }catch(e){
+      console.error(e);
+      document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>Connection error — retrying...</div></div>';
+    }
   }
 
   fetch_render();
