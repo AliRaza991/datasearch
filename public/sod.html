@@ -822,6 +822,126 @@ function renderQualifier(data){
   `;
 }
 
+function renderRevived(data){
+  // TOTAL REVIVED LEADS - rows 121-129 (array index 120-128)
+  const rv_today       = data[121]?.[2] ?? 0;
+  const rv_email       = data[122]?.[2] ?? 0;
+  const rv_st          = data[123]?.[2] ?? 0;
+  const rv_duplicate   = data[124]?.[2] ?? 0;
+  const rv_existing    = data[125]?.[2] ?? 0;
+  const rv_overall_avg = data[126]?.[2] ?? 0;
+  const rv_monthly_avg = data[127]?.[2] ?? 0;
+  const rv_today_avg   = data[128]?.[2] ?? 0;
+
+  // TEAM MAHEEN - rows 134-140 (array index 133-139)
+  // columns: B=name, C=Revived, D=Duplicate, E=Existing, F=Email, G=RC, H=Total Revived, I=Total Closed
+  const maheen_members = [
+    data[134], data[135], data[136], data[137], data[138], data[139], data[140]
+  ].filter(r => r?.[1] && r[1] !== '');
+
+  // TEAM KHURRAM - rows 147-152 (array index 146-151)
+  const khurram_members = [
+    data[147], data[148], data[149], data[150], data[151], data[152]
+  ].filter(r => r?.[1] && r[1] !== '');
+
+  function memberRow(row){
+    if(!row || !row[1]) return '';
+    return `
+    <tr style="border-bottom:1px solid rgba(26,45,74,0.5);transition:background 0.12s;" onmouseover="this.style.background='rgba(0,229,160,0.02)'" onmouseout="this.style.background='transparent'">
+      <td style="padding:10px 16px;font-size:0.78rem;color:var(--text);font-weight:500;">${row[1]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--cyan);font-family:'DM Mono',monospace;">${row[2]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--red);font-family:'DM Mono',monospace;">${row[3]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--gold);font-family:'DM Mono',monospace;">${row[4]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--green);font-family:'DM Mono',monospace;">${row[5]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--purple);font-family:'DM Mono',monospace;">${row[6]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.9rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${row[7]||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;font-size:0.9rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${row[8]||'—'}</td>
+    </tr>`;
+  }
+
+  function teamTable(title, color, members){
+    return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.88rem;font-weight:700;color:var(--${color});">👥 ${title}</span>
+        <span style="font-size:0.65rem;color:var(--text2);font-family:'DM Mono',monospace;">${members.length} members</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:9px 16px;text-align:left;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);">Member</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--cyan);">Revived</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);">Duplicate</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);">Existing</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);">Email</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);">RC</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--cyan);">Total Revived</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);">Total Closed</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.map(r => memberRow(r)).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <!-- TOP SUMMARY CARD -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;margin-bottom:14px;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--cyan),transparent);"></div>
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(0,229,160,0.05);">
+        <span style="font-size:0.65rem;font-weight:600;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;">🔄 Total Revived Leads Summary</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
+        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Revived Today</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${rv_today}</div>
+        </div>
+        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Email</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${rv_email}</div>
+        </div>
+        <div style="padding:16px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">ST</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${rv_st}</div>
+        </div>
+        <div style="padding:16px 20px;text-align:center;">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Duplicate</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${rv_duplicate}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Existing</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${rv_existing}</div>
+        </div>
+        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Overall Avg</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${rv_overall_avg}</div>
+        </div>
+        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Monthly Avg</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${rv_monthly_avg}</div>
+        </div>
+        <div style="padding:14px 20px;text-align:center;">
+          <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Today Avg</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${rv_today_avg}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM TABLES -->
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      ${teamTable('Team Maheen', 'cyan', maheen_members)}
+      ${teamTable('Team Khurram', 'gold', khurram_members)}
+    </div>
+  `;
+}
+
 function renderGeneric(data, deptName, icon){
   const rows=data.filter(r=>r.some(c=>c!==''));
   let cards=''; let metrics=''; let cardCount=0;
@@ -873,6 +993,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
       else if(deptName==='Marketing') content=renderMarketing(json.data);
       else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
+      else if(deptName==='Revived Leads') content=renderRevived(json.data);
       else content=renderGeneric(json.data,deptName,icon);
 
       document.getElementById('deptContent').innerHTML=`
