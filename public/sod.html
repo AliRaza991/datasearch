@@ -523,6 +523,164 @@ function renderOrganic(data){
   `;
 }
 
+function renderMarketing(data){
+  const ta_recv   = data[31]?.[2] ?? 0;
+  const ta_qual   = data[32]?.[2] ?? 0;
+  const ta_closed = data[33]?.[2] ?? 0;
+  const ta_a      = data[31]?.[5] ?? 0;
+  const ta_b      = data[32]?.[5] ?? 0;
+  const ta_c      = data[33]?.[5] ?? 0;
+  const ta_uncat  = data[34]?.[5] ?? 0;
+  const ta_recv_overall = data[31]?.[8] ?? 0;
+  const ta_recv_monthly = data[32]?.[8] ?? 0;
+  const ta_recv_today   = data[33]?.[8] ?? 0;
+  const ta_qual_overall = data[31]?.[10] ?? 0;
+  const ta_qual_monthly = data[32]?.[10] ?? 0;
+  const ta_qual_today   = data[33]?.[10] ?? 0;
+
+  const mtc_recv   = data[37]?.[2] ?? 0;
+  const mtc_qual   = data[38]?.[2] ?? 0;
+  const mtc_closed = data[39]?.[2] ?? 0;
+  const mtc_a      = data[37]?.[5] ?? 0;
+  const mtc_b      = data[38]?.[5] ?? 0;
+  const mtc_c      = data[39]?.[5] ?? 0;
+  const mtc_uncat  = data[40]?.[5] ?? 0;
+  const mtc_recv_overall = data[37]?.[8] ?? 0;
+  const mtc_recv_monthly = data[38]?.[8] ?? 0;
+  const mtc_recv_today   = data[39]?.[8] ?? 0;
+  const mtc_qual_overall = data[37]?.[10] ?? 0;
+  const mtc_qual_monthly = data[38]?.[10] ?? 0;
+  const mtc_qual_today   = data[39]?.[10] ?? 0;
+
+  const wa_recv   = data[44]?.[2] ?? 0;
+  const wa_qual   = data[45]?.[2] ?? 0;
+  const wa_closed = data[46]?.[2] ?? 0;
+  const wa_a      = data[44]?.[5] ?? 0;
+  const wa_b      = data[45]?.[5] ?? 0;
+  const wa_c      = data[46]?.[5] ?? 0;
+  const wa_uncat  = data[47]?.[5] ?? 0;
+  const wa_recv_overall = data[44]?.[8] ?? 0;
+  const wa_recv_monthly = data[45]?.[8] ?? 0;
+  const wa_recv_today   = data[46]?.[8] ?? 0;
+  const wa_qual_overall = data[44]?.[10] ?? 0;
+  const wa_qual_monthly = data[45]?.[10] ?? 0;
+  const wa_qual_today   = data[46]?.[10] ?? 0;
+
+  const pre_recv   = data[51]?.[2] ?? 0;
+  const pre_qual   = data[52]?.[2] ?? 0;
+  const pre_closed = data[53]?.[2] ?? 0;
+  const pre_a      = data[51]?.[5] ?? 0;
+  const pre_b      = data[52]?.[5] ?? 0;
+  const pre_c      = data[53]?.[5] ?? 0;
+  const pre_uncat  = data[54]?.[5] ?? 0;
+  const pre_recv_overall = data[51]?.[8] ?? 0;
+  const pre_recv_monthly = data[52]?.[8] ?? 0;
+  const pre_recv_today   = data[53]?.[8] ?? 0;
+  const pre_qual_overall = data[51]?.[10] ?? 0;
+  const pre_qual_monthly = data[52]?.[10] ?? 0;
+  const pre_qual_today   = data[53]?.[10] ?? 0;
+
+  const tt_recv   = data[58]?.[2] ?? 0;
+  const tt_qual   = data[59]?.[2] ?? 0;
+  const tt_closed = data[60]?.[2] ?? 0;
+  const tt_a      = data[58]?.[5] ?? 0;
+  const tt_b      = data[59]?.[5] ?? 0;
+  const tt_c      = data[60]?.[5] ?? 0;
+  const tt_uncat  = data[61]?.[5] ?? 0;
+  const tt_recv_overall = data[58]?.[8] ?? 0;
+  const tt_recv_monthly = data[59]?.[8] ?? 0;
+  const tt_recv_today   = data[60]?.[8] ?? 0;
+  const tt_qual_overall = data[58]?.[10] ?? 0;
+  const tt_qual_monthly = data[59]?.[10] ?? 0;
+  const tt_qual_today   = data[60]?.[10] ?? 0;
+
+  const cl_total   = data[65]?.[2] ?? 0;
+  const cl_3months = data[66]?.[2] ?? 0;
+  const cl_month   = data[67]?.[2] ?? 0;
+  const cl_today   = data[68]?.[2] ?? 0;
+
+  const total_recv_today = ta_recv + mtc_recv + wa_recv + pre_recv + tt_recv;
+  const total_qual_today = ta_qual + mtc_qual + wa_qual + pre_qual + tt_qual;
+
+  function platformCard(name, recv, qual, closed, a, b, c, uncat, recv_ov, recv_mn, recv_td, qual_ov, qual_mn, qual_td, color){
+    return `
+    <div class="detail-card">
+      <div class="detail-title ${color}" style="justify-content:space-between;">
+        <span>📱 ${name}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.8rem;">Recv: <span style="color:var(--${color})">${recv}</span> · Qual: <span style="color:var(--${color})">${qual}</span></span>
+      </div>
+      <div style="display:flex;gap:0;">
+        <div style="flex:1.2;border-right:1px solid var(--border);">
+          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text2);border-bottom:1px solid var(--border);">Today</div>
+          ${mr('Received', recv, color)}
+          ${mr('Qualified', qual, color)}
+          ${mr('Closed', closed, 'red')}
+        </div>
+        <div style="flex:1;border-right:1px solid var(--border);">
+          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text2);border-bottom:1px solid var(--border);">Categories</div>
+          ${mr('A', a, 'green')}
+          ${mr('B', b, 'gold')}
+          ${mr('C', c, 'red')}
+          ${mr('Un-cat', uncat, 'dim')}
+        </div>
+        <div style="flex:1.4;">
+          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(0,229,160,0.08);color:var(--green);border-bottom:1px solid var(--border);">Recv Avg</div>
+          ${mr('Overall', recv_ov, 'green')}
+          ${mr('Monthly', recv_mn, 'green')}
+          ${mr('Today', recv_td, 'green')}
+          <div style="padding:7px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(124,77,255,0.08);color:var(--purple);border-bottom:1px solid var(--border);">Qual Avg</div>
+          ${mr('Overall', qual_ov, 'purple')}
+          ${mr('Monthly', qual_mn, 'purple')}
+          ${mr('Today', qual_td, 'purple')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <div class="kpi-grid">
+      ${kpi('Total Received Today', total_recv_today, 'green', 'All Platforms')}
+      ${kpi('Total Qualified Today', total_qual_today, 'cyan', 'All Platforms')}
+      ${kpi('TA Received', ta_recv, 'gold', 'Today')}
+      ${kpi('MTC Received', mtc_recv, 'purple', 'Today')}
+      ${kpi('WhatsApp Received', wa_recv, 'blue', 'Today')}
+      ${kpi('Preceptor Received', pre_recv, 'red', 'Today')}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+      ${platformCard('TA Class Ads', ta_recv, ta_qual, ta_closed, ta_a, ta_b, ta_c, ta_uncat, ta_recv_overall, ta_recv_monthly, ta_recv_today, ta_qual_overall, ta_qual_monthly, ta_qual_today, 'gold')}
+      ${platformCard('MTC Class Ads', mtc_recv, mtc_qual, mtc_closed, mtc_a, mtc_b, mtc_c, mtc_uncat, mtc_recv_overall, mtc_recv_monthly, mtc_recv_today, mtc_qual_overall, mtc_qual_monthly, mtc_qual_today, 'purple')}
+      ${platformCard('WhatsApp Ads', wa_recv, wa_qual, wa_closed, wa_a, wa_b, wa_c, wa_uncat, wa_recv_overall, wa_recv_monthly, wa_recv_today, wa_qual_overall, wa_qual_monthly, wa_qual_today, 'cyan')}
+      ${platformCard('Preceptor Ads', pre_recv, pre_qual, pre_closed, pre_a, pre_b, pre_c, pre_uncat, pre_recv_overall, pre_recv_monthly, pre_recv_today, pre_qual_overall, pre_qual_monthly, pre_qual_today, 'blue')}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      ${platformCard('TikTok Ads', tt_recv, tt_qual, tt_closed, tt_a, tt_b, tt_c, tt_uncat, tt_recv_overall, tt_recv_monthly, tt_recv_today, tt_qual_overall, tt_qual_monthly, tt_qual_today, 'pink')}
+      <div class="detail-card">
+        <div class="detail-title red">📈 Closed Leads — Paid Data</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <div style="padding:16px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Total Closed</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(cl_total)}</div>
+          </div>
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Last 3 Months</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(cl_3months)}</div>
+          </div>
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">Current Month</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(cl_month)}</div>
+          </div>
+          <div style="padding:16px 20px;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">TODAY Closed</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${cl_today}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderGeneric(data, deptName, icon){
   const rows=data.filter(r=>r.some(c=>c!==''));
   let cards=''; let metrics=''; let cardCount=0;
@@ -572,6 +730,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       const now=new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
       let content='';
       if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
+      else if(deptName==='Marketing') content=renderMarketing(json.data);
       else content=renderGeneric(json.data,deptName,icon);
 
       document.getElementById('deptContent').innerHTML=`
