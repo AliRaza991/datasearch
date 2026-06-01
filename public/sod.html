@@ -944,6 +944,163 @@ function renderRevived(data){
   `;
 }
 
+function renderClosed(data){
+  // CLOSERS section - rows 189-192 (array index 188-191)
+  const cl_today        = data[188]?.[2] ?? 0;
+  const cl_email        = data[189]?.[2] ?? 0;
+  const cl_st           = data[190]?.[2] ?? 0;
+  const cl_whatsapp     = data[191]?.[2] ?? 0;
+
+  // CLOSERS AVG - rows 195-197 (array index 194-196)
+  // columns: C=Total, D=Email, E=ST, F=Whatsapp, G=Unique, H=Revived
+  const cl_avg_overall  = data[194]?.[2] ?? 0;
+  const cl_avg_month    = data[195]?.[2] ?? 0;
+  const cl_avg_today    = data[196]?.[2] ?? 0;
+  const cl_email_ov     = data[194]?.[3] ?? 0;
+  const cl_st_ov        = data[194]?.[4] ?? 0;
+  const cl_wa_ov        = data[194]?.[5] ?? 0;
+  const cl_uniq_ov      = data[194]?.[6] ?? 0;
+  const cl_rev_ov       = data[194]?.[7] ?? 0;
+
+  // MANAGERS section - rows 202-205 (array index 201-204)
+  const mg_today        = data[201]?.[2] ?? 0;
+  const mg_email        = data[202]?.[2] ?? 0;
+  const mg_st           = data[203]?.[2] ?? 0;
+  const mg_whatsapp     = data[204]?.[2] ?? 0;
+
+  // MANAGERS AVG - rows 208-210 (array index 207-209)
+  const mg_avg_overall  = data[207]?.[2] ?? 0;
+  const mg_avg_month    = data[208]?.[2] ?? 0;
+  const mg_avg_today    = data[209]?.[2] ?? 0;
+  const mg_email_ov     = data[207]?.[3] ?? 0;
+  const mg_st_ov        = data[207]?.[4] ?? 0;
+  const mg_wa_ov        = data[207]?.[5] ?? 0;
+  const mg_uniq_ov      = data[207]?.[6] ?? 0;
+  const mg_rev_ov       = data[207]?.[7] ?? 0;
+
+  // TEAM MAHEEN - rows 213-219 (array index 212-218)
+  // cols: B=name, C=Inbound, D=Outbound, E=Facebook, F=Referral, G=Total
+  const maheen_cl = [
+    data[213], data[214], data[215], data[216], data[217], data[218], data[219]
+  ].filter(r => r?.[1] && r[1] !== '');
+
+  // TEAM KHURRAM - rows 228-233 (array index 227-232)
+  const khurram_cl = [
+    data[228], data[229], data[230], data[231], data[232], data[233]
+  ].filter(r => r?.[1] && r[1] !== '');
+
+  function sectionCard(title, color, today, email, st, whatsapp, avg_overall, avg_month, avg_today, email_ov, st_ov, wa_ov, uniq_ov, rev_ov){
+    return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.88rem;font-weight:700;color:var(--${color});">✅ ${title}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text2);">Today: <span style="color:var(--${color});font-weight:700;font-size:1rem;margin-left:4px;">${today}</span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+        <!-- Left: Today Breakdown -->
+        <div style="border-right:1px solid var(--border);">
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--${color});background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">Today Closed</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Total</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${today}</div>
+            </div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Email</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email}</div>
+            </div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">ST</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st}</div>
+            </div>
+            <div style="padding:14px 8px;text-align:center;">
+              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">WhatsApp</div>
+              <div style="font-size:1.6rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${whatsapp}</div>
+            </div>
+          </div>
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.01);border-bottom:1px solid var(--border);">Averages</div>
+          ${mr('Overall Avg', avg_overall, color)}
+          ${mr('Current Month Avg', avg_month, color)}
+          ${mr('Today Avg', avg_today, color)}
+        </div>
+
+        <!-- Right: AVG Breakdown -->
+        <div>
+          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--gold);background:rgba(245,166,35,0.05);border-bottom:1px solid var(--border);">Overall AVG Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <div style="padding:12px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Email</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email_ov}</div>
+            </div>
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">ST</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st_ov}</div>
+            </div>
+            <div style="padding:12px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">WhatsApp</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${wa_ov}</div>
+            </div>
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Unique</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${uniq_ov}</div>
+            </div>
+            <div style="padding:12px 14px;grid-column:span 2;text-align:center;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:4px;">Revived</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${rev_ov}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function teamTable(title, color, members){
+    return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+        <span style="font-size:0.88rem;font-weight:700;color:var(--${color});">👥 ${title}</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:9px 16px;text-align:left;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);">Member</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);">In-bound</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--cyan);">Out-bound</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);">Facebook</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);">Referral</th>
+              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--${color});">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.map(r => `
+            <tr style="border-bottom:1px solid rgba(26,45,74,0.5);transition:background 0.12s;" onmouseover="this.style.background='rgba(0,229,160,0.02)'" onmouseout="this.style.background='transparent'">
+              <td style="padding:10px 16px;font-size:0.78rem;color:var(--text);font-weight:500;">${r[1]||'—'}</td>
+              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--green);font-family:'DM Mono',monospace;">${r[2]||'—'}</td>
+              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--cyan);font-family:'DM Mono',monospace;">${r[3]||'—'}</td>
+              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--purple);font-family:'DM Mono',monospace;">${r[4]||'—'}</td>
+              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--gold);font-family:'DM Mono',monospace;">${r[5]||'—'}</td>
+              <td style="padding:10px 8px;text-align:center;font-size:0.9rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${r[6]||'—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      ${sectionCard('Closed Lead (Closers)', 'cyan', cl_today, cl_email, cl_st, cl_whatsapp, cl_avg_overall, cl_avg_month, cl_avg_today, cl_email_ov, cl_st_ov, cl_wa_ov, cl_uniq_ov, cl_rev_ov)}
+      ${sectionCard('Closed Lead (Managers)', 'gold', mg_today, mg_email, mg_st, mg_whatsapp, mg_avg_overall, mg_avg_month, mg_avg_today, mg_email_ov, mg_st_ov, mg_wa_ov, mg_uniq_ov, mg_rev_ov)}
+      ${teamTable('Team Maheen', 'cyan', maheen_cl)}
+      ${teamTable('Team Khurram', 'gold', khurram_cl)}
+    </div>
+  `;
+}
+
 function renderGeneric(data, deptName, icon){
   const rows=data.filter(r=>r.some(c=>c!==''));
   let cards=''; let metrics=''; let cardCount=0;
@@ -996,6 +1153,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       else if(deptName==='Marketing') content=renderMarketing(json.data);
       else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
       else if(deptName==='Revived Leads') content=renderRevived(json.data);
+      else if(deptName==='Closed Leads') content=renderClosed(json.data);
       else content=renderGeneric(json.data,deptName,icon);
 
       document.getElementById('deptContent').innerHTML=`
