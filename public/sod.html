@@ -209,23 +209,22 @@ nav{
 
 /* ── DEPT HEADER ── */
 .dept-hdr{
-  background: rgb(2,0,36);
-  background: linear-gradient(90deg, rgba(2,0,36,1) 4%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%);
-  border:none;border-radius:16px;
-  padding:22px 28px;margin-bottom:24px;
+  background: rgb(63,94,251);
+  background: linear-gradient(211deg, rgba(63,94,251,1) 25%, rgba(252,70,107,1) 61%);
+  border-radius:14px;padding:14px 22px;margin-bottom:24px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 6px 24px rgba(63,94,251,0.3);
   position:relative;overflow:hidden;
-  display:flex;align-items:center;gap:18px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.3);
 }
 .dept-hdr::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(0,200,255,0.15),transparent 50%,rgba(124,77,255,0.15));
 }
-.dept-hdr-icon{font-size:4rem;filter:drop-shadow(0 0 12px rgba(255,255,255,0.3));position:relative;z-index:1;}
-.dept-hdr-name{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.01em;position:relative;}
-.dept-hdr-sub{font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:4px;position:relative;}
-.dept-hdr-time{margin-left:auto;font-size:0.65rem;color:#3a3a8a;font-family:'DM Mono',monospace;position:relative;z-index:1;font-weight:600;}
-.dept-hdr-time span{color:#A2A2F5;font-weight:700;}
+.dept-hdr-icon{font-size:2rem;filter:drop-shadow(0 0 12px rgba(255,255,255,0.3));position:relative;z-index:1;}
+.dept-hdr-name{font-size:1.4rem;font-weight:800;color:#fff;position:relative;z-index:1;}
+.dept-hdr-sub{font-size:0.68rem;color:rgba(255,255,255,0.6);margin-top:4px;position:relative;z-index:1;}
+.dept-hdr-time{margin-left:auto;font-size:0.78rem;color:#fff;font-family:'DM Mono',monospace;position:relative;z-index:1;font-weight:600;text-align:right;}
+.dept-hdr-time span{color:#fff;font-weight:800;font-size:0.9rem;display:block;margin-top:2px;}
 
 /* ── KPI CARDS - WHITE cards like reference ── */
 .kpi-grid{
