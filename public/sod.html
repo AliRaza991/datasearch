@@ -209,7 +209,8 @@ nav{
 
 /* ── DEPT HEADER ── */
 .dept-hdr{
-  background:linear-gradient(135deg,#1a6b8a,#1e4a7a,#2a1a8b);
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 4%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%);
   border:none;border-radius:16px;
   padding:22px 28px;margin-bottom:24px;
   position:relative;overflow:hidden;
@@ -220,11 +221,11 @@ nav{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(0,200,255,0.15),transparent 50%,rgba(124,77,255,0.15));
 }
-.dept-hdr-icon{font-size:2.4rem;filter:drop-shadow(0 0 12px rgba(255,255,255,0.3));position:relative;}
+.dept-hdr-icon{font-size:4rem;filter:drop-shadow(0 0 12px rgba(255,255,255,0.3));position:relative;z-index:1;}
 .dept-hdr-name{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.01em;position:relative;}
 .dept-hdr-sub{font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:4px;position:relative;}
-.dept-hdr-time{margin-left:auto;font-size:0.65rem;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;position:relative;}
-.dept-hdr-time span{color:#7ff0ff;font-weight:700;}
+.dept-hdr-time{margin-left:auto;font-size:0.65rem;color:#3a3a8a;font-family:'DM Mono',monospace;position:relative;z-index:1;font-weight:600;}
+.dept-hdr-time span{color:#A2A2F5;font-weight:700;}
 
 /* ── KPI CARDS - WHITE cards like reference ── */
 .kpi-grid{
