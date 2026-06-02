@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0d1117;
+  --bg:#F7FDFF;
   --sidebar:#0f1520;
   --nav:#0a0f1a;
   --card:#ffffff;
@@ -547,24 +547,24 @@ function renderOrganic(data){
     </div>
 
     <div style="margin-bottom:14px;">
-      <div class="detail-card">
-        <div class="detail-title green">📋 Today Received POP-UPS Breakdown</div>
+      <div class="detail-card" style="background:#D0F0CE;border:1px solid #86efac;">
+        <div class="detail-title green" style="border-bottom:1px solid #86efac;background:rgba(16,185,129,0.1);">📋 Today Received POP-UPS Breakdown</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Total Received</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${total_popup_recv}</div>
+          <div style="padding:18px 20px;border-right:1px solid #86efac;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#166534;margin-bottom:8px;font-weight:700;">Total Received</div>
+            <div style="font-size:2rem;font-weight:800;color:#15803d;font-family:'DM Mono',monospace;">${total_popup_recv}</div>
           </div>
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Valid POP-UPs</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${valid_popups}</div>
+          <div style="padding:18px 20px;border-right:1px solid #86efac;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#166534;margin-bottom:8px;font-weight:700;">Valid POP-UPs</div>
+            <div style="font-size:2rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${valid_popups}</div>
           </div>
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Repeated</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${repeated}</div>
+          <div style="padding:18px 20px;border-right:1px solid #86efac;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#166534;margin-bottom:8px;font-weight:700;">Repeated</div>
+            <div style="font-size:2rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${repeated}</div>
           </div>
           <div style="padding:18px 20px;text-align:center;">
-            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;font-weight:500;">Invalid IP & Data</div>
-            <div style="font-size:1.8rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${invalid}</div>
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#166534;margin-bottom:8px;font-weight:700;">Invalid IP & Data</div>
+            <div style="font-size:2rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${invalid}</div>
           </div>
         </div>
       </div>
