@@ -17,16 +17,18 @@ export default function HeroBanner({ icon, deptName, updatedAt }: HeroBannerProp
 
         {/* Glassmorphism icon container */}
         <div className="
-          w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0
-          bg-white/20 backdrop-blur-md
+          w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0
+          bg-white/[0.18] backdrop-blur-[12px]
           border border-white/25
-          shadow-[0_2px_8px_rgba(0,0,0,0.08)]
+          shadow-[0_8px_20px_rgba(0,0,0,0.12)]
+          text-[2.25rem] leading-none
+          drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]
         ">
           {icon}
         </div>
 
         {/* Title + subtitle */}
-        <div>
+        <div className="ml-1">
           <h2 className="text-white text-[18px] font-bold leading-[1.2]">
             {deptName}
           </h2>
