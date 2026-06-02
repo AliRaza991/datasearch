@@ -489,12 +489,19 @@ function renderOrganic(data){
 
   return `
     <div class="kpi-grid">
-      ${kpi('POP-UP Received Today', popup_recv, 'green', 'Unique POP-UPs')}
-      ${kpi('POP-UP Qualified Today', popup_qual, 'cyan', 'Unique POP-UPs')}
-      ${kpi('POP-UP Closed Today', popup_closed, 'gold', 'Closed Today')}
-      ${kpi('Hot Leads Received Today', hot_recv, 'purple', 'Unique Hot Leads')}
-      ${kpi('Hot Leads Qualified Today', hot_qual, 'red', 'Qualified Today')}
-      ${kpi('Hot Leads Closed Today', hot_closed, 'blue', 'Closed Today')}
+      <div class="kpi-card" style="background:#D5F0E1;border:1.5px solid #5CBD81;box-shadow:0 2px 8px rgba(92,189,129,0.15);">
+        <div class="kpi-label" style="color:#1A1A1A;">POP-UP Received Today</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#23914F" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <div class="kpi-val" style="color:#23914F;font-size:2.2rem;">${popup_recv}</div>
+        </div>
+        <div class="kpi-sub" style="color:#1A1A1A;">Unique POP-UPs</div>
+      </div>
+      ${kpi('POP-UP Qualified Today',popup_qual,'cyan','Unique POP-UPs')}
+      ${kpi('POP-UP Closed Today',popup_closed,'gold','Closed Today')}
+      ${kpi('Hot Leads Received Today',hot_recv,'purple','Unique Hot Leads')}
+      ${kpi('Hot Leads Qualified Today',hot_qual,'red','Qualified Today')}
+      ${kpi('Hot Leads Closed Today',hot_closed,'blue','Closed Today')}
     </div>
 
     <div style="margin-bottom:14px;">
