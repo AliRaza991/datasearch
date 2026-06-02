@@ -600,22 +600,36 @@ function renderOrganic(data){
         </table>
       </div>
 
-      <div class="detail-card">
-        <div class="detail-title purple">📈 Hot Lead Averages</div>
-        <div style="display:flex;gap:0;">
-          <div style="flex:1;border-right:1px solid var(--border);">
-            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(245,166,35,0.12);color:var(--gold);border-bottom:1px solid var(--border);">Received</div>
-            ${mr('Overall', hot_recv_overall, 'gold')}
-            ${mr('Monthly', hot_recv_monthly, 'gold')}
-            ${mr('Today', hot_recv_today, 'gold')}
-          </div>
-          <div style="flex:1;">
-            <div style="padding:8px 14px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:rgba(0,212,255,0.12);color:var(--cyan);border-bottom:1px solid var(--border);">Qualified</div>
-            ${mr('Overall', hot_qual_overall, 'cyan')}
-            ${mr('Monthly', hot_qual_monthly, 'cyan')}
-            ${mr('Today', hot_qual_today, 'cyan')}
-          </div>
+      <div style="background:#fff;border:1px solid #D0BAFF;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(104,39,245,0.1);">
+        <div style="padding:14px 20px;border-bottom:1px solid #D0BAFF;background:linear-gradient(90deg,rgba(2,0,36,0.4) 0%,rgba(208,186,255,0.56) 100%);display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.78rem;font-weight:800;color:#6827F5;letter-spacing:0.08em;text-transform:uppercase;">🔥 Hot Lead Averages</span>
         </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="padding:10px 18px;text-align:left;font-size:0.7rem;font-weight:700;color:#718096;border-bottom:1px solid #e5e9f0;background:#f8fafc;width:30%;"></th>
+              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#ef4444;border-bottom:1px solid #e5e9f0;background:#fff5f5;width:35%;">RECEIVED</th>
+              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#00379E;border-bottom:1px solid #e5e9f0;background:#f0f4ff;width:35%;">QUALIFIED</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Overall</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_overall}</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_overall}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
+              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Monthly</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_monthly}</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_monthly}</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Today</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_today}</td>
+              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_today}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="detail-card" style="grid-column:span 2;">
