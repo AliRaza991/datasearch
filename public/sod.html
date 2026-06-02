@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOD — Start of Day Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -489,15 +489,24 @@ function renderOrganic(data){
 
   return `
     <div class="kpi-grid">
-      <div class="kpi-card" style="background:#D5F0E1;border:1.5px solid #5CBD81;box-shadow:0 2px 8px rgba(92,189,129,0.15);">
-        <div class="kpi-label" style="color:#1A1A1A;">POP-UP Received Today</div>
+      <div class="kpi-card" style="background:#F0FFD9;border:1.5px solid #23914F;box-shadow:0 2px 8px rgba(35,145,79,0.12);border-radius:14px;padding:18px 16px;">
+        <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#1A1A1A;margin-bottom:12px;font-family:'Heebo',sans-serif;">POP-UP Received Today</div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#23914F" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          <div class="kpi-val" style="color:#23914F;font-size:2.2rem;">${popup_recv}</div>
+          <svg width="2.2rem" height="2.2rem" viewBox="0 0 24 24" fill="none" stroke="#23914F" stroke-width="2.5" style="flex-shrink:0;width:2.2rem;height:2.2rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <div style="font-size:2.2rem;font-weight:800;color:#23914F;font-family:'DM Mono',monospace;line-height:1;">${popup_recv}</div>
         </div>
-        <div class="kpi-sub" style="color:#1A1A1A;">Unique POP-UPs</div>
+        <div style="font-size:0.62rem;font-weight:500;color:#1A1A1A;font-family:'Heebo',sans-serif;">Unique POP-UPs</div>
       </div>
-      ${kpi('POP-UP Qualified Today',popup_qual,'cyan','Unique POP-UPs')}
+
+      <div class="kpi-card" style="background:#D1F7FF;border:1.5px solid #116578;box-shadow:0 2px 8px rgba(17,101,120,0.12);border-radius:14px;padding:18px 16px;">
+        <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#1A1A1A;margin-bottom:12px;font-family:'Heebo',sans-serif;">POP-UP Qualified Today</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <svg width="2.2rem" height="2.2rem" viewBox="0 0 24 24" fill="none" stroke="#116578" stroke-width="2.5" style="flex-shrink:0;width:2.2rem;height:2.2rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <div style="font-size:2.2rem;font-weight:800;color:#116578;font-family:'DM Mono',monospace;line-height:1;">${popup_qual}</div>
+        </div>
+        <div style="font-size:0.62rem;font-weight:500;color:#1A1A1A;font-family:'Heebo',sans-serif;">Unique POP-UPs</div>
+      </div>
+
       ${kpi('POP-UP Closed Today',popup_closed,'gold','Closed Today')}
       ${kpi('Hot Leads Received Today',hot_recv,'purple','Unique Hot Leads')}
       ${kpi('Hot Leads Qualified Today',hot_qual,'red','Qualified Today')}
