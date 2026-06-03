@@ -1289,103 +1289,144 @@ function renderClosed(data){
     data[214], data[215], data[216], data[217], data[218], data[219]
   ].filter(r => r?.[1] && r[1] !== '');
 
-  function sectionCard(title, color, today, email, st, whatsapp, avg_overall, avg_month, avg_today, email_ov, st_ov, wa_ov, uniq_ov, rev_ov){
-    return `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:0.88rem;font-weight:700;color:var(--${color});">✅ ${title}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text2);">Today: <span style="color:var(--${color});font-weight:700;font-size:1rem;margin-left:4px;">${today}</span></span>
+  function sCard(title,hex,color,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
+    return `<div style="background:#fff;border:1.5px solid #7c3aed;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(124,58,237,0.15);position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#a855f7,#eab308);border-radius:16px 16px 0 0;"></div>
+
+      <!-- Header -->
+      <div style="padding:16px 22px;border-bottom:1px solid #ede9fe;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(234,179,8,0.06));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(124,58,237,0.4);animation:iconFloat 3s ease-in-out infinite;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <div>
+            <div style="font-size:1rem;font-weight:800;color:#4c1d95;">✅ ${title}</div>
+            <div style="font-size:0.65rem;color:#7c3aed;margin-top:2px;font-weight:500;">Closing Performance</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;padding:8px 20px;text-align:center;box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.8);letter-spacing:0.08em;">Today Closed</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${today}</div>
+        </div>
       </div>
+
+      <!-- Body -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
 
-        <!-- Left: Today Breakdown -->
-        <div style="border-right:1px solid var(--border);">
-          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--${color});background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">Today Closed</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Total</div>
-              <div style="font-size:1.6rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${today}</div>
+        <!-- Left: Today + Averages -->
+        <div style="border-right:1px solid #ede9fe;">
+          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#7c3aed;background:rgba(124,58,237,0.05);border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Today Closed</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #ede9fe;">
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3s ease-in-out infinite;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              </div>
+              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">Total</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${today}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">Email</div>
-              <div style="font-size:1.6rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#a855f7,#7c3aed);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3.5s ease-in-out infinite;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </div>
+              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">Email</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${email}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">ST</div>
-              <div style="font-size:1.6rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#eab308,#ca8a04);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 4s ease-in-out infinite;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">ST</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${st}</div>
             </div>
             <div style="padding:14px 8px;text-align:center;">
-              <div style="font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;">WhatsApp</div>
-              <div style="font-size:1.6rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${whatsapp}</div>
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 2.5s ease-in-out infinite;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              </div>
+              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">WhatsApp</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${whatsapp}</div>
             </div>
           </div>
-          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.01);border-bottom:1px solid var(--border);">Averages</div>
-          ${mr('Overall Avg', avg_overall, color)}
-          ${mr('Current Month Avg', avg_month, color)}
-          ${mr('Today Avg', avg_today, color)}
+          <div style="padding:8px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#4c1d95;background:#faf5ff;border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Averages</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #ede9fe;">
+            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Overall Avg</span>
+            <span style="font-size:0.9rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${avg_overall}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #ede9fe;">
+            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Current Month Avg</span>
+            <span style="font-size:0.9rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${avg_month}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
+            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Today Avg</span>
+            <span style="font-size:0.9rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${avg_today}</span>
+          </div>
         </div>
 
-        <!-- Right: AVG Breakdown -->
+        <!-- Right: Overall AVG Breakdown -->
         <div>
-          <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--gold);background:rgba(245,166,35,0.05);border-bottom:1px solid var(--border);">Overall AVG Breakdown</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);">
-            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--cyan);margin-bottom:5px;letter-spacing:0.06em;">Email</div>
-              <div style="font-size:1.3rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${email_ov}</div>
+          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#eab308;background:rgba(234,179,8,0.06);border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Overall AVG Breakdown</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #ede9fe;">
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Email</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${email_ov}</div>
             </div>
-            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--purple);margin-bottom:5px;letter-spacing:0.06em;">ST</div>
-              <div style="font-size:1.3rem;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;">${st_ov}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">ST</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${st_ov}</div>
             </div>
-            <div style="padding:12px 8px;text-align:center;">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--green);margin-bottom:5px;letter-spacing:0.06em;">WhatsApp</div>
-              <div style="font-size:1.3rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${wa_ov}</div>
+            <div style="padding:14px 8px;text-align:center;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">WhatsApp</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${wa_ov}</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;">
-            <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--border);">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--gold);margin-bottom:5px;letter-spacing:0.06em;">Unique</div>
-              <div style="font-size:1.3rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${uniq_ov}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Unique</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${uniq_ov}</div>
             </div>
-            <div style="padding:12px 8px;text-align:center;">
-              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text2);margin-bottom:5px;letter-spacing:0.06em;">Revived</div>
-              <div style="font-size:1.3rem;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;">${rev_ov}</div>
+            <div style="padding:14px 8px;text-align:center;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Revived</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${rev_ov}</div>
             </div>
           </div>
         </div>
+
       </div>
     </div>`;
   }
 
-  function teamTable(title, color, members){
-    return `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${color}),transparent);"></div>
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
-        <span style="font-size:0.88rem;font-weight:700;color:var(--${color});">👥 ${title}</span>
+  function teamTable(title,hex,members){
+    return `<div style="background:#fff;border:1.5px solid #7c3aed;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(124,58,237,0.12);position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#a855f7,#eab308);border-radius:14px 14px 0 0;"></div>
+      <div style="padding:14px 20px;border-bottom:1px solid #ede9fe;background:linear-gradient(135deg,rgba(124,58,237,0.07),rgba(234,179,8,0.05));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(124,58,237,0.3);animation:iconFloat 3s ease-in-out infinite;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <span style="font-size:0.9rem;font-weight:800;color:#4c1d95;">👥 ${title}</span>
+        </div>
+        <span style="font-size:0.65rem;color:#7c3aed;font-weight:600;background:rgba(124,58,237,0.08);padding:4px 12px;border-radius:20px;border:1px solid rgba(124,58,237,0.2);">${members.length} members</span>
       </div>
       <div style="overflow-x:auto;">
         <table style="width:100%;border-collapse:collapse;">
           <thead>
-            <tr style="border-bottom:1px solid var(--border);">
-              <th style="padding:9px 16px;text-align:left;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);">Member</th>
-              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);">In-bound</th>
-              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--cyan);">Out-bound</th>
-              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);">Facebook</th>
-              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);">Referral</th>
-              <th style="padding:9px 8px;text-align:center;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--${color});">Total</th>
+            <tr style="background:linear-gradient(90deg,rgba(124,58,237,0.05),rgba(234,179,8,0.03));border-bottom:1px solid #ede9fe;">
+              <th style="padding:10px 16px;text-align:left;font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4c1d95;">Member</th>
+              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#10b981;">In-bound</th>
+              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7c3aed;">Out-bound</th>
+              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#a855f7;">Facebook</th>
+              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#eab308;">Referral</th>
+              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#4c1d95;">Total</th>
             </tr>
           </thead>
           <tbody>
-            ${members.map(r => `
-            <tr style="border-bottom:1px solid rgba(26,45,74,0.5);transition:background 0.12s;" onmouseover="this.style.background='rgba(0,229,160,0.02)'" onmouseout="this.style.background='transparent'">
-              <td style="padding:10px 16px;font-size:0.78rem;color:var(--text);font-weight:500;">${r[1]||'—'}</td>
-              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--green);font-family:'DM Mono',monospace;">${r[2]||'—'}</td>
-              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--cyan);font-family:'DM Mono',monospace;">${r[3]||'—'}</td>
-              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--purple);font-family:'DM Mono',monospace;">${r[4]||'—'}</td>
-              <td style="padding:10px 8px;text-align:center;font-size:0.78rem;color:var(--gold);font-family:'DM Mono',monospace;">${r[5]||'—'}</td>
-              <td style="padding:10px 8px;text-align:center;font-size:0.9rem;font-weight:700;color:var(--${color});font-family:'DM Mono',monospace;">${r[6]||'—'}</td>
+            ${members.map((r,i)=>`
+            <tr style="border-bottom:1px solid #faf5ff;background:${i%2===0?'#fff':'rgba(124,58,237,0.02)'};" onmouseover="this.style.background='rgba(124,58,237,0.05)'" onmouseout="this.style.background='${i%2===0?'#fff':'rgba(124,58,237,0.02)'}'">
+              <td style="padding:11px 16px;font-size:0.8rem;color:#4c1d95;font-weight:600;">${r[1]||'—'}</td>
+              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#10b981;font-weight:700;font-family:'DM Mono',monospace;">${r[2]||'—'}</td>
+              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#7c3aed;font-weight:700;font-family:'DM Mono',monospace;">${r[3]||'—'}</td>
+              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#a855f7;font-weight:700;font-family:'DM Mono',monospace;">${r[4]||'—'}</td>
+              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#eab308;font-weight:700;font-family:'DM Mono',monospace;">${r[5]||'—'}</td>
+              <td style="padding:11px 8px;text-align:center;font-size:0.95rem;font-weight:800;color:#4c1d95;font-family:'DM Mono',monospace;">${r[6]||'—'}</td>
             </tr>`).join('')}
           </tbody>
         </table>
@@ -1393,14 +1434,12 @@ function renderClosed(data){
     </div>`;
   }
 
-  return `
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      ${sectionCard('Closed Lead (Closers)', 'cyan', cl_today, cl_email, cl_st, cl_whatsapp, cl_avg_overall, cl_avg_month, cl_avg_today, cl_email_ov, cl_st_ov, cl_wa_ov, cl_uniq_ov, cl_rev_ov)}
-      ${sectionCard('Closed Lead (Managers)', 'gold', mg_today, mg_email, mg_st, mg_whatsapp, mg_avg_overall, mg_avg_month, mg_avg_today, mg_email_ov, mg_st_ov, mg_wa_ov, mg_uniq_ov, mg_rev_ov)}
-      ${teamTable('Team Maheen', 'cyan', maheen_cl)}
-      ${teamTable('Team Khurram', 'gold', khurram_cl)}
-    </div>
-  `;
+  return `<div style="display:flex;flex-direction:column;gap:14px;">
+    ${sCard('Closed Lead (Closers)','#7c3aed','purple',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_ov,cl_st_ov,cl_wa_ov,cl_uniq_ov,cl_rev_ov)}
+    ${sCard('Closed Lead (Managers)','#eab308','gold',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_ov,mg_st_ov,mg_wa_ov,mg_uniq_ov,mg_rev_ov)}
+    ${teamTable('Team Maheen','#7c3aed',maheen_cl)}
+    ${teamTable('Team Khurram','#eab308',khurram_cl)}
+  </div>`;
 }
 
 function renderGeneric(data, deptName, icon){
