@@ -801,78 +801,152 @@ function renderMarketing(data){
       qual_ov:tt_qual_overall, qual_mn:tt_qual_monthly, qual_td:tt_qual_today },
   ];
 
-  function platCard(p){
-    return `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--${p.color}),transparent);"></div>
-
-      <div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:0.78rem;font-weight:700;color:var(--${p.color});letter-spacing:0.04em;">📱 ${p.label}</span>
-        <span style="font-size:0.65rem;color:var(--text2);font-family:'DM Mono',monospace;">
-          R:<span style="color:var(--${p.color});margin:0 4px;">${p.recv}</span>
-          Q:<span style="color:var(--${p.color});margin:0 4px;">${p.qual}</span>
-          C:<span style="color:var(--red);margin-left:4px;">${p.closed}</span>
-        </span>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.3fr 1.3fr;gap:0;">
-        <div style="border-right:1px solid var(--border);">
-          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--${p.color});background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">${p.name} Today</div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Received</span><span class="mrow-val ${p.color}">${p.recv}</span></div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Qualified</span><span class="mrow-val ${p.color}">${p.qual}</span></div>
-          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Closed</span><span class="mrow-val red">${p.closed}</span></div>
-        </div>
-        <div style="border-right:1px solid var(--border);">
-          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);">Categories</div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">A</span><span class="mrow-val green">${p.a}</span></div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">B</span><span class="mrow-val gold">${p.b}</span></div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">C</span><span class="mrow-val red">${p.c}</span></div>
-          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Un-cat</span><span class="mrow-val dim">${p.uncat}</span></div>
-        </div>
-        <div style="border-right:1px solid var(--border);">
-          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--green);background:rgba(0,229,160,0.08);border-bottom:1px solid var(--border);">${p.name} Recv Avg</div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Overall</span><span class="mrow-val green">${p.recv_ov}</span></div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Monthly</span><span class="mrow-val green">${p.recv_mn}</span></div>
-          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Today</span><span class="mrow-val green">${p.recv_td}</span></div>
-        </div>
-        <div>
-          <div style="padding:7px 12px;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--purple);background:rgba(124,77,255,0.08);border-bottom:1px solid var(--border);">${p.name} Qual Avg</div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Overall</span><span class="mrow-val purple">${p.qual_ov}</span></div>
-          <div class="mrow" style="padding:9px 12px;"><span class="mrow-label">Monthly</span><span class="mrow-val purple">${p.qual_mn}</span></div>
-          <div class="mrow" style="padding:9px 12px;border-bottom:none;"><span class="mrow-label">Today</span><span class="mrow-val purple">${p.qual_td}</span></div>
-        </div>
-      </div>
-    </div>`;
-  }
-
   return `
     <div style="display:flex;flex-direction:column;gap:14px;">
-      ${platforms.map(p => platCard(p)).join('')}
 
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);"></div>
-        <div style="padding:13px 16px;border-bottom:1px solid var(--border);background:rgba(255,71,87,0.05);">
-          <span style="font-size:0.65rem;font-weight:600;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;">📈 Closed Leads — Paid Data</span>
+      ${platforms.map(p => `
+      <div style="background:#fff;border:1.5px solid #0d9488;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(13,148,136,0.12);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#10b981,#0d9488,#06b6d4);border-radius:16px 16px 0 0;"></div>
+
+        <!-- Header -->
+        <div style="padding:14px 20px;border-bottom:1px solid #ccfbf1;background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(6,182,212,0.08));display:flex;align-items:center;justify-content:space-between;margin-top:3px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#0d9488);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(13,148,136,0.3);animation:iconFloat 3s ease-in-out infinite;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <span style="font-size:0.88rem;font-weight:800;color:#065f46;letter-spacing:0.02em;">📱 ${p.label}</span>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <div style="text-align:center;">
+              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Received</div>
+              <div style="font-size:1.1rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.recv}</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Qualified</div>
+              <div style="font-size:1.1rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.qual}</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Closed</div>
+              <div style="font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.closed}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;">
+
+          <!-- Today -->
+          <div style="border-right:1px solid #ccfbf1;">
+            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#0d9488;background:rgba(13,148,136,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Today</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Received</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.recv}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Qualified</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.qual}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Closed</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.closed}</span>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div style="border-right:1px solid #ccfbf1;">
+            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#06b6d4;background:rgba(6,182,212,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">Categories</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">A</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.a}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">B</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${p.b}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">C</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.c}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Un-cat</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#9ca3af;font-family:'DM Mono',monospace;">${p.uncat}</span>
+            </div>
+          </div>
+
+          <!-- Recv Avg -->
+          <div style="border-right:1px solid #ccfbf1;">
+            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#10b981;background:rgba(16,185,129,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Recv Avg</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Overall</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_ov}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Monthly</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_mn}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_td}</span>
+            </div>
+          </div>
+
+          <!-- Qual Avg -->
+          <div>
+            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#0d9488;background:rgba(13,148,136,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Qual Avg</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Overall</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_ov}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Monthly</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_mn}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
+              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
+              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_td}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>`).join('')}
+
+      <!-- Closed Leads Paid Data -->
+      <div style="background:#fff;border:1.5px solid #0d9488;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(13,148,136,0.12);">
+        <div style="padding:14px 20px;border-bottom:1px solid #ccfbf1;background:linear-gradient(90deg,rgba(16,185,129,0.1),rgba(6,182,212,0.1));">
+          <span style="font-size:0.78rem;font-weight:800;color:#065f46;letter-spacing:0.08em;text-transform:uppercase;">📈 Closed Leads — Paid Data</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);">
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Total Closed</div>
-            <div style="font-size:2rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;">${pct(cl_total)}</div>
+          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(16,185,129,0.3);animation:iconFloat 3s ease-in-out infinite;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Total Closed</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${cl_total}</div>
           </div>
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Last 3 Months</div>
-            <div style="font-size:2rem;font-weight:700;color:var(--cyan);font-family:'DM Mono',monospace;">${pct(cl_3months)}</div>
+          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(14,165,233,0.3);animation:iconFloat 3.5s ease-in-out infinite;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Last 3 Months</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${cl_3months}</div>
           </div>
-          <div style="padding:18px 20px;border-right:1px solid var(--border);text-align:center;">
-            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">Current Month</div>
-            <div style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;">${pct(cl_month)}</div>
+          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(245,158,11,0.3);animation:iconFloat 4s ease-in-out infinite;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+            </div>
+            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Current Month</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${cl_month}</div>
           </div>
-          <div style="padding:18px 20px;text-align:center;">
-            <div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:500;">TODAY Closed</div>
-            <div style="font-size:2rem;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;">${cl_today}</div>
+          <div style="padding:20px;text-align:center;">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(239,68,68,0.3);animation:iconFloat 2.5s ease-in-out infinite;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">TODAY Closed</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${cl_today}</div>
           </div>
         </div>
       </div>
+
     </div>
   `;
 }
