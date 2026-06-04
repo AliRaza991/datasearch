@@ -767,11 +767,16 @@ async function doSearch(){
 
   try{
     const {headers, rows} = await getSheetData();
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().trim();
     const matched = rows.filter(row=>{
       return Object.values(row).some(val=>{
-        const parts = String(val).split(/\s*\/\/\s*/);
-        return parts.some(p=>p.toLowerCase().includes(q));
+        if(val === null || val === undefined || val === '') return false;
+        const strVal = String(val).toLowerCase().trim();
+        // Split by common separators
+        const parts = strVal.split(/\s*[\/\/|,;]\s*/);
+        // Check direct match or any part match
+        if(strVal.includes(q)) return true;
+        return parts.some(p => p.trim().includes(q));
       });
     });
 
@@ -784,11 +789,14 @@ async function doSearch(){
       if(!currentQuery) return;
       try{
         const {headers: h, rows: r} = await getSheetData();
-        const q2 = currentQuery.toLowerCase();
+        const q2 = currentQuery.toLowerCase().trim();
         const m = r.filter(row=>{
           return Object.values(row).some(val=>{
-            const parts = String(val).split(/\s*\/\/\s*/);
-            return parts.some(p=>p.toLowerCase().includes(q2));
+            if(val === null || val === undefined || val === '') return false;
+            const strVal = String(val).toLowerCase().trim();
+            const parts = strVal.split(/\s*[\/\/|,;]\s*/);
+            if(strVal.includes(q2)) return true;
+            return parts.some(p => p.trim().includes(q2));
           });
         });
         showResults(m, h, currentQuery);
