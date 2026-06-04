@@ -314,9 +314,9 @@ nav{
 
 /* ═══ SECTION CARDS ═══ */
 .section-card{
-  background:#fff;border:1px solid var(--border);
+  background:#fff;border:2px solid #E2E8F0;
   border-radius:24px;overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,0.05);
+  box-shadow:0 4px 20px rgba(0,0,0,0.06);
   margin-bottom:20px;
 }
 .section-hdr{
@@ -363,10 +363,11 @@ nav{
 .avg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
 .avg-table{width:100%;border-collapse:collapse;}
 .avg-table th{
-  padding:10px 16px;text-align:center;
+  padding:11px 16px;text-align:center;
   font-size:0.68rem;font-weight:700;
   letter-spacing:0.1em;text-transform:uppercase;
-  border-bottom:1px solid #f1f5f9;
+  border-bottom:2px solid #E2E8F0;
+  background:#F8FAFC;
 }
 .avg-table th:first-child{text-align:left;}
 .avg-table td{
@@ -382,7 +383,7 @@ nav{
 .closing-grid{display:grid;grid-template-columns:repeat(4,1fr);}
 .closing-cell{
   padding:28px 20px;text-align:center;
-  border-right:1px solid #f1f5f9;
+  border-right:2px solid #F1F5F9;
   position:relative;
 }
 .closing-cell:last-child{border-right:none;}
@@ -652,11 +653,11 @@ function renderOrganic(data){
 
     <!-- BREAKDOWN -->
     <div class="section-card" style="margin-bottom:20px;">
-      <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.06),rgba(255,255,255,0),rgba(220,38,38,0.06));">
-        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <div class="section-hdr" style="background:linear-gradient(90deg,#2563EB,#4F46E5,#DC2626);border-bottom:none;">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.2);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
         </div>
-        <span class="section-hdr-title" style="color:#2563EB;">Today Received POP-UPS Breakdown</span>
+        <span class="section-hdr-title" style="color:#fff;letter-spacing:0.06em;">Today Received POP-UPS Breakdown</span>
       </div>
       <div class="breakdown-grid">
         <div class="breakdown-cell">
@@ -693,9 +694,9 @@ function renderOrganic(data){
     <!-- AVERAGES -->
     <div class="avg-grid">
       <div class="section-card" style="margin-bottom:0;">
-        <div class="section-hdr">
-          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">📊</div>
-          <span class="section-hdr-title" style="color:#2563EB;">POP-UP Averages</span>
+        <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(37,99,235,0.04));border-bottom:2px solid rgba(37,99,235,0.15);">
+          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.15);">📊</div>
+          <span class="section-hdr-title" style="color:#2563EB;font-size:0.82rem;">POP-UP Averages</span>
         </div>
         <div style="padding:8px 0;">
           <table class="avg-table">
@@ -715,9 +716,9 @@ function renderOrganic(data){
         </div>
       </div>
       <div class="section-card" style="margin-bottom:0;">
-        <div class="section-hdr">
-          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.1);">🔥</div>
-          <span class="section-hdr-title" style="color:#DC2626;">Hot Lead Averages</span>
+        <div class="section-hdr" style="background:linear-gradient(90deg,rgba(220,38,38,0.1),rgba(220,38,38,0.03));border-bottom:2px solid rgba(220,38,38,0.15);">
+          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.15);">🔥</div>
+          <span class="section-hdr-title" style="color:#DC2626;font-size:0.82rem;">Hot Lead Averages</span>
         </div>
         <div style="padding:8px 0;">
           <table class="avg-table">
@@ -740,9 +741,9 @@ function renderOrganic(data){
 
     <!-- CLOSING AVERAGE -->
     <div class="section-card">
-      <div class="section-hdr">
-        <div class="section-hdr-icon" style="background:rgba(251,191,36,0.15);">📈</div>
-        <span class="section-hdr-title" style="color:#D97706;">Closing Average</span>
+      <div class="section-hdr" style="background:linear-gradient(90deg,rgba(217,119,6,0.12),rgba(217,119,6,0.04));border-bottom:2px solid rgba(217,119,6,0.2);">
+        <div class="section-hdr-icon" style="background:rgba(217,119,6,0.15);">📈</div>
+        <span class="section-hdr-title" style="color:#D97706;font-size:0.82rem;">Closing Average</span>
       </div>
       <div class="closing-grid">
         <div class="closing-cell">
