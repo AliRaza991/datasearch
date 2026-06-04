@@ -4,143 +4,251 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EOD — End of Day Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#060912;--card:#0c1220;--card2:#0f1729;--border:#162035;
-  --cyan:#00D4FF;--gold:#FFD700;--green:#00e5a0;--red:#ff4d6d;
-  --text:#e2e8f0;--muted:#4a5568;--dim:#2d3748;
-  --maheen:#38bdf8;--khurram:#f59e0b;
-}
 html{visibility:hidden}
-body{background:var(--bg);font-family:'DM Mono',monospace;color:var(--text);min-height:100vh;padding-top:60px;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 10% 10%,rgba(0,212,255,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 90% 90%,rgba(255,215,0,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
+:root{
+  --blue:#2563EB;--red:#DC2626;--gold:#FBBF24;
+  --green:#16A34A;--purple:#7C3AED;--cyan:#0891B2;
+  --orange:#EA580C;--bg:#F8FAFC;--white:#FFFFFF;
+  --border:#CBD5E1;--text:#0F172A;--text2:#64748B;--text3:#94A3B8;
+  --maheen:#2563EB;--khurram:#D97706;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,#F8FAFC 0%,#F1F5F9 100%);
+  color:var(--text);min-height:100vh;
+  padding-top:80px;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 40% 30% at 10% 20%,rgba(37,99,235,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 35% 25% at 90% 80%,rgba(220,38,38,0.05) 0%,transparent 60%);
+}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:#0d1117;height:60px;display:flex;align-items:center;padding:0 24px;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);}
-.nav-logo{display:flex;align-items:center;gap:10px;}
-.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#00D4FF,#FFD700);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.nav-logo-text{font-size:1rem;font-weight:800;color:#fff;letter-spacing:0.04em;}
-.nav-logo-text span{color:#00D4FF;}
-.nav-links{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.07);border-radius:14px;padding:5px;border:1px solid rgba(255,255,255,0.07);}
-.nav-link{padding:7px 20px;border-radius:10px;font-size:0.76rem;font-weight:600;text-decoration:none;color:rgba(255,255,255,0.45);background:transparent;border:none;transition:all 0.2s;display:flex;align-items:center;gap:7px;cursor:pointer;}
-.nav-link:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.06);}
-.nav-link.ds{color:#fff;background:linear-gradient(135deg,#1d4ed8,#0ea5e9);box-shadow:0 4px 14px rgba(14,165,233,0.3);}
-.nav-link.sod{color:#1a1a1a;background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 14px rgba(245,158,11,0.3);}
-.nav-link.eod{color:#fff;background:linear-gradient(135deg,#7c3aed,#8b5cf6);box-shadow:0 4px 14px rgba(139,92,246,0.3);}
-/* USER */
-.user-pill{display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:5px 14px 5px 5px;transition:all 0.2s;position:relative;}
-.user-pill:hover{background:rgba(255,255,255,0.14);}
-.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#00D4FF,#FFD700);display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:800;color:#0d1117;}
-.user-name{font-size:0.76rem;color:#fff;font-weight:700;}
-.user-desig{font-size:0.56rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;}
-.user-menu{display:none;position:absolute;right:0;top:calc(100% + 10px);background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:8px;min-width:190px;z-index:9999;box-shadow:0 24px 60px rgba(0,0,0,0.6);}
-.menu-hdr{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:6px;}
-.menu-name{font-size:0.78rem;color:#fff;font-weight:700;}
-.menu-desig{font-size:0.62rem;color:rgba(255,255,255,0.4);margin-top:2px;}
-.logout-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;color:#f87171;font-size:0.74rem;transition:all 0.15s;}
-.logout-item:hover{background:rgba(248,113,113,0.1);}
+/* ═══ NAVBAR ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(203,213,225,0.8);
+  height:80px;display:flex;align-items:center;
+  padding:0 32px;justify-content:space-between;
+  box-shadow:0 4px 24px rgba(0,0,0,0.04);
+}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-brand-icon{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;font-weight:900;color:#fff;
+  box-shadow:0 6px 20px rgba(37,99,235,0.3);
+}
+.nav-brand-text{font-size:1.15rem;font-weight:800;letter-spacing:-0.01em;}
+.nav-brand-text .massive{color:var(--blue);}
+.nav-brand-text .dynamics{color:var(--red);}
+.nav-pills{
+  display:flex;align-items:center;gap:4px;
+  background:#F1F5F9;border-radius:999px;
+  padding:5px;border:1px solid var(--border);
+}
+.nav-pill{
+  padding:8px 24px;border-radius:999px;
+  font-size:0.8rem;font-weight:600;
+  text-decoration:none;color:var(--text2);
+  background:transparent;border:none;
+  transition:all 0.25s;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+}
+.nav-pill:hover{color:var(--text);background:rgba(255,255,255,0.8);}
+.nav-pill.active{
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  box-shadow:0 4px 16px rgba(37,99,235,0.35);
+}
+.nav-user{
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+  position:relative;background:rgba(255,255,255,0.8);
+  border:1px solid var(--border);border-radius:999px;
+  padding:6px 16px 6px 6px;backdrop-filter:blur(10px);
+  transition:all 0.2s;
+}
+.nav-user:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.nav-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.88rem;font-weight:800;color:#fff;
+  border:2px solid var(--gold);
+  box-shadow:0 0 0 3px rgba(251,191,36,0.2);
+}
+.nav-user-name{font-size:0.8rem;font-weight:700;color:var(--text);}
+.nav-user-role{font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
+.user-menu{
+  display:none;position:absolute;right:0;top:calc(100% + 12px);
+  background:#fff;border:1px solid var(--border);border-radius:16px;
+  padding:8px;min-width:200px;z-index:9999;
+  box-shadow:0 20px 50px rgba(0,0,0,0.1);
+}
+.user-menu.show{display:block;}
+.menu-hdr{padding:10px 12px;border-bottom:1px solid #f1f5f9;margin-bottom:6px;}
+.menu-name{font-size:0.82rem;font-weight:700;color:var(--text);}
+.menu-desig{font-size:0.65rem;color:var(--text3);margin-top:2px;}
+.logout-item{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border-radius:10px;cursor:pointer;color:#ef4444;
+  font-size:0.76rem;font-weight:600;transition:all 0.15s;
+}
+.logout-item:hover{background:#fef2f2;}
 
-/* MAIN */
-main{position:relative;z-index:1;padding:20px 20px 40px;}
+/* ═══ MAIN ═══ */
+main{
+  position:relative;z-index:1;
+  padding:32px 36px;
+  min-height:calc(100vh - 80px);
+}
 
-/* PAGE HEADER */
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-.header-left{}
-.page-title{font-family:'Playfair Display',serif;font-size:1.7rem;background:linear-gradient(135deg,var(--gold) 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
-.page-sub{color:var(--muted);font-size:0.65rem;letter-spacing:0.08em;}
-.header-right{display:flex;align-items:center;gap:10px;}
-.live-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:20px;padding:5px 12px;font-size:0.62rem;color:var(--green);letter-spacing:0.06em;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s ease infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
-.refresh-pill{font-size:0.6rem;color:var(--muted);letter-spacing:0.05em;}
-#lastUpdated{color:var(--cyan);}
-
-/* OVERALL CARDS */
-.overall-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
-.ov-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;cursor:default;}
-.ov-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
-.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.ov-card.c1::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
-.ov-card.c2::before{background:linear-gradient(90deg,transparent,var(--maheen),transparent);}
-.ov-card.c3::before{background:linear-gradient(90deg,transparent,var(--khurram),transparent);}
-.ov-card.c4::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.ov-card.c5::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
-.ov-label{font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.ov-val{font-size:1.8rem;font-weight:500;line-height:1;}
-.ov-val.cyan{color:var(--cyan);}
-.ov-val.maheen{color:var(--maheen);}
-.ov-val.khurram{color:var(--khurram);}
-.ov-val.gold{color:var(--gold);}
-.ov-val.green{color:var(--green);}
-.ov-sub{font-size:0.58rem;color:var(--muted);margin-top:4px;}
-
-/* TEAM SECTION */
-.team-section{margin-bottom:28px;}
-.team-header-bar{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-radius:12px 12px 0 0;border:1px solid var(--border);border-bottom:none;}
-.team-header-bar.m{background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.04));}
-.team-header-bar.k{background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04));}
-.team-title{font-family:'Playfair Display',serif;font-size:1.1rem;}
-.team-title.m{color:var(--maheen);}
-.team-title.k{color:var(--khurram);}
-.team-kpis{display:flex;gap:20px;}
-.kpi{text-align:right;}
-.kpi-val{font-size:1.2rem;font-weight:500;}
-.kpi-val.m{color:var(--maheen);}
-.kpi-val.k{color:var(--khurram);}
-.kpi-label{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
-
-/* TABLE WRAPPER */
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;overflow:hidden;}
-.tbl-scroll{overflow-x:auto;}
-
-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
-
-/* Section headers */
-.sec-head{text-align:center;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--border);}
-.sec-head.month{background:rgba(0,212,255,0.05);color:var(--cyan);}
-.sec-head.today{background:rgba(0,229,160,0.05);color:var(--green);}
-.sec-head.closed{background:rgba(255,215,0,0.05);color:var(--gold);}
-
-thead th{padding:7px 8px;text-align:center;font-size:0.66rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--card);}
-thead th.name-h{text-align:left;padding-left:16px;min-width:130px;}
-
-tbody tr{border-bottom:1px solid rgba(22,32,53,0.8);transition:background 0.12s;}
-tbody tr:hover{background:rgba(0,212,255,0.03);}
-tbody tr:nth-child(even){background:rgba(255,255,255,0.01);}
-tbody tr.total-row{background:rgba(0,212,255,0.04);border-top:1px solid var(--border);}
-tbody tr.total-row:hover{background:rgba(0,212,255,0.07);}
-
-tbody td{padding:9px 8px;text-align:center;white-space:nowrap;font-size:0.76rem;}
-tbody td.name-td{text-align:left;padding-left:16px;color:var(--text);font-size:0.82rem;}
-tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;}
-
-/* Column group colors */
-.col-month-new{color:#93c5fd;}
-.col-month-rev{color:#c4b5fd;}
-.col-total-q{color:var(--cyan);font-weight:600;}
-.col-inb{color:#6ee7b7;}
-.col-out{color:#fde68a;}
-.col-total-c{color:var(--gold);font-weight:600;}
-.col-ratio{}
-.col-today-new{color:var(--green);}
-.col-today-rev{color:#86efac;}
-.col-inb-today{color:#67e8f9;}
-.col-out-today{color:#fbbf24;}
-.col-fb{color:#f9a8d4;}
-.col-ql-today{color:var(--cyan);font-weight:600;}
-.col-cl-today{color:var(--gold);font-weight:600;}
-
-.zero{color:var(--dim);}
-.ratio-badge{padding:2px 7px;border-radius:10px;font-size:0.62rem;}
-.ratio-h{background:rgba(0,229,160,0.1);color:var(--green);border:1px solid rgba(0,229,160,0.2);}
-.ratio-m{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
-.ratio-l{background:rgba(255,77,109,0.08);color:var(--red);border:1px solid rgba(255,77,109,0.15);}
-
-.spin{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+/* ═══ PAGE HEADER ═══ */
+.page-hdr{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:16px;
+}
+.page-title{
+  font-family:'Manrope',sans-serif;
+  font-size:2.8rem;font-weight:700;
+  color:var(--text);letter-spacing:-0.03em;line-height:1.1;
+}
+.page-title .highlight{color:var(--red);}
+.page-sub{color:var(--text2);font-size:0.78rem;margin-top:6px;font-weight:500;}
+.live-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(22,163,74,0.1);border:1.5px solid rgba(22,163,74,0.25);
+  border-radius:999px;padding:8px 20px;font-size:0.72rem;
+  color:var(--green);letter-spacing:0.06em;font-weight:700;
+}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);animation:blink 1.5s ease infinite;
+  box-shadow:0 0 8px var(--green);
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
 @keyframes spin{to{transform:rotate(360deg);}}
-.loading-td{padding:40px;text-align:center;color:var(--muted);font-size:0.75rem;}
+
+/* ═══ OVERALL STAT CARDS ═══ */
+.overall-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:16px;margin-bottom:28px;
+}
+.ov-card{
+  background:#fff;border:2px solid var(--border);
+  border-radius:20px;padding:20px 18px;
+  position:relative;overflow:hidden;
+  transition:transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 4px 16px rgba(0,0,0,0.05);
+}
+.ov-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
+.ov-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:4px;border-radius:20px 20px 0 0;
+}
+.ov-card.c1::before{background:linear-gradient(90deg,#2563EB,#60A5FA);}
+.ov-card.c2::before{background:linear-gradient(90deg,#2563EB,#60A5FA);}
+.ov-card.c3::before{background:linear-gradient(90deg,#D97706,#FCD34D);}
+.ov-card.c4::before{background:linear-gradient(90deg,#FBBF24,#FDE68A);}
+.ov-card.c5::before{background:linear-gradient(90deg,#16A34A,#4ADE80);}
+.ov-label{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;}
+.ov-val{font-size:2.4rem;font-weight:700;line-height:1;margin-bottom:6px;font-family:'Manrope',sans-serif;letter-spacing:-0.03em;}
+.ov-sub{font-size:0.62rem;color:var(--text3);font-weight:500;}
+
+/* ═══ TEAM SECTION ═══ */
+.team-section{margin-bottom:28px;}
+.team-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;border-radius:20px 20px 0 0;
+  border:2px solid var(--border);border-bottom:none;
+}
+.team-header.maheen{background:linear-gradient(135deg,rgba(37,99,235,0.08),rgba(37,99,235,0.03));}
+.team-header.khurram{background:linear-gradient(135deg,rgba(217,119,6,0.08),rgba(217,119,6,0.03));}
+.team-name{font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;}
+.team-name.maheen{color:var(--maheen);}
+.team-name.khurram{color:var(--khurram);}
+.team-dot{width:10px;height:10px;border-radius:50%;}
+.team-dot.maheen{background:var(--maheen);box-shadow:0 0 8px rgba(37,99,235,0.4);}
+.team-dot.khurram{background:var(--khurram);box-shadow:0 0 8px rgba(217,119,6,0.4);}
+.team-kpis{display:flex;gap:20px;}
+.team-kpi{text-align:right;}
+.team-kpi-val{font-size:1.3rem;font-weight:800;font-family:'DM Mono',monospace;line-height:1;}
+.team-kpi-val.maheen{color:var(--maheen);}
+.team-kpi-val.khurram{color:var(--khurram);}
+.team-kpi-label{font-size:0.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px;font-weight:600;}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{
+  background:#fff;border:2px solid var(--border);
+  border-radius:0 0 20px 20px;border-top:none;overflow:hidden;
+}
+.tbl-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+
+.sec-head{
+  text-align:center;font-size:0.6rem;letter-spacing:0.1em;
+  text-transform:uppercase;padding:8px 6px;
+  border-bottom:2px solid var(--border);font-weight:700;
+}
+.sec-head.month{background:rgba(37,99,235,0.08);color:var(--blue);}
+.sec-head.today{background:rgba(22,163,74,0.08);color:var(--green);}
+.sec-head.closed{background:rgba(217,119,6,0.08);color:var(--khurram);}
+
+thead th{
+  padding:10px 10px;text-align:center;
+  font-size:0.62rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text2);background:#F1F5F9;
+  border-bottom:2px solid #94A3B8;
+  white-space:nowrap;
+}
+thead th:first-child{text-align:left;padding-left:20px;}
+
+tbody tr{border-bottom:1.5px solid var(--border);transition:background 0.12s;}
+tbody tr:hover{background:#F8FAFC;}
+tbody tr:nth-child(even){background:#FAFBFC;}
+tbody tr:nth-child(even):hover{background:#F1F5F9;}
+tbody tr.total-row{
+  background:linear-gradient(90deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));
+  border-top:2px solid var(--border);font-weight:700;
+}
+tbody tr.total-row:hover{background:linear-gradient(90deg,rgba(37,99,235,0.1),rgba(220,38,38,0.07));}
+
+tbody td{padding:11px 10px;text-align:center;color:var(--text);font-weight:500;}
+tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;}
+.row-num{
+  color:#fff;font-family:'DM Mono',monospace;font-size:0.72rem;
+  font-weight:700;
+  background:linear-gradient(135deg,#1e3a8a,#2563EB);
+  padding:3px 8px;border-radius:6px;
+}
+.zero{color:var(--text3);}
+
+/* Ratio badges */
+.ratio-h{background:rgba(22,163,74,0.1);color:#16A34A;border:1.5px solid rgba(22,163,74,0.25);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
+.ratio-m{background:rgba(217,119,6,0.1);color:#D97706;border:1.5px solid rgba(217,119,6,0.25);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
+.ratio-l{background:rgba(220,38,38,0.08);color:#DC2626;border:1.5px solid rgba(220,38,38,0.2);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
+
+/* Loading */
+.loading-wrap{display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:16px;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;}
+.loading-text{font-size:0.8rem;color:var(--text2);font-weight:500;}
+
+/* Refresh info */
+.refresh-info{
+  text-align:center;color:var(--text3);
+  font-size:0.68rem;margin-top:20px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.refresh-info span{color:var(--blue);font-weight:600;font-family:'DM Mono',monospace;}
 </style>
 </head>
 <body>
@@ -153,31 +261,31 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
 </script>
 
 <nav>
-  <div class="nav-logo">
-    <div class="nav-logo-icon">🌙</div>
-    <div class="nav-logo-text">END OF <span style="color:#8b5cf6;">DAY</span></div>
-  </div>
-  <div class="nav-links">
-    <a href="/index.html" class="nav-link ds">⚡ DataSearch</a>
-    <a href="/sod.html" class="nav-link sod">☀️ SOD</a>
-    <a href="/eod.html" class="nav-link eod">🌙 EOD</a>
-  </div>
-  <div id="userWidget" style="position:relative;">
-    <div class="user-pill" onclick="toggleUserMenu()">
-      <div class="user-avatar" id="userAvatar"></div>
-      <div>
-        <div class="user-name" id="userDisplayName"></div>
-        <div class="user-desig" id="userDisplayRole"></div>
-      </div>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  <div class="nav-brand">
+    <div class="nav-brand-icon">M</div>
+    <div class="nav-brand-text">
+      <span class="massive">Massive </span><span class="dynamics">Dynamics</span>
     </div>
-    <div class="user-menu" id="userMenu">
+  </div>
+  <div class="nav-pills">
+    <a href="/index.html" class="nav-pill">⚡ DataSearch</a>
+    <a href="/sod.html" class="nav-pill">☀️ SOD</a>
+    <a href="/eod.html" class="nav-pill active">🌙 EOD</a>
+  </div>
+  <div class="nav-user" onclick="toggleMenu()">
+    <div class="nav-avatar" id="uAvatar"></div>
+    <div>
+      <div class="nav-user-name" id="uName"></div>
+      <div class="nav-user-role" id="uDesig"></div>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    <div class="user-menu" id="uMenu">
       <div class="menu-hdr">
-        <div class="menu-name" id="menuUserName"></div>
-        <div class="menu-desig" id="menuUserDesig"></div>
+        <div class="menu-name" id="mName"></div>
+        <div class="menu-desig" id="mDesig"></div>
       </div>
-      <div class="logout-item" onclick="dsLogout()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <div class="logout-item" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </div>
     </div>
@@ -185,55 +293,70 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
 </nav>
 
 <main>
-  <div class="page-header">
-    <div class="header-left">
-      <div class="page-title">End of Day Report</div>
-      <div class="page-sub">Live Intelligence Dashboard · All Teams</div>
+  <div class="page-hdr">
+    <div>
+      <div class="page-title">END OF DAY <span class="highlight">REPORT</span></div>
+      <div class="page-sub">Live Intelligence Dashboard · All Teams · Auto-refreshes every 30 seconds</div>
     </div>
-    <div class="header-right">
-      <div class="live-pill"><span class="live-dot"></span>LIVE</div>
-      <div class="refresh-pill">Updated: <span id="lastUpdated">—</span></div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="live-badge"><span class="live-dot"></span> LIVE</div>
+      <div class="refresh-info">Updated: <span id="lastUpdated">—</span></div>
     </div>
   </div>
 
   <!-- OVERALL STATS -->
-  <div class="overall-row">
+  <div class="overall-grid">
     <div class="ov-card c1">
       <div class="ov-label">Total Qualified</div>
-      <div class="ov-val cyan" id="ovQ">—</div>
-      <div class="ov-sub">Both Teams · Month</div>
-    </div>
-    <div class="ov-card c4">
-      <div class="ov-label">Total Closed</div>
-      <div class="ov-val gold" id="ovC">—</div>
+      <div class="ov-val" style="color:var(--blue);" id="ovQ">—</div>
       <div class="ov-sub">Both Teams · Month</div>
     </div>
     <div class="ov-card c2">
-      <div class="ov-label">Maheen Team Closed</div>
-      <div class="ov-val maheen" id="mClosedCard">—</div>
-      <div class="ov-sub" id="mRatioCard">Closing —</div>
+      <div class="ov-label">Team Maheen</div>
+      <div class="ov-val" style="color:var(--maheen);" id="mQ">—</div>
+      <div class="ov-sub" id="mR">Closing —</div>
     </div>
     <div class="ov-card c3">
-      <div class="ov-label">Khurram Team Closed</div>
-      <div class="ov-val khurram" id="kClosedCard">—</div>
-      <div class="ov-sub" id="kRatioCard">Closing —</div>
+      <div class="ov-label">Team Khurram</div>
+      <div class="ov-val" style="color:var(--khurram);" id="kQ">—</div>
+      <div class="ov-sub" id="kR">Closing —</div>
+    </div>
+    <div class="ov-card c4">
+      <div class="ov-label">Total Closed</div>
+      <div class="ov-val" style="color:var(--gold);" id="ovC">—</div>
+      <div class="ov-sub">Both Teams · Month</div>
     </div>
     <div class="ov-card c5">
       <div class="ov-label">Overall Ratio</div>
-      <div class="ov-val green" id="ovRatio">—</div>
+      <div class="ov-val" style="color:var(--green);" id="ovRatio">—</div>
       <div class="ov-sub">Closing Rate</div>
     </div>
   </div>
 
   <!-- TEAM MAHEEN -->
   <div class="team-section">
-    <div class="team-header-bar m">
-      <div class="team-title m">⬤ Team Maheen</div>
+    <div class="team-header maheen">
+      <div class="team-name maheen">
+        <div class="team-dot maheen"></div>
+        Team Maheen
+      </div>
       <div class="team-kpis">
-        <div class="kpi"><div class="kpi-val m" id="mTotal">—</div><div class="kpi-label">Qualified</div></div>
-        <div class="kpi"><div class="kpi-val m" id="mClosed">—</div><div class="kpi-label">Closed</div></div>
-        <div class="kpi"><div class="kpi-val m" id="mRatio">—</div><div class="kpi-label">Ratio</div></div>
-        <div class="kpi"><div class="kpi-val m" id="mQToday">—</div><div class="kpi-label">Today</div></div>
+        <div class="team-kpi">
+          <div class="team-kpi-val maheen" id="mTotal">—</div>
+          <div class="team-kpi-label">Qualified</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val maheen" id="mClosed">—</div>
+          <div class="team-kpi-label">Closed</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val maheen" id="mRatio">—</div>
+          <div class="team-kpi-label">Ratio</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val maheen" id="mQToday">—</div>
+          <div class="team-kpi-label">Today</div>
+        </div>
       </div>
     </div>
     <div class="tbl-wrap">
@@ -241,7 +364,7 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
         <table>
           <thead>
             <tr>
-              <th class="name-h" rowspan="3">Member</th>
+              <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#1e3a8a,#1e293b);color:#fff;border-bottom:2px solid var(--blue);">Member</th>
               <th colspan="7" class="sec-head month">Total Leads Qualified In The Month</th>
               <th colspan="4" class="sec-head closed">Closed Leads (Month)</th>
               <th rowspan="3" class="sec-head closed">Total Closed</th>
@@ -252,16 +375,16 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
               <th rowspan="3" class="sec-head today">Closed Today</th>
             </tr>
             <tr>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;">New Leads</th>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;">Revive Leads</th>
+              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
+              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
               <th rowspan="2" class="sec-head month">Total Q</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;">Inbound</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;">Outbound</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;">New Leads</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;">Revive Leads</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">INB</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">OUT</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">FB</th>
+              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Inbound</th>
+              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Outbound</th>
+              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
+              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">INB</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">OUT</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">FB</th>
             </tr>
             <tr>
               <th>Email</th><th>RC</th><th>WAPP</th>
@@ -274,7 +397,9 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
             </tr>
           </thead>
           <tbody id="maheenBody">
-            <tr><td colspan="22" class="loading-td"><div class="spin"></div> Loading data...</td></tr>
+            <tr><td colspan="22" style="text-align:center;padding:40px;color:var(--text3);">
+              <div class="loading-wrap" style="height:auto;"><div class="spinner"></div><div class="loading-text">Loading...</div></div>
+            </td></tr>
           </tbody>
         </table>
       </div>
@@ -283,13 +408,28 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
 
   <!-- TEAM KHURRAM -->
   <div class="team-section">
-    <div class="team-header-bar k">
-      <div class="team-title k">⬤ Team Khurram</div>
+    <div class="team-header khurram">
+      <div class="team-name khurram">
+        <div class="team-dot khurram"></div>
+        Team Khurram
+      </div>
       <div class="team-kpis">
-        <div class="kpi"><div class="kpi-val k" id="kTotal">—</div><div class="kpi-label">Qualified</div></div>
-        <div class="kpi"><div class="kpi-val k" id="kClosed">—</div><div class="kpi-label">Closed</div></div>
-        <div class="kpi"><div class="kpi-val k" id="kRatio">—</div><div class="kpi-label">Ratio</div></div>
-        <div class="kpi"><div class="kpi-val k" id="kQToday">—</div><div class="kpi-label">Today</div></div>
+        <div class="team-kpi">
+          <div class="team-kpi-val khurram" id="kTotal">—</div>
+          <div class="team-kpi-label">Qualified</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val khurram" id="kClosed">—</div>
+          <div class="team-kpi-label">Closed</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val khurram" id="kRatio">—</div>
+          <div class="team-kpi-label">Ratio</div>
+        </div>
+        <div class="team-kpi">
+          <div class="team-kpi-val khurram" id="kQToday">—</div>
+          <div class="team-kpi-label">Today</div>
+        </div>
       </div>
     </div>
     <div class="tbl-wrap">
@@ -297,7 +437,7 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
         <table>
           <thead>
             <tr>
-              <th class="name-h" rowspan="3">Member</th>
+              <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#78350f,#92400e);color:#fff;border-bottom:2px solid var(--khurram);">Member</th>
               <th colspan="7" class="sec-head month">Total Leads Qualified In The Month</th>
               <th colspan="4" class="sec-head closed">Closed Leads (Month)</th>
               <th rowspan="3" class="sec-head closed">Total Closed</th>
@@ -308,16 +448,16 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
               <th rowspan="3" class="sec-head today">Closed Today</th>
             </tr>
             <tr>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;">New Leads</th>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;">Revive Leads</th>
+              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
+              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
               <th rowspan="2" class="sec-head month">Total Q</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;">Inbound</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;">Outbound</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;">New Leads</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;">Revive Leads</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">INB</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">OUT</th>
-              <th class="sec-head closed" style="font-size:0.52rem;">FB</th>
+              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Inbound</th>
+              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Outbound</th>
+              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
+              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">INB</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">OUT</th>
+              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">FB</th>
             </tr>
             <tr>
               <th>Email</th><th>RC</th><th>WAPP</th>
@@ -330,7 +470,9 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
             </tr>
           </thead>
           <tbody id="khurramBody">
-            <tr><td colspan="22" class="loading-td"><div class="spin"></div> Loading data...</td></tr>
+            <tr><td colspan="22" style="text-align:center;padding:40px;color:var(--text3);">
+              <div class="loading-wrap" style="height:auto;"><div class="spinner"></div><div class="loading-text">Loading...</div></div>
+            </td></tr>
           </tbody>
         </table>
       </div>
@@ -341,69 +483,52 @@ tbody td.total-name{color:var(--cyan);font-size:0.65rem;letter-spacing:0.06em;te
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyq7c00GRxW4Zx7l47GWGh-Wr83cy1tx4dhUY1a0sOvAa8sJgW8ACheQVNDzFa_ncwo/exec';
 
-// User widget
 const u=JSON.parse(localStorage.getItem('ds_user')||'{}');
-document.getElementById('userAvatar').textContent=(u.name||'U').charAt(0).toUpperCase();
-document.getElementById('userDisplayName').textContent=u.name||'User';
-document.getElementById('userDisplayRole').textContent=u.designation||u.role||'';
-document.getElementById('menuUserName').textContent=u.name||'User';
-document.getElementById('menuUserDesig').textContent=u.designation||'';
+document.getElementById('uAvatar').textContent=(u.name||'U').charAt(0).toUpperCase();
+document.getElementById('uName').textContent=u.name||'User';
+document.getElementById('uDesig').textContent=u.designation||u.role||'';
+document.getElementById('mName').textContent=u.name||'User';
+document.getElementById('mDesig').textContent=u.designation||'';
 
-function toggleUserMenu(){const m=document.getElementById('userMenu');m.style.display=m.style.display==='block'?'none':'block';}
-document.addEventListener('click',function(e){const p=document.querySelector('.user-pill');const m=document.getElementById('userMenu');if(p&&!p.contains(e.target)&&m)m.style.display='none';});
-function dsLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
+function toggleMenu(){const m=document.getElementById('uMenu');m.classList.toggle('show');}
+document.addEventListener('click',function(e){const p=document.querySelector('.nav-user');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.classList.remove('show');});
+function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
-function v(val){
-  if(val===0||val===''||val===null||val===undefined) return '<span class="zero">—</span>';
-  return val;
-}
-function pct(ratio){
-  const r=parseFloat(ratio)||0;
-  return Math.round(r*100)+'%';
-}
-function ratioClass(ratio){
-  const r=parseFloat(ratio)||0;
-  if(r>=0.3) return 'ratio-h';
-  if(r>=0.15) return 'ratio-m';
-  return 'ratio-l';
-}
-function ratioBadge(ratio){
-  const r=parseFloat(ratio)||0;
-  if(!r) return '<span class="zero">—</span>';
-  return `<span class="ratio-badge ${ratioClass(r)}">${pct(r)}</span>`;
-}
+function v(val){if(val===0||val===''||val===null||val===undefined)return '<span class="zero">—</span>';return val;}
+function pct(ratio){const r=parseFloat(ratio)||0;return Math.round(r*100)+'%';}
+function ratioClass(ratio){const r=parseFloat(ratio)||0;if(r>=0.3)return 'ratio-h';if(r>=0.15)return 'ratio-m';return 'ratio-l';}
+function ratioBadge(ratio){const r=parseFloat(ratio)||0;if(!r)return '<span class="zero">—</span>';return `<span class="${ratioClass(r)}">${pct(r)}</span>`;}
 
-function makeRow(row, isTotal=false){
+function makeRow(row,isTotal=false){
   const name=row[0];
-  if(!name||name==='') return '';
+  if(!name||name==='')return '';
   const cls=isTotal?'total-row':'';
-  const nameCls=isTotal?'name-td total-name':'name-td';
   return `<tr class="${cls}">
-    <td class="${nameCls}">${name}</td>
-    <td class="col-month-new">${v(row[1])}</td>
-    <td class="col-month-new">${v(row[2])}</td>
-    <td class="col-month-new">${v(row[3])}</td>
-    <td class="col-month-rev">${v(row[4])}</td>
-    <td class="col-month-rev">${v(row[5])}</td>
-    <td class="col-month-rev">${v(row[6])}</td>
-    <td class="col-total-q">${v(row[7])}</td>
-    <td class="col-inb">${v(row[8])}</td>
-    <td class="col-inb">${v(row[9])}</td>
-    <td class="col-out">${v(row[10])}</td>
-    <td class="col-out">${v(row[11])}</td>
-    <td class="col-total-c">${v(row[12])}</td>
+    <td style="text-align:left;padding-left:20px;${isTotal?'color:var(--blue);font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;':''}">${name}</td>
+    <td style="color:#374151;">${v(row[1])}</td>
+    <td style="color:#374151;">${v(row[2])}</td>
+    <td style="color:#374151;">${v(row[3])}</td>
+    <td style="color:#374151;">${v(row[4])}</td>
+    <td style="color:#374151;">${v(row[5])}</td>
+    <td style="color:#374151;">${v(row[6])}</td>
+    <td style="color:var(--blue);font-weight:700;">${v(row[7])}</td>
+    <td style="color:#374151;">${v(row[8])}</td>
+    <td style="color:#374151;">${v(row[9])}</td>
+    <td style="color:#374151;">${v(row[10])}</td>
+    <td style="color:#374151;">${v(row[11])}</td>
+    <td style="color:var(--khurram);font-weight:700;">${v(row[12])}</td>
     <td>${ratioBadge(row[13])}</td>
-    <td class="col-today-new">${v(row[15])}</td>
-    <td class="col-today-new">${v(row[16])}</td>
-    <td class="col-today-new">${v(row[17])}</td>
-    <td class="col-today-rev">${v(row[18])}</td>
-    <td class="col-today-rev">${v(row[19])}</td>
-    <td class="col-today-rev">${v(row[20])}</td>
-    <td class="col-inb-today">${v(row[22])}</td>
-    <td class="col-out-today">${v(row[23])}</td>
-    <td class="col-fb">${v(row[24])}</td>
-    <td class="col-ql-today">${v(row[25])}</td>
-    <td class="col-cl-today">${v(row[26])}</td>
+    <td style="color:var(--green);">${v(row[15])}</td>
+    <td style="color:var(--green);">${v(row[16])}</td>
+    <td style="color:var(--green);">${v(row[17])}</td>
+    <td style="color:var(--green);">${v(row[18])}</td>
+    <td style="color:var(--green);">${v(row[19])}</td>
+    <td style="color:var(--green);">${v(row[20])}</td>
+    <td style="color:var(--cyan);">${v(row[22])}</td>
+    <td style="color:var(--orange);">${v(row[23])}</td>
+    <td style="color:var(--purple);">${v(row[24])}</td>
+    <td style="color:var(--blue);font-weight:700;">${v(row[25])}</td>
+    <td style="color:var(--khurram);font-weight:700;">${v(row[26])}</td>
   </tr>`;
 }
 
@@ -411,65 +536,55 @@ async function loadData(){
   try{
     const res=await fetch(SCRIPT_URL);
     const json=await res.json();
-    if(!json.success) return;
+    if(!json.success)return;
     const d=json.data;
 
-    // Find team rows dynamically
-    let mStartIdx=-1, mTotalIdx=-1;
-    let kStartIdx=-1, kTotalIdx=-1;
-    let ovIdx=-1;
-
+    let mStartIdx=-1,mTotalIdx=-1,kStartIdx=-1,kTotalIdx=-1,ovIdx=-1;
     for(let i=0;i<d.length;i++){
       const cell=String(d[i][0]||'').trim();
-      if(cell.toLowerCase().includes('maheen')&&mStartIdx===-1) mStartIdx=i+3;
-      if(cell.toLowerCase().includes('khurram')&&kStartIdx===-1) kStartIdx=i+3;
-      if(cell.toLowerCase().includes('total leads')&&mStartIdx>0&&mTotalIdx===-1) mTotalIdx=i;
-      if(cell.toLowerCase().includes('total leads')&&kStartIdx>0&&mTotalIdx>0&&kTotalIdx===-1) kTotalIdx=i;
-      if(cell.toLowerCase().includes('overall')) ovIdx=i;
+      if(cell.toLowerCase().includes('maheen')&&mStartIdx===-1)mStartIdx=i+3;
+      if(cell.toLowerCase().includes('khurram')&&kStartIdx===-1)kStartIdx=i+3;
+      if(cell.toLowerCase().includes('total leads')&&mStartIdx>0&&mTotalIdx===-1)mTotalIdx=i;
+      if(cell.toLowerCase().includes('total leads')&&kStartIdx>0&&mTotalIdx>0&&kTotalIdx===-1)kTotalIdx=i;
+      if(cell.toLowerCase().includes('overall'))ovIdx=i;
     }
 
-    const mMembers=mStartIdx>0?d.slice(mStartIdx,mTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-'):[];
+    const mMembers=mStartIdx>0?d.slice(mStartIdx,mTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''):[];
     const mTotal=mTotalIdx>0?d[mTotalIdx]:null;
     const kMembers=kStartIdx>0?d.slice(kStartIdx,kTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-'):[];
     const kTotal=kTotalIdx>0?d[kTotalIdx]:null;
     const ov=ovIdx>0?d[ovIdx]:null;
 
-    // Render Maheen
     document.getElementById('maheenBody').innerHTML=
-      mMembers.map(r=>makeRow(r)).join('')+
-      (mTotal?makeRow(mTotal,true):'');
+      mMembers.map(r=>makeRow(r)).join('')+(mTotal?makeRow(mTotal,true):'');
+    document.getElementById('khurramBody').innerHTML=
+      kMembers.map(r=>makeRow(r)).join('')+(kTotal?makeRow(kTotal,true):'');
 
     if(mTotal){
-      document.getElementById('mClosedCard').textContent=mTotal[12]||0;
-      document.getElementById('mRatioCard').textContent='Closing '+pct(mTotal[13]);
       document.getElementById('mTotal').textContent=mTotal[7]||0;
       document.getElementById('mClosed').textContent=mTotal[12]||0;
-      document.getElementById('mRatio').textContent=pct(mTotal[13]);
+      const mr=parseFloat(mTotal[13])||0;
+      document.getElementById('mRatio').textContent=Math.round(mr*100)+'%';
       document.getElementById('mQToday').textContent=mTotal[25]||0;
+      document.getElementById('mQ').textContent=mTotal[7]||0;
+      document.getElementById('mR').textContent='Closing '+Math.round(mr*100)+'%';
     }
-
-    // Render Khurram
-    document.getElementById('khurramBody').innerHTML=
-      kMembers.map(r=>makeRow(r)).join('')+
-      (kTotal?makeRow(kTotal,true):'');
-
     if(kTotal){
-      document.getElementById('kClosedCard').textContent=kTotal[12]||0;
-      document.getElementById('kRatioCard').textContent='Closing '+pct(kTotal[13]);
       document.getElementById('kTotal').textContent=kTotal[7]||0;
       document.getElementById('kClosed').textContent=kTotal[12]||0;
-      document.getElementById('kRatio').textContent=pct(kTotal[13]);
+      const kr=parseFloat(kTotal[13])||0;
+      document.getElementById('kRatio').textContent=Math.round(kr*100)+'%';
       document.getElementById('kQToday').textContent=kTotal[25]||0;
+      document.getElementById('kQ').textContent=kTotal[7]||0;
+      document.getElementById('kR').textContent='Closing '+Math.round(kr*100)+'%';
     }
-
-    // Overall
     if(ov){
       document.getElementById('ovQ').textContent=ov[7]||0;
       document.getElementById('ovC').textContent=ov[12]||0;
-      document.getElementById('ovRatio').textContent=pct(ov[13]);
+      const or=parseFloat(ov[13])||0;
+      document.getElementById('ovRatio').textContent=Math.round(or*100)+'%';
     }
 
-    // Timestamp
     document.getElementById('lastUpdated').textContent=
       new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
