@@ -304,10 +304,10 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 }
 
 .table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+table{width:100%;border-collapse:collapse;font-size:0.92rem;}
 thead th{
-  padding:12px 14px;text-align:center;
-  font-size:0.62rem;font-weight:700;
+  padding:14px 16px;text-align:center;
+  font-size:0.72rem;font-weight:700;
   letter-spacing:0.1em;text-transform:uppercase;
   color:#fff;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
@@ -318,9 +318,9 @@ thead th:first-child{text-align:left;padding-left:20px;}
 tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
 tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
-tbody td{padding:11px 14px;text-align:center;color:#374151;}
-tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:500;}
-.row-num{color:#94a3b8;font-family:'DM Mono',monospace;font-size:0.72rem;}
+tbody td{padding:13px 16px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:500;}
+tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:700;}
+.row-num{color:#94a3b8;font-family:'DM Mono',monospace;font-size:0.78rem;}
 
 /* Loading */
 .loading-hero{
@@ -662,9 +662,11 @@ function parseCSV(text){
 }
 
 // Skip columns
-const SKIP_COLS=['email','phone','e-mail','phone number','mobile','contact'];
+const SKIP_COLS=['email','phone','e-mail','phone number','mobile','contact','db_user','syedaliraza','_id','__v','password','token'];
 function shouldSkip(header){
-  return SKIP_COLS.some(s=>header.toLowerCase().includes(s));
+  const h = header.toLowerCase().trim();
+  if(!h) return true;
+  return SKIP_COLS.some(s => h.includes(s));
 }
 
 let cachedData = null;
@@ -792,7 +794,7 @@ async function doSearch(){
 }
 
 function showResults(rows, headers, query){
-  const visibleHeaders = headers.filter(h=>!shouldSkip(h));
+  const visibleHeaders = headers.filter(h => h && h.trim() !== '' && !shouldSkip(h));
 
   document.getElementById('heroSection').style.paddingBottom='0';
   document.getElementById('resultsSection').classList.add('show');
