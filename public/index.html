@@ -563,7 +563,7 @@ html{scroll-behavior:smooth;}
   else document.documentElement.style.visibility='visible';
 })();
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1F5TjGNkgzX_40v_G5zOdJTQFqLo3d6S3OtKCdLsgdp4/pub?output=csv&gid=0';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec?sheet=Client_History';
 
 // User setup
 const u = JSON.parse(localStorage.getItem('ds_user')||'{}');
@@ -675,11 +675,21 @@ let currentQuery = '';
 // Pre-fetch on page load silently
 async function prefetchData(){
   try{
-    const res = await fetch(SHEET_URL + '&t=' + Date.now());
-    const text = await res.text();
-    cachedData = parseCSV(text);
+    const res = await fetch(SHEET_URL);
+    const json = await res.json();
+    if(!json.success) return;
+    const data = json.data;
+    const headers = data[0].map(h => String(h||'').trim());
+    const rows = [];
+    for(let i=1; i<data.length; i++){
+      if(!data[i].some(c => c !== '')) continue;
+      const row = {};
+      headers.forEach((h,idx) => row[h] = String(data[i][idx]||'').trim());
+      rows.push(row);
+    }
+    cachedData = {headers, rows};
     lastFetch = Date.now();
-  } catch(e){ console.log('Prefetch failed silently'); }
+  } catch(e){ console.log('Prefetch failed:', e); }
 }
 
 async function getSheetData(){
@@ -688,10 +698,23 @@ async function getSheetData(){
     return cachedData;
   }
   const res = await fetch(SHEET_URL + '&t=' + now);
-  if(!res.ok) throw new Error('Sheet fetch failed');
-  const text = await res.text();
-  cachedData = parseCSV(text);
-  lastFetch = now;
+  if(!res.ok) throw new Error('Fetch failed');
+  const json = await res.json();
+  if(!json.success) throw new Error(json.error || 'Script error');
+
+  // Convert 2D array to {headers, rows} format
+  const data = json.data;
+  const headers = data[0].map(h => String(h||'').trim());
+  const rows = [];
+  for(let i=1; i<data.length; i++){
+    if(!data[i].some(c => c !== '')) continue;
+    const row = {};
+    headers.forEach((h,idx) => row[h] = String(data[i][idx]||'').trim());
+    rows.push(row);
+  }
+
+  cachedData = {headers, rows};
+  lastFetch = Date.now();
   return cachedData;
 }
 
