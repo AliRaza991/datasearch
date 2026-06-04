@@ -170,20 +170,20 @@ main{
   padding:18px 24px;border-radius:20px 20px 0 0;
   border:2px solid var(--border);border-bottom:none;
 }
-.team-header.maheen{background:linear-gradient(135deg,rgba(37,99,235,0.08),rgba(37,99,235,0.03));}
-.team-header.khurram{background:linear-gradient(135deg,rgba(217,119,6,0.08),rgba(217,119,6,0.03));}
+.team-header.maheen{background:linear-gradient(135deg,#1d4ed8,#2563EB);border-color:#1d4ed8;}
+.team-header.khurram{background:linear-gradient(135deg,#b91c1c,#DC2626);border-color:#b91c1c;}
 .team-name{font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;}
-.team-name.maheen{color:var(--maheen);}
-.team-name.khurram{color:var(--khurram);}
+.team-name.maheen{color:#fff;}
+.team-name.khurram{color:#fff;}
 .team-dot{width:10px;height:10px;border-radius:50%;}
-.team-dot.maheen{background:var(--maheen);box-shadow:0 0 8px rgba(37,99,235,0.4);}
-.team-dot.khurram{background:var(--khurram);box-shadow:0 0 8px rgba(217,119,6,0.4);}
+.team-dot.maheen{background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);}
+.team-dot.khurram{background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);}
 .team-kpis{display:flex;gap:20px;}
 .team-kpi{text-align:right;}
 .team-kpi-val{font-size:1.3rem;font-weight:800;font-family:'DM Mono',monospace;line-height:1;}
-.team-kpi-val.maheen{color:var(--maheen);}
-.team-kpi-val.khurram{color:var(--khurram);}
-.team-kpi-label{font-size:0.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px;font-weight:600;}
+.team-kpi-val.maheen{color:#fff;}
+.team-kpi-val.khurram{color:#fff;}
+.team-kpi-label{font-size:0.58rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px;font-weight:600;}
 
 /* ═══ TABLE ═══ */
 .tbl-wrap{
@@ -210,7 +210,7 @@ thead th{
   border-bottom:2px solid #94A3B8;
   white-space:nowrap;
 }
-thead th:first-child{text-align:left;padding-left:20px;}
+thead th:first-child{text-align:left;padding-left:20px;font-size:0.78rem;}
 
 tbody tr{border-bottom:1.5px solid var(--border);transition:background 0.12s;}
 tbody tr:hover{background:#F8FAFC;}
@@ -223,7 +223,7 @@ tbody tr.total-row{
 tbody tr.total-row:hover{background:linear-gradient(90deg,rgba(37,99,235,0.1),rgba(220,38,38,0.07));}
 
 tbody td{padding:11px 10px;text-align:center;color:var(--text);font-weight:500;}
-tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;}
+tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size:0.88rem;color:var(--text);}
 .row-num{
   color:#fff;font-family:'DM Mono',monospace;font-size:0.72rem;
   font-weight:700;
@@ -365,14 +365,14 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;}
           <thead>
             <tr>
               <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#1e3a8a,#1e293b);color:#fff;border-bottom:2px solid var(--blue);">Member</th>
-              <th colspan="7" class="sec-head month">Total Leads Qualified In The Month</th>
-              <th colspan="4" class="sec-head closed">Closed Leads (Month)</th>
-              <th rowspan="3" class="sec-head closed">Total Closed</th>
-              <th rowspan="3" class="sec-head closed">Ratio</th>
-              <th colspan="6" class="sec-head today">Total Leads Qualified Today</th>
-              <th colspan="3" class="sec-head closed">Closed Today</th>
-              <th rowspan="3" class="sec-head today">Qual. Today</th>
-              <th rowspan="3" class="sec-head today">Closed Today</th>
+              <th colspan="7" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(37,99,235,0.12);color:#1d4ed8;">Total Leads Qualified In The Month</th>
+              <th colspan="4" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Closed Leads (Month)</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Total Closed</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Ratio</th>
+              <th colspan="6" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Total Leads Qualified Today</th>
+              <th colspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Qual. Today</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
             </tr>
             <tr>
               <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
@@ -438,14 +438,14 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;}
           <thead>
             <tr>
               <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#78350f,#92400e);color:#fff;border-bottom:2px solid var(--khurram);">Member</th>
-              <th colspan="7" class="sec-head month">Total Leads Qualified In The Month</th>
-              <th colspan="4" class="sec-head closed">Closed Leads (Month)</th>
-              <th rowspan="3" class="sec-head closed">Total Closed</th>
-              <th rowspan="3" class="sec-head closed">Ratio</th>
-              <th colspan="6" class="sec-head today">Total Leads Qualified Today</th>
-              <th colspan="3" class="sec-head closed">Closed Today</th>
-              <th rowspan="3" class="sec-head today">Qual. Today</th>
-              <th rowspan="3" class="sec-head today">Closed Today</th>
+              <th colspan="7" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(37,99,235,0.12);color:#1d4ed8;">Total Leads Qualified In The Month</th>
+              <th colspan="4" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Closed Leads (Month)</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Total Closed</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Ratio</th>
+              <th colspan="6" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Total Leads Qualified Today</th>
+              <th colspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Qual. Today</th>
+              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
             </tr>
             <tr>
               <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
