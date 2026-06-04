@@ -667,21 +667,46 @@ function shouldSkip(header){
   return SKIP_COLS.some(s=>header.toLowerCase().includes(s));
 }
 
+let cachedData = null;
+let lastFetch = 0;
+let autoRefreshTimer = null;
+let currentQuery = '';
+
+// Pre-fetch on page load silently
+async function prefetchData(){
+  try{
+    const res = await fetch(SHEET_URL + '&t=' + Date.now());
+    const text = await res.text();
+    cachedData = parseCSV(text);
+    lastFetch = Date.now();
+  } catch(e){ console.log('Prefetch failed silently'); }
+}
+
+async function getSheetData(){
+  const now = Date.now();
+  if(cachedData && (now - lastFetch) < 30000){
+    return cachedData;
+  }
+  const res = await fetch(SHEET_URL + '&t=' + now);
+  if(!res.ok) throw new Error('Sheet fetch failed');
+  const text = await res.text();
+  cachedData = parseCSV(text);
+  lastFetch = now;
+  return cachedData;
+}
+
 // Search
 async function doSearch(){
   const query = document.getElementById('searchInput').value.trim();
   if(!query) return;
+  currentQuery = query;
 
   const btn = document.getElementById('searchBtn');
   btn.disabled=true;
   btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg> Searching...';
 
   try{
-    const res = await fetch(SHEET_URL);
-    const text = await res.text();
-    const {headers,rows} = parseCSV(text);
-
-    // Filter matching rows
+    const {headers, rows} = await getSheetData();
     const q = query.toLowerCase();
     const matched = rows.filter(row=>{
       return Object.values(row).some(val=>{
@@ -690,13 +715,53 @@ async function doSearch(){
       });
     });
 
-    // Display results
     showResults(matched, headers, query);
     addRecent(query);
 
-  }catch(e){
-    console.error(e);
-    alert('Error fetching data. Please try again.');
+    // Start auto-refresh every 30 seconds
+    if(autoRefreshTimer) clearInterval(autoRefreshTimer);
+    autoRefreshTimer = setInterval(async ()=>{
+      if(!currentQuery) return;
+      try{
+        const {headers: h, rows: r} = await getSheetData();
+        const q2 = currentQuery.toLowerCase();
+        const m = r.filter(row=>{
+          return Object.values(row).some(val=>{
+            const parts = String(val).split(/\s*\/\/\s*/);
+            return parts.some(p=>p.toLowerCase().includes(q2));
+          });
+        });
+        showResults(m, h, currentQuery);
+      } catch(e){ console.log('Auto-refresh error:', e); }
+    }, 30000);
+
+  } catch(e){
+    console.error('Search error:', e);
+    // Try with no-cors as fallback
+    try{
+      const res = await fetch(SHEET_URL, {cache: 'no-store'});
+      const text = await res.text();
+      const {headers, rows} = parseCSV(text);
+      cachedData = {headers, rows};
+      lastFetch = Date.now();
+      const q = query.toLowerCase();
+      const matched = rows.filter(row=>{
+        return Object.values(row).some(val=>{
+          const parts = String(val).split(/\s*\/\/\s*/);
+          return parts.some(p=>p.toLowerCase().includes(q));
+        });
+      });
+      showResults(matched, headers, query);
+      addRecent(query);
+    } catch(e2){
+      document.getElementById('resultsSection').classList.add('show');
+      document.getElementById('resultsBody').innerHTML=`
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-text">Could not load data. Please check your internet connection and try again.</div>
+          <button onclick="doSearch()" style="margin-top:12px;padding:10px 20px;background:#2563EB;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;">Retry</button>
+        </div>`;
+    }
   }
 
   btn.disabled=false;
@@ -746,6 +811,8 @@ function showResults(rows, headers, query){
 }
 
 function newSearch(){
+  if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer=null; }
+  currentQuery='';
   document.getElementById('resultsSection').classList.remove('show');
   document.getElementById('searchInput').value='';
   document.getElementById('heroSection').scrollIntoView({behavior:'smooth'});
@@ -769,6 +836,7 @@ async function downloadResult(format){
 }
 
 renderRecent();
+prefetchData();
 </script>
 </body>
 </html>
