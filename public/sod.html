@@ -4,336 +4,473 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOD — Start of Day Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F7FDFF;
-  --sidebar:#0f1520;
-  --nav:#0a0f1a;
-  --card:#ffffff;
-  --card-tint:#f0f7ff;
-  --border:#e2e8f0;
-  --border-dark:#1e2d45;
-  --cyan:#00b4d8;
-  --cyan2:#0077a8;
-  --gold:#f5a623;
-  --green:#00b894;
-  --green2:#00856e;
-  --red:#e53e3e;
-  --purple:#6c63ff;
-  --blue:#3182ce;
-  --pink:#d63384;
-  --orange:#dd6b20;
-  --text-dark:#1a202c;
-  --text-mid:#4a5568;
-  --text-light:#718096;
-  --text-white:#f7fafc;
-  --text-sidebar:#8899bb;
-}
 html{visibility:hidden}
-body{
-  background:var(--bg);
-  font-family:'Inter',sans-serif;
-  color:var(--text-dark);
-  min-height:100vh;
-  padding-top:60px;
-  display:flex;
+
+:root{
+  --blue:#2563EB;
+  --red:#DC2626;
+  --gold:#FBBF24;
+  --green:#16A34A;
+  --purple:#7C3AED;
+  --bg:#F8FAFC;
+  --bg2:#F1F5F9;
+  --white:#FFFFFF;
+  --border:#E2E8F0;
+  --text:#0F172A;
+  --text2:#64748B;
+  --text3:#94A3B8;
 }
 
-/* ── NAV ── */
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,#F8FAFC 0%,#F1F5F9 100%);
+  color:var(--text);
+  min-height:100vh;
+  padding-top:80px;
+  display:flex;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 40% 30% at 10% 20%,rgba(37,99,235,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 35% 25% at 90% 80%,rgba(220,38,38,0.05) 0%,transparent 60%);
+}
+
+/* ═══ NAVBAR ═══ */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:1000;
-  background:var(--nav);
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  height:60px;display:flex;align-items:center;
-  padding:0 28px;justify-content:space-between;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(226,232,240,0.8);
+  height:80px;
+  display:flex;align-items:center;
+  padding:0 32px;
+  justify-content:space-between;
+  box-shadow:0 4px 24px rgba(0,0,0,0.04);
 }
-.nav-logo{display:flex;align-items:center;gap:10px;}
-.nav-logo-icon{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,#ffd600,#ff8c00);
-  border-radius:10px;display:flex;align-items:center;
-  justify-content:center;font-size:18px;
-  box-shadow:0 4px 14px rgba(255,160,0,0.35);
-}
-.nav-logo-text{
-  font-size:0.95rem;font-weight:800;
-  letter-spacing:0.06em;color:#fff;
-}
-.nav-logo-text span{color:#ffd600;}
-
-.nav-links{
-  display:flex;align-items:center;gap:4px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;padding:5px;
-}
-.nav-link{
-  padding:7px 22px;border-radius:10px;font-size:0.76rem;
-  font-weight:600;letter-spacing:0.03em;
-  text-decoration:none;color:rgba(255,255,255,0.5);
-  background:transparent;border:none;
-  transition:all 0.2s;display:flex;align-items:center;gap:7px;
-  cursor:pointer;
-}
-.nav-link:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.06);}
-.nav-link.ds{
-  color:#fff;
-  background:linear-gradient(135deg,#1a56db,#06b6d4);
-  box-shadow:0 4px 14px rgba(6,182,212,0.35);
-}
-.nav-link.sod{
-  color:#1a1a1a;
-  background:linear-gradient(135deg,#fbbf24,#f59e0b);
-  box-shadow:0 4px 14px rgba(245,158,11,0.35);
-}
-.nav-link.eod{
-  color:#fff;
-  background:linear-gradient(135deg,#7c3aed,#a78bfa);
-  box-shadow:0 4px 14px rgba(124,58,237,0.35);
-}
-
-/* ── USER PILL ── */
-.user-pill{
-  display:flex;align-items:center;gap:10px;cursor:pointer;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:50px;padding:6px 14px 6px 6px;
-  transition:all 0.2s;position:relative;
-}
-.user-pill:hover{background:rgba(255,255,255,0.12);}
-.user-avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,#6c63ff,#00b4d8);
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-brand-icon{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  font-size:0.82rem;font-weight:800;color:#fff;
-  box-shadow:0 0 10px rgba(108,99,255,0.4);
+  font-size:20px;font-weight:900;color:#fff;
+  box-shadow:0 6px 20px rgba(37,99,235,0.3);
 }
-.user-name{font-size:0.76rem;color:#fff;font-weight:700;}
-.user-desig{font-size:0.58rem;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;}
-.user-menu{
-  display:none;position:absolute;right:0;top:calc(100% + 10px);
-  background:#1a2235;border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px;padding:8px;min-width:190px;
-  z-index:9999;box-shadow:0 24px 60px rgba(0,0,0,0.7);
-}
-.menu-hdr{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:6px;}
-.menu-name{font-size:0.78rem;color:#fff;font-weight:700;}
-.menu-desig{font-size:0.62rem;color:rgba(255,255,255,0.4);margin-top:2px;}
-.logout-item{
-  display:flex;align-items:center;gap:8px;padding:9px 12px;
-  border-radius:8px;cursor:pointer;color:#fc8181;font-size:0.74rem;transition:all 0.15s;
-}
-.logout-item:hover{background:rgba(252,129,129,0.1);}
+.nav-brand-text{font-size:1.15rem;font-weight:800;letter-spacing:-0.01em;}
+.nav-brand-text .massive{color:var(--blue);}
+.nav-brand-text .dynamics{color:var(--red);}
 
-/* ── SIDEBAR ── */
+.nav-pills{
+  display:flex;align-items:center;gap:4px;
+  background:#F1F5F9;
+  border-radius:999px;padding:5px;
+  border:1px solid var(--border);
+}
+.nav-pill{
+  padding:8px 24px;border-radius:999px;
+  font-size:0.8rem;font-weight:600;
+  text-decoration:none;color:var(--text2);
+  background:transparent;border:none;
+  transition:all 0.25s;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  letter-spacing:0.01em;
+}
+.nav-pill:hover{color:var(--text);background:rgba(255,255,255,0.8);}
+.nav-pill.active{
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  box-shadow:0 4px 16px rgba(37,99,235,0.35);
+}
+
+.nav-user{
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;position:relative;
+  background:rgba(255,255,255,0.8);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 16px 6px 6px;
+  backdrop-filter:blur(10px);
+  transition:all 0.2s;
+}
+.nav-user:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.nav-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.88rem;font-weight:800;color:#fff;
+  border:2px solid var(--gold);
+  box-shadow:0 0 0 3px rgba(251,191,36,0.2);
+}
+.nav-user-name{font-size:0.8rem;font-weight:700;color:var(--text);}
+.nav-user-role{font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
+.user-menu{
+  display:none;position:absolute;right:0;top:calc(100% + 12px);
+  background:#fff;border:1px solid var(--border);
+  border-radius:16px;padding:8px;min-width:200px;
+  z-index:9999;box-shadow:0 20px 50px rgba(0,0,0,0.1);
+}
+.user-menu.show{display:block;}
+.menu-hdr{padding:10px 12px;border-bottom:1px solid #f1f5f9;margin-bottom:6px;}
+.menu-name{font-size:0.82rem;font-weight:700;color:var(--text);}
+.menu-desig{font-size:0.65rem;color:var(--text3);margin-top:2px;}
+.logout-item{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 12px;border-radius:10px;cursor:pointer;
+  color:#ef4444;font-size:0.76rem;font-weight:600;transition:all 0.15s;
+}
+.logout-item:hover{background:#fef2f2;}
+
+/* ═══ SIDEBAR ═══ */
 .sidebar{
-  position:fixed;top:60px;left:0;bottom:0;width:230px;
-  background:var(--sidebar);
-  border-right:1px solid rgba(255,255,255,0.06);
-  z-index:100;overflow-y:auto;padding:24px 12px;
+  position:fixed;top:80px;left:0;bottom:0;
+  width:260px;
+  background:#fff;
+  border-right:1px solid var(--border);
+  z-index:100;padding:28px 16px;
+  overflow-y:auto;
+  box-shadow:4px 0 20px rgba(0,0,0,0.03);
 }
 .sidebar-label{
   font-size:0.62rem;font-weight:700;letter-spacing:0.16em;
-  text-transform:uppercase;color:rgba(255,255,255,0.25);
-  padding:0 10px;margin-bottom:16px;
+  text-transform:uppercase;color:var(--text3);
+  padding:0 12px;margin-bottom:16px;
 }
 .dept-btn{
-  width:100%;text-align:left;padding:12px 14px;
-  border:1px solid transparent;
-  background:transparent;border-radius:12px;
-  color:var(--text-sidebar);
-  font-family:'Inter',sans-serif;
-  font-size:0.8rem;font-weight:500;cursor:pointer;
-  transition:all 0.2s;
-  display:flex;align-items:center;gap:12px;margin-bottom:6px;
+  width:100%;text-align:left;
+  padding:12px 14px;border:1.5px solid transparent;
+  background:transparent;border-radius:14px;
+  color:var(--text2);font-family:'Inter',sans-serif;
+  font-size:0.82rem;font-weight:500;cursor:pointer;
+  transition:all 0.22s;
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:6px;
 }
 .dept-btn:hover{
-  color:rgba(255,255,255,0.8);
-  background:rgba(255,255,255,0.04);
-  border-color:rgba(255,255,255,0.08);
+  color:var(--text);
+  background:#F8FAFC;
+  border-color:var(--border);
 }
 .dept-btn.active{
-  color:#fff;font-weight:700;
-  background:rgba(0,180,216,0.12);
-  border-color:rgba(0,180,216,0.25);
-  border-left:3px solid var(--cyan);
+  color:var(--blue);font-weight:700;
+  background:#fff;
+  border-color:var(--blue);
+  box-shadow:0 4px 16px rgba(37,99,235,0.12),inset 3px 0 0 var(--blue);
 }
 .dept-icon{
-  width:34px;height:34px;border-radius:10px;
+  width:36px;height:36px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:1rem;
-  background:rgba(255,255,255,0.05);
-  flex-shrink:0;transition:all 0.2s;
+  font-size:1rem;background:#F1F5F9;flex-shrink:0;
+  transition:all 0.2s;
 }
-.dept-btn.active .dept-icon{
-  background:rgba(0,180,216,0.15);
-}
-.dept-name{font-size:0.8rem;}
+.dept-btn.active .dept-icon{background:rgba(37,99,235,0.1);}
+.dept-name{font-size:0.82rem;}
 
-/* ── MAIN ── */
+.sidebar-footer{
+  position:absolute;bottom:16px;left:16px;right:16px;
+  background:rgba(37,99,235,0.04);
+  border:1px solid rgba(37,99,235,0.1);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sidebar-footer-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);
+  animation:blink 1.5s ease infinite;
+  flex-shrink:0;
+}
+.sidebar-footer-text{font-size:0.68rem;color:var(--text2);font-weight:500;}
+
+/* ═══ MAIN ═══ */
 .main{
-  margin-left:230px;flex:1;
-  padding:28px 32px;
-  background:var(--bg);
-  min-height:calc(100vh - 60px);
+  margin-left:260px;flex:1;
+  padding:32px 36px;
+  position:relative;z-index:1;
+  min-height:calc(100vh - 80px);
 }
 
-/* ── PAGE HEADER ── */
+/* ═══ PAGE HEADER ═══ */
 .page-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px;flex-wrap:wrap;gap:12px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:16px;
 }
-.page-title{font-size:1.75rem;font-weight:800;color:#000000;letter-spacing:-0.02em;}
-.page-sub{color:#000000;font-size:0.72rem;margin-top:3px;}
+.page-title{
+  font-family:'Manrope',sans-serif;
+  font-size:2.8rem;font-weight:700;
+  color:var(--text);letter-spacing:-0.03em;line-height:1.1;
+}
+.page-title .highlight{color:var(--red);}
+.page-sub{
+  color:var(--text2);font-size:0.78rem;
+  margin-top:6px;font-weight:500;
+}
 .live-badge{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(0,184,148,0.1);
-  border:1.5px solid rgba(0,184,148,0.3);
-  border-radius:20px;padding:7px 18px;
-  font-size:0.7rem;color:var(--green);
-  letter-spacing:0.1em;font-weight:700;
-  box-shadow:0 0 16px rgba(0,184,148,0.1);
+  background:rgba(22,163,74,0.1);
+  border:1.5px solid rgba(22,163,74,0.25);
+  border-radius:999px;padding:8px 20px;
+  font-size:0.72rem;color:var(--green);
+  letter-spacing:0.06em;font-weight:700;
 }
 .live-dot{
-  width:7px;height:7px;border-radius:50%;
+  width:8px;height:8px;border-radius:50%;
   background:var(--green);
   animation:blink 1.5s ease infinite;
   box-shadow:0 0 8px var(--green);
 }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
 
-/* ── DEPT HEADER ── */
+/* ═══ DEPT HEADER BANNER ═══ */
 .dept-hdr{
-  background: #4c44db;
-  background: linear-gradient(47deg, rgba(76,68,219,1) 0%, rgba(9,9,121,1) 54%, rgba(45,64,97,1) 100%);
-  border-radius:14px;padding:14px 22px;margin-bottom:24px;
-  display:flex;align-items:center;gap:14px;
-  box-shadow:0 6px 24px rgba(63,94,251,0.3);
+  background:linear-gradient(135deg,#2563EB 0%,#4F46E5 50%,#DC2626 100%);
+  border-radius:24px;
+  padding:0 32px;
+  height:110px;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:20px;
   position:relative;overflow:hidden;
+  box-shadow:0 12px 40px rgba(37,99,235,0.25);
 }
 .dept-hdr::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,200,255,0.15),transparent 50%,rgba(124,77,255,0.15));
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-.dept-hdr-icon{font-size:2rem;filter:drop-shadow(0 0 12px rgba(255,255,255,0.3));position:relative;z-index:1;}
-.dept-hdr-name{font-size:1.4rem;font-weight:800;color:#fff;position:relative;z-index:1;}
-.dept-hdr-sub{font-size:0.68rem;color:rgba(255,255,255,0.6);margin-top:4px;position:relative;z-index:1;}
-.dept-hdr-time{margin-left:auto;font-size:0.78rem;color:#E3D214;font-family:'DM Mono',monospace;position:relative;z-index:1;font-weight:600;text-align:right;white-space:nowrap;}
-.dept-hdr-time span{color:#ffffff;font-weight:800;font-size:0.78rem;display:inline;margin-top:0;margin-left:4px;}
+.dept-hdr::after{
+  content:'';position:absolute;
+  top:-40px;right:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(255,255,255,0.12),transparent 70%);
+  pointer-events:none;
+}
+.dept-hdr-icon{
+  font-size:2.8rem;
+  filter:drop-shadow(0 4px 12px rgba(255,255,255,0.3));
+  position:relative;z-index:1;
+  background:rgba(255,255,255,0.15);
+  width:64px;height:64px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+  flex-shrink:0;
+}
+.dept-hdr-info{position:relative;z-index:1;}
+.dept-hdr-name{
+  font-size:1.5rem;font-weight:800;color:#fff;
+  letter-spacing:-0.02em;font-family:'Manrope',sans-serif;
+}
+.dept-hdr-sub{font-size:0.72rem;color:rgba(255,255,255,0.65);margin-top:4px;font-weight:500;}
+.dept-hdr-time{
+  margin-left:auto;position:relative;z-index:1;
+  text-align:right;
+}
+.dept-hdr-time-label{font-size:0.65rem;color:rgba(255,255,255,0.6);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;}
+.dept-hdr-time-val{
+  font-size:0.95rem;font-weight:700;
+  color:var(--gold);font-family:'DM Mono',monospace;
+  margin-top:4px;
+}
 
-/* ── KPI CARDS - WHITE cards like reference ── */
+/* ═══ KPI CARDS ═══ */
 .kpi-grid{
   display:grid;
   grid-template-columns:repeat(6,1fr);
-  gap:14px;margin-bottom:20px;
+  gap:16px;margin-bottom:24px;
 }
 .kpi-card{
   background:#fff;
-  border:1px solid #e8edf5;
-  border-radius:14px;padding:18px 16px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px 16px;
   position:relative;overflow:hidden;
-  transition:transform 0.2s,box-shadow 0.2s;
+  transition:transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 4px 16px rgba(0,0,0,0.05);
   cursor:default;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
 }
-.kpi-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.12);}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0;}
-.kpi-card.c-green::before{background:linear-gradient(90deg,#00b894,#00cec9);}
-.kpi-card.c-cyan::before{background:linear-gradient(90deg,#00b4d8,#0077b6);}
-.kpi-card.c-gold::before{background:linear-gradient(90deg,#f5a623,#fdcb6e);}
-.kpi-card.c-purple::before{background:linear-gradient(90deg,#6c63ff,#a29bfe);}
-.kpi-card.c-red::before{background:linear-gradient(90deg,#e53e3e,#fc8181);}
-.kpi-card.c-blue::before{background:linear-gradient(90deg,#3182ce,#63b3ed);}
-.kpi-card.c-pink::before{background:linear-gradient(90deg,#d63384,#f472b6);}
-.kpi-card.c-orange::before{background:linear-gradient(90deg,#dd6b20,#f6ad55);}
+.kpi-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,0.1);
+}
+.kpi-card-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;margin-bottom:14px;
+  flex-shrink:0;
+}
 .kpi-label{
-  font-size:0.62rem;font-weight:700;letter-spacing:0.08em;
-  text-transform:uppercase;color:#718096;margin-bottom:12px;
+  font-size:0.62rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:10px;
+  line-height:1.3;
 }
 .kpi-val{
-  font-size:2.2rem;font-weight:800;line-height:1;
-  margin-bottom:6px;font-family:'DM Mono',monospace;
+  font-size:2.8rem;font-weight:700;line-height:1;
+  margin-bottom:8px;font-family:'Manrope',sans-serif;
+  letter-spacing:-0.03em;
+}
+.kpi-sub{font-size:0.65rem;color:var(--text3);font-weight:500;}
+
+/* ═══ SECTION CARDS ═══ */
+.section-card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom:20px;
+}
+.section-hdr{
+  padding:16px 24px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid #f1f5f9;
+}
+.section-hdr-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;flex-shrink:0;
+}
+.section-hdr-title{
+  font-size:0.8rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+}
+
+/* Breakdown grid */
+.breakdown-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.breakdown-cell{
+  padding:24px 20px;text-align:center;
+  border-right:1px solid #f8fafc;
+}
+.breakdown-cell:last-child{border-right:none;}
+.breakdown-icon{
+  width:48px;height:48px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 12px;font-size:1.4rem;
+}
+.breakdown-label{
+  font-size:0.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--text2);margin-bottom:8px;
+}
+.breakdown-val{
+  font-size:2.2rem;font-weight:700;
+  font-family:'Manrope',sans-serif;
   letter-spacing:-0.02em;
 }
-.kpi-val.green{color:#00b894;}
-.kpi-val.cyan{color:#00b4d8;}
-.kpi-val.gold{color:#f5a623;}
-.kpi-val.purple{color:#6c63ff;}
-.kpi-val.red{color:#e53e3e;}
-.kpi-val.blue{color:#3182ce;}
-.kpi-val.pink{color:#d63384;}
-.kpi-val.orange{color:#dd6b20;}
-.kpi-sub{font-size:0.64rem;color:#a0aec0;font-weight:500;}
 
-/* ── DETAIL CARDS - Light tinted like reference ── */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+/* Averages table */
+.avg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.avg-table{width:100%;border-collapse:collapse;}
+.avg-table th{
+  padding:10px 16px;text-align:center;
+  font-size:0.68rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  border-bottom:1px solid #f1f5f9;
+}
+.avg-table th:first-child{text-align:left;}
+.avg-table td{
+  padding:12px 16px;font-size:0.88rem;
+  font-weight:600;border-bottom:1px solid #f8fafc;
+}
+.avg-table td:first-child{color:var(--text);text-align:left;}
+.avg-table td:not(:first-child){text-align:center;font-family:'DM Mono',monospace;}
+.avg-table tr:last-child td{border-bottom:none;}
+.avg-table tr:nth-child(even) td{background:#fafbfc;}
+
+/* Closing avg */
+.closing-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.closing-cell{
+  padding:28px 20px;text-align:center;
+  border-right:1px solid #f1f5f9;
+  position:relative;
+}
+.closing-cell:last-child{border-right:none;}
+.closing-label{
+  font-size:0.68rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text2);margin-bottom:12px;
+}
+.closing-val{
+  font-size:2.4rem;font-weight:700;
+  font-family:'Manrope',sans-serif;
+  letter-spacing:-0.02em;margin-bottom:8px;
+}
+.closing-trend{
+  height:40px;display:flex;align-items:flex-end;
+  justify-content:center;gap:2px;
+  margin-top:8px;
+}
+.trend-bar{
+  width:4px;border-radius:2px;
+  background:currentColor;opacity:0.3;
+}
+.trend-bar.active{opacity:1;}
+
+/* Detail cards */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 .detail-card{
-  background:#fff;
-  border:1px solid #e8edf5;
-  border-radius:14px;overflow:hidden;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  background:#fff;border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
 }
 .detail-title{
-  padding:14px 18px;font-size:0.68rem;letter-spacing:0.1em;
-  text-transform:uppercase;border-bottom:1px solid #edf2f7;
-  display:flex;align-items:center;gap:8px;font-weight:700;
+  padding:14px 20px;font-size:0.7rem;
+  font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;
+  border-bottom:1px solid #f1f5f9;
+  display:flex;align-items:center;gap:8px;
 }
-.detail-title.green{color:#00856e;background:rgba(0,184,148,0.06);}
-.detail-title.cyan{color:#0077a8;background:rgba(0,180,216,0.06);}
-.detail-title.gold{color:#b7791f;background:rgba(245,166,35,0.06);}
-.detail-title.red{color:#c53030;background:rgba(229,62,62,0.06);}
-.detail-title.purple{color:#553c9a;background:rgba(108,99,255,0.06);}
-.detail-title.blue{color:#2c5282;background:rgba(49,130,206,0.06);}
-
 .mrow{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 18px;
-  border-bottom:1px solid #f7fafc;
+  padding:12px 20px;border-bottom:1px solid #f8fafc;
   transition:background 0.12s;
 }
 .mrow:last-child{border-bottom:none;}
-.mrow:hover{background:#f7fafc;}
-.mrow-label{font-size:0.76rem;color:#4a5568;font-weight:500;}
+.mrow:hover{background:#fafbfc;}
+.mrow-label{font-size:0.78rem;color:var(--text2);font-weight:500;}
 .mrow-val{font-size:0.92rem;font-weight:700;font-family:'DM Mono',monospace;}
-.mrow-val.green{color:#00b894;}
-.mrow-val.cyan{color:#00b4d8;}
-.mrow-val.gold{color:#f5a623;}
-.mrow-val.red{color:#e53e3e;}
-.mrow-val.purple{color:#6c63ff;}
-.mrow-val.blue{color:#3182ce;}
-.mrow-val.dim{color:#cbd5e0;}
-.mrow-val.text{color:#2d3748;}
-
+.mrow-val.blue{color:var(--blue);}
+.mrow-val.red{color:var(--red);}
+.mrow-val.green{color:var(--green);}
+.mrow-val.gold{color:var(--gold);}
+.mrow-val.purple{color:var(--purple);}
+.mrow-val.cyan{color:#0891b2;}
+.mrow-val.orange{color:#ea580c;}
+.mrow-val.dim{color:var(--text3);}
+.mrow-val.text{color:var(--text);}
 .divider-label{
-  padding:8px 18px;font-size:0.6rem;
-  letter-spacing:0.12em;text-transform:uppercase;
-  color:#718096;border-bottom:1px solid #edf2f7;
-  background:#f8fafc;font-weight:700;
+  padding:8px 20px;font-size:0.62rem;
+  font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text3);
+  background:#fafbfc;border-bottom:1px solid #f1f5f9;
 }
 
-/* ── LOADING ── */
-.loading-wrap{
-  display:flex;align-items:center;justify-content:center;
-  height:300px;flex-direction:column;gap:14px;
+/* Team tables */
+.team-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.team-table thead th{
+  padding:10px 14px;text-align:center;
+  font-size:0.62rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text2);
+  background:#F8FAFC;
+  border-bottom:1.5px solid var(--border);
 }
-.spinner{
-  width:32px;height:32px;
-  border:3px solid rgba(255,255,255,0.1);
-  border-top-color:var(--cyan);
-  border-radius:50%;animation:spin 0.7s linear infinite;
-}
+.team-table thead th:first-child{text-align:left;padding-left:20px;}
+.team-table tbody tr{border-bottom:1px solid #f8fafc;transition:background 0.1s;}
+.team-table tbody tr:hover{background:#F8FAFC;}
+.team-table tbody td{padding:11px 14px;text-align:center;color:var(--text);font-weight:500;}
+.team-table tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;color:var(--text);}
+
+/* Loading */
+.loading-wrap{display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:16px;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.loading-text{font-size:0.78rem;color:rgba(255,255,255,0.4);font-weight:500;}
-.empty-wrap{
-  display:flex;align-items:center;justify-content:center;
-  height:250px;flex-direction:column;gap:12px;
-  color:rgba(255,255,255,0.3);
-}
-.empty-icon{font-size:2.5rem;opacity:0.2;}
-@keyframes pulse1{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.4);opacity:0.2;}}
-@keyframes iconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.loading-text{font-size:0.8rem;color:var(--text2);font-weight:500;}
+.empty-wrap{display:flex;align-items:center;justify-content:center;height:200px;flex-direction:column;gap:12px;color:var(--text3);}
+.empty-icon{font-size:2.5rem;opacity:0.3;}
+@keyframes iconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+@keyframes pulse1{0%,100%{transform:scale(1);opacity:0.4;}50%{transform:scale(1.4);opacity:0.1;}}
 </style>
 </head>
 <body>
@@ -345,33 +482,33 @@ nav{
 })();
 </script>
 
-<!-- NAV -->
+<!-- NAVBAR -->
 <nav>
-  <div class="nav-logo">
-    <div class="nav-logo-icon">☀️</div>
-    <div class="nav-logo-text">START OF <span>DAY</span></div>
-  </div>
-  <div class="nav-links">
-    <a href="/index.html" class="nav-link ds">⚡ DataSearch</a>
-    <a href="/sod.html" class="nav-link sod">☀️ SOD</a>
-    <a href="/eod.html" class="nav-link eod">🌙 EOD</a>
-  </div>
-  <div style="position:relative;">
-    <div class="user-pill" onclick="toggleMenu()">
-      <div class="user-avatar" id="uAvatar"></div>
-      <div>
-        <div class="user-name" id="uName"></div>
-        <div class="user-desig" id="uDesig"></div>
-      </div>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3a5070" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  <div class="nav-brand">
+    <div class="nav-brand-icon">M</div>
+    <div class="nav-brand-text">
+      <span class="massive">Massive </span><span class="dynamics">Dynamics</span>
     </div>
+  </div>
+  <div class="nav-pills">
+    <a href="/index.html" class="nav-pill">⚡ DataSearch</a>
+    <a href="/sod.html" class="nav-pill active">☀️ SOD</a>
+    <a href="/eod.html" class="nav-pill">🌙 EOD</a>
+  </div>
+  <div class="nav-user" onclick="toggleMenu()">
+    <div class="nav-avatar" id="uAvatar"></div>
+    <div>
+      <div class="nav-user-name" id="uName"></div>
+      <div class="nav-user-role" id="uDesig"></div>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
     <div class="user-menu" id="uMenu">
       <div class="menu-hdr">
         <div class="menu-name" id="mName"></div>
         <div class="menu-desig" id="mDesig"></div>
       </div>
       <div class="logout-item" onclick="doLogout()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </div>
     </div>
@@ -382,33 +519,32 @@ nav{
 <div class="sidebar">
   <div class="sidebar-label">Departments</div>
   <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','📥','Organic')" id="btn-Organic">
-    <div class="dept-icon">📥</div>
-    <div class="dept-name">Organic & Pop-Up</div>
+    <div class="dept-icon">📥</div><div class="dept-name">Organic & Pop-Up</div>
   </button>
   <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢','Marketing')" id="btn-Marketing">
-    <div class="dept-icon">📢</div>
-    <div class="dept-name">Marketing</div>
+    <div class="dept-icon">📢</div><div class="dept-name">Marketing</div>
   </button>
   <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🏢','Qualifier')" id="btn-Qualifier">
-    <div class="dept-icon">🏢</div>
-    <div class="dept-name">Qualifier & 4th Floor</div>
+    <div class="dept-icon">🏢</div><div class="dept-name">Qualifier & 4th Floor</div>
   </button>
   <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄','Revived')" id="btn-Revived">
-    <div class="dept-icon">🔄</div>
-    <div class="dept-name">Revived Leads</div>
+    <div class="dept-icon">🔄</div><div class="dept-name">Revived Leads</div>
   </button>
   <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','✅','Closed')" id="btn-Closed">
-    <div class="dept-icon">✅</div>
-    <div class="dept-name">Closed Leads</div>
+    <div class="dept-icon">✅</div><div class="dept-name">Closed Leads</div>
   </button>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-dot"></div>
+    <div class="sidebar-footer-text">Auto refresh every 30 seconds</div>
+  </div>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="main">
   <div class="page-hdr">
     <div>
-      <div class="page-title">Start of Day Report</div>
-      <div class="page-sub">Live Department Intelligence · Auto-refreshes every 30 seconds</div>
+      <div class="page-title">START OF DAY <span class="highlight">REPORT</span></div>
+      <div class="page-sub">Live Department Intelligence • Auto refresh every 30 seconds</div>
     </div>
     <div class="live-badge"><span class="live-dot"></span> LIVE</div>
   </div>
@@ -427,30 +563,32 @@ document.getElementById('uDesig').textContent=u.designation||u.role||'';
 document.getElementById('mName').textContent=u.name||'User';
 document.getElementById('mDesig').textContent=u.designation||'';
 
-function toggleMenu(){const m=document.getElementById('uMenu');m.style.display=m.style.display==='block'?'none':'block';}
-document.addEventListener('click',function(e){const p=document.querySelector('.user-pill');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.style.display='none';});
+function toggleMenu(){const m=document.getElementById('uMenu');m.classList.toggle('show');}
+document.addEventListener('click',function(e){const p=document.querySelector('.nav-user');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.classList.remove('show');});
 function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
 let refreshTimer=null;
-const dataCache = {};
-const CACHE_TTL = 30000;
+const dataCache={};
+const CACHE_TTL=30000;
 
 function v(val){
   if(val===0||val===''||val===null||val===undefined) return '<span class="mrow-val dim">—</span>';
   return val;
 }
 function pct(val){
-  if(!val) return '—';
+  if(!val&&val!==0) return '—';
   const n=parseFloat(val);
-  return n<=1&&n>0 ? Math.round(n*100)+'%' : val;
+  return n<=1&&n>0?Math.round(n*100)+'%':val;
 }
-function mr(label,val,color='green'){
+function mr(label,val,color='blue'){
   return `<div class="mrow"><span class="mrow-label">${label}</span><span class="mrow-val ${color}">${v(val)}</span></div>`;
 }
-function kpi(label,val,color,sub){
-  return `<div class="kpi-card c-${color}">
+
+function kpiCard(icon,iconBg,label,val,valColor,sub){
+  return `<div class="kpi-card">
+    <div class="kpi-card-icon" style="background:${iconBg};">${icon}</div>
     <div class="kpi-label">${label}</div>
-    <div class="kpi-val ${color}">${val}</div>
+    <div class="kpi-val" style="color:${valColor};">${val}</div>
     <div class="kpi-sub">${sub}</div>
   </div>`;
 }
@@ -462,21 +600,18 @@ function renderOrganic(data){
   const hot_recv     = data[8]?.[2]  ?? 0;
   const hot_qual     = data[9]?.[2]  ?? 0;
   const hot_closed   = data[10]?.[2] ?? 0;
-
   const popup_recv_overall = data[2]?.[5] ?? 0;
   const popup_recv_monthly = data[3]?.[5] ?? 0;
   const popup_recv_today   = data[4]?.[5] ?? 0;
   const hot_recv_overall   = data[2]?.[8] ?? 0;
   const hot_recv_monthly   = data[3]?.[8] ?? 0;
   const hot_recv_today     = data[4]?.[8] ?? 0;
-
   const popup_qual_overall = data[8]?.[5]  ?? 0;
   const popup_qual_monthly = data[9]?.[5]  ?? 0;
   const popup_qual_today   = data[10]?.[5] ?? 0;
   const hot_qual_overall   = data[8]?.[8]  ?? 0;
   const hot_qual_monthly   = data[9]?.[8]  ?? 0;
   const hot_qual_today     = data[10]?.[8] ?? 0;
-
   const total_popup_recv   = data[16]?.[2] ?? 0;
   const valid_popups       = data[17]?.[2] ?? 0;
   const repeated           = data[18]?.[2] ?? 0;
@@ -487,472 +622,338 @@ function renderOrganic(data){
   const today_closed       = data[19]?.[5] ?? 0;
 
   return `
+    <!-- KPI CARDS -->
     <div class="kpi-grid">
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(99,102,241,0.25),transparent 70%);border-radius:50%;animation:pulse1 2s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,0.45);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">POP-UP<br>Received Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${popup_recv}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Unique POP-UPs</div>
-      </div>
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(14,165,233,0.25),transparent 70%);border-radius:50%;animation:pulse1 2.5s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#0ea5e9,#06b6d4);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(14,165,233,0.45);animation:iconFloat 3.5s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">POP-UP<br>Qualified Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${popup_qual}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Unique POP-UPs</div>
-      </div>
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(245,158,11,0.25),transparent 70%);border-radius:50%;animation:pulse1 2s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#f59e0b,#f97316);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(245,158,11,0.45);animation:iconFloat 4s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">POP-UP<br>Closed Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${popup_closed}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Closed Today</div>
-      </div>
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(239,68,68,0.25),transparent 70%);border-radius:50%;animation:pulse1 3s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#ef4444,#f43f5e);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(239,68,68,0.45);animation:iconFloat 2.5s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">Hot Leads<br>Received Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${hot_recv}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Unique Hot Leads</div>
-      </div>
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(16,185,129,0.25),transparent 70%);border-radius:50%;animation:pulse1 2.8s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,0.45);animation:iconFloat 3.2s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"></path><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">Hot Leads<br>Qualified Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${hot_qual}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Qualified Today</div>
-      </div>
-
-      <div style="background:#C7DDFF;border:1.5px solid #08326E;border-radius:16px;padding:18px 16px;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 2px 12px rgba(8,50,110,0.15);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(8,50,110,0.25)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 12px rgba(8,50,110,0.15)'">
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(139,92,246,0.25),transparent 70%);border-radius:50%;animation:pulse1 2.2s ease-in-out infinite;"></div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-          <div style="width:38px;height:38px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(139,92,246,0.45);animation:iconFloat 3.8s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;letter-spacing:0.04em;line-height:1.3;font-family:'Heebo',sans-serif;">Hot Leads<br>Closed Today</div>
-        </div>
-        <div style="text-align:center;font-size:2.6rem;font-weight:800;color:#08326E;font-family:'DM Mono',monospace;line-height:1;margin-bottom:6px;">${hot_closed}</div>
-        <div style="text-align:center;font-size:0.68rem;font-weight:700;color:#1A1A1A;font-family:'Heebo',sans-serif;">Closed Today</div>
-      </div>
-
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+        'rgba(37,99,235,0.1)','POP-UP<br>RECEIVED TODAY',popup_recv,'#2563EB','Unique POP-UPs'
+      )}
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0891B2" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>',
+        'rgba(8,145,178,0.1)','POP-UP<br>QUALIFIED TODAY',popup_qual,'#0891B2','Unique POP-UPs'
+      )}
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+        'rgba(217,119,6,0.1)','POP-UP<br>CLOSED TODAY',popup_closed,'#D97706','Closed Today'
+      )}
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>',
+        'rgba(220,38,38,0.1)','HOT LEADS<br>RECEIVED TODAY',hot_recv,'#DC2626','Unique Hot Leads'
+      )}
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"></path><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>',
+        'rgba(22,163,74,0.1)','HOT LEADS<br>QUALIFIED TODAY',hot_qual,'#16A34A','Qualified Today'
+      )}
+      ${kpiCard(
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>',
+        'rgba(124,58,237,0.1)','HOT LEADS<br>CLOSED TODAY',hot_closed,'#7C3AED','Closed Today'
+      )}
     </div>
 
-    <div style="background:#fff;border:1px solid #4DC99A;border-radius:14px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
-      <div style="padding:16px 20px;border-bottom:1px solid #4DC99A;background:linear-gradient(0deg,rgba(42,123,155,1) 0%,rgba(193,227,213,0.68) 100%);display:flex;align-items:center;gap:8px;">
-        <span style="font-size:0.8rem;font-weight:800;color:#000000;letter-spacing:0.06em;text-transform:uppercase;">📋 Today Received POP-UPS Breakdown</span>
+    <!-- BREAKDOWN -->
+    <div class="section-card" style="margin-bottom:20px;">
+      <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.06),rgba(255,255,255,0),rgba(220,38,38,0.06));">
+        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </div>
+        <span class="section-hdr-title" style="color:#2563EB;">Today Received POP-UPS Breakdown</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e5e9f0;background:#fff;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(16,185,129,0.35);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      <div class="breakdown-grid">
+        <div class="breakdown-cell">
+          <div class="breakdown-icon" style="background:rgba(22,163,74,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
           </div>
-          <div style="font-size:0.82rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Total Received</div>
-          <div style="font-size:2rem;font-weight:800;color:#12523F;font-family:'DM Mono',monospace;">${total_popup_recv}</div>
+          <div class="breakdown-label">Total Received</div>
+          <div class="breakdown-val" style="color:#16A34A;">${total_popup_recv}</div>
         </div>
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e5e9f0;background:#fff;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(14,165,233,0.35);animation:iconFloat 3.5s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <div class="breakdown-cell">
+          <div class="breakdown-icon" style="background:rgba(8,145,178,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0891B2" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
           </div>
-          <div style="font-size:0.82rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Valid POP-UPs</div>
-          <div style="font-size:2rem;font-weight:800;color:#12523F;font-family:'DM Mono',monospace;">${valid_popups}</div>
+          <div class="breakdown-label">Valid POP-UPs</div>
+          <div class="breakdown-val" style="color:#0891B2;">${valid_popups}</div>
         </div>
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e5e9f0;background:#fff;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(245,158,11,0.35);animation:iconFloat 4s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.51"></path></svg>
+        <div class="breakdown-cell">
+          <div class="breakdown-icon" style="background:rgba(217,119,6,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.51"></path></svg>
           </div>
-          <div style="font-size:0.82rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Repeated</div>
-          <div style="font-size:2rem;font-weight:800;color:#12523F;font-family:'DM Mono',monospace;">${repeated}</div>
+          <div class="breakdown-label">Repeated</div>
+          <div class="breakdown-val" style="color:#D97706;">${repeated}</div>
         </div>
-        <div style="padding:18px 12px;text-align:center;background:#fff;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(239,68,68,0.35);animation:iconFloat 2.5s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <div class="breakdown-cell">
+          <div class="breakdown-icon" style="background:rgba(220,38,38,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
-          <div style="font-size:0.82rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Invalid IP & Data</div>
-          <div style="font-size:2rem;font-weight:800;color:#12523F;font-family:'DM Mono',monospace;">${invalid}</div>
+          <div class="breakdown-label">Invalid IP & Data</div>
+          <div class="breakdown-val" style="color:#DC2626;">${invalid}</div>
         </div>
       </div>
     </div>
 
-    <div class="detail-grid">
-      <div style="background:#fff;border:1px solid #9EC0FF;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,55,158,0.1);">
-        <div style="padding:14px 20px;border-bottom:1px solid #9EC0FF;background:linear-gradient(90deg,rgba(2,0,36,0.4) 0%,rgba(158,192,255,0.4) 100%);display:flex;align-items:center;gap:8px;">
-          <span style="font-size:0.78rem;font-weight:800;color:#00379E;letter-spacing:0.08em;text-transform:uppercase;">📊 POP-UP Averages</span>
+    <!-- AVERAGES -->
+    <div class="avg-grid">
+      <div class="section-card" style="margin-bottom:0;">
+        <div class="section-hdr">
+          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">📊</div>
+          <span class="section-hdr-title" style="color:#2563EB;">POP-UP Averages</span>
         </div>
-        <table style="width:100%;border-collapse:collapse;">
-          <thead>
-            <tr>
-              <th style="padding:10px 18px;text-align:left;font-size:0.7rem;font-weight:700;color:#718096;border-bottom:1px solid #e5e9f0;background:#f8fafc;width:30%;"></th>
-              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#2C7528;border-bottom:1px solid #e5e9f0;background:#f0fff0;width:35%;">RECEIVED</th>
-              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#00379E;border-bottom:1px solid #e5e9f0;background:#f0f4ff;width:35%;">QUALIFIED</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9;">
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Overall</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#2C7528;font-family:'DM Mono',monospace;">${popup_recv_overall}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${popup_qual_overall}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Monthly</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#2C7528;font-family:'DM Mono',monospace;">${popup_recv_monthly}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${popup_qual_monthly}</td>
-            </tr>
-            <tr>
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Today</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#2C7528;font-family:'DM Mono',monospace;">${popup_recv_today}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${popup_qual_today}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="padding:8px 0;">
+          <table class="avg-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th style="color:#16A34A;">RECEIVED</th>
+                <th style="color:#2563EB;">QUALIFIED</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Overall</td><td style="color:#16A34A;">${popup_recv_overall}</td><td style="color:#2563EB;">${popup_qual_overall}</td></tr>
+              <tr><td>Monthly</td><td style="color:#16A34A;">${popup_recv_monthly}</td><td style="color:#2563EB;">${popup_qual_monthly}</td></tr>
+              <tr><td>Today</td><td style="color:#16A34A;">${popup_recv_today}</td><td style="color:#2563EB;">${popup_qual_today}</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      <div style="background:#fff;border:1px solid #D0BAFF;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(104,39,245,0.1);">
-        <div style="padding:14px 20px;border-bottom:1px solid #D0BAFF;background:linear-gradient(90deg,rgba(2,0,36,0.4) 0%,rgba(208,186,255,0.56) 100%);display:flex;align-items:center;gap:8px;">
-          <span style="font-size:0.78rem;font-weight:800;color:#6827F5;letter-spacing:0.08em;text-transform:uppercase;">🔥 Hot Lead Averages</span>
+      <div class="section-card" style="margin-bottom:0;">
+        <div class="section-hdr">
+          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.1);">🔥</div>
+          <span class="section-hdr-title" style="color:#DC2626;">Hot Lead Averages</span>
         </div>
-        <table style="width:100%;border-collapse:collapse;">
-          <thead>
-            <tr>
-              <th style="padding:10px 18px;text-align:left;font-size:0.7rem;font-weight:700;color:#718096;border-bottom:1px solid #e5e9f0;background:#f8fafc;width:30%;"></th>
-              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#ef4444;border-bottom:1px solid #e5e9f0;background:#fff5f5;width:35%;">RECEIVED</th>
-              <th style="padding:10px 18px;text-align:center;font-size:0.75rem;font-weight:800;color:#00379E;border-bottom:1px solid #e5e9f0;background:#f0f4ff;width:35%;">QUALIFIED</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9;">
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Overall</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_overall}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_overall}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Monthly</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_monthly}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_monthly}</td>
-            </tr>
-            <tr>
-              <td style="padding:12px 18px;font-size:0.78rem;font-weight:700;color:#1A1A1A;">Today</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${hot_recv_today}</td>
-              <td style="padding:12px 18px;text-align:center;font-size:1.1rem;font-weight:800;color:#00379E;font-family:'DM Mono',monospace;">${hot_qual_today}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    <div style="background:#FFDBFC;border:1px solid #f0abfc;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(240,171,252,0.2);grid-column:span 2;">
-      <div style="padding:14px 20px;border-bottom:1px solid #a1e1ff;background:linear-gradient(90deg,rgba(161,225,255,0.9) 0%,rgba(237,255,248,1) 100%);display:flex;align-items:center;gap:8px;">
-        <span style="font-size:0.78rem;font-weight:800;color:#dc2626;letter-spacing:0.08em;text-transform:uppercase;">📈 Closing Average</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
-        <div style="padding:20px;text-align:center;border-right:1px solid #f0abfc;background:#fff;">
-          <div style="font-size:0.85rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:10px;">Total Closed</div>
-          <div style="font-size:2rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${total_closed}</div>
-        </div>
-        <div style="padding:20px;text-align:center;border-right:1px solid #f0abfc;background:#fff;">
-          <div style="font-size:0.85rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:10px;">Last 3 Months</div>
-          <div style="font-size:2rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${last3months}</div>
-        </div>
-        <div style="padding:20px;text-align:center;border-right:1px solid #f0abfc;background:#fff;">
-          <div style="font-size:0.85rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:10px;">Current Month</div>
-          <div style="font-size:2rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${current_month}</div>
-        </div>
-        <div style="padding:20px;text-align:center;background:#fff;">
-          <div style="font-size:0.85rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#1A1A1A;margin-bottom:10px;">Today Closed</div>
-          <div style="font-size:2rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${today_closed}</div>
+        <div style="padding:8px 0;">
+          <table class="avg-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th style="color:#DC2626;">RECEIVED</th>
+                <th style="color:#2563EB;">QUALIFIED</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Overall</td><td style="color:#DC2626;">${hot_recv_overall}</td><td style="color:#2563EB;">${hot_qual_overall}</td></tr>
+              <tr><td>Monthly</td><td style="color:#DC2626;">${hot_recv_monthly}</td><td style="color:#2563EB;">${hot_qual_monthly}</td></tr>
+              <tr><td>Today</td><td style="color:#DC2626;">${hot_recv_today}</td><td style="color:#2563EB;">${hot_qual_today}</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+
+    <!-- CLOSING AVERAGE -->
+    <div class="section-card">
+      <div class="section-hdr">
+        <div class="section-hdr-icon" style="background:rgba(251,191,36,0.15);">📈</div>
+        <span class="section-hdr-title" style="color:#D97706;">Closing Average</span>
+      </div>
+      <div class="closing-grid">
+        <div class="closing-cell">
+          <div class="closing-label">Total Closed</div>
+          <div class="closing-val" style="color:#16A34A;">${total_closed}</div>
+          <div class="closing-trend" style="color:#16A34A;">
+            ${[3,5,4,6,5,7,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
+          </div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Last 3 Months</div>
+          <div class="closing-val" style="color:#2563EB;">${last3months}</div>
+          <div class="closing-trend" style="color:#2563EB;">
+            ${[4,3,5,4,6,5,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
+          </div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Current Month</div>
+          <div class="closing-val" style="color:#D97706;">${current_month}</div>
+          <div class="closing-trend" style="color:#D97706;">
+            ${[5,6,5,7,6,7,8].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
+          </div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Today Closed</div>
+          <div class="closing-val" style="color:#DC2626;">${today_closed}</div>
+          <div class="closing-trend" style="color:#DC2626;">
+            ${[2,4,3,5,4,6,5].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
 
 function renderMarketing(data){
-  // TA - rows 32-35 (array index 31-34)
-  const ta_recv         = data[31]?.[2]  ?? 0;
-  const ta_qual         = data[32]?.[2]  ?? 0;
-  const ta_closed       = data[33]?.[2]  ?? 0;
-  const ta_a            = data[31]?.[5]  ?? 0;
-  const ta_b            = data[32]?.[5]  ?? 0;
-  const ta_c            = data[33]?.[5]  ?? 0;
-  const ta_uncat        = data[34]?.[5]  ?? 0;
-  const ta_recv_overall = data[31]?.[8]  ?? 0;
-  const ta_recv_monthly = data[32]?.[8]  ?? 0;
-  const ta_recv_today   = data[33]?.[8]  ?? 0;
+  const ta_recv   = data[31]?.[2] ?? 0;
+  const ta_qual   = data[32]?.[2] ?? 0;
+  const ta_closed = data[33]?.[2] ?? 0;
+  const ta_a      = data[31]?.[5] ?? 0;
+  const ta_b      = data[32]?.[5] ?? 0;
+  const ta_c      = data[33]?.[5] ?? 0;
+  const ta_uncat  = data[34]?.[5] ?? 0;
+  const ta_recv_overall = data[31]?.[8] ?? 0;
+  const ta_recv_monthly = data[32]?.[8] ?? 0;
+  const ta_recv_today   = data[33]?.[8] ?? 0;
   const ta_qual_overall = data[31]?.[11] ?? 0;
   const ta_qual_monthly = data[32]?.[11] ?? 0;
   const ta_qual_today   = data[33]?.[11] ?? 0;
-
-  // MTC - rows 39-42 (array index 38-41)
-  const mtc_recv         = data[38]?.[2]  ?? 0;
-  const mtc_qual         = data[39]?.[2]  ?? 0;
-  const mtc_closed       = data[40]?.[2]  ?? 0;
-  const mtc_a            = data[38]?.[5]  ?? 0;
-  const mtc_b            = data[39]?.[5]  ?? 0;
-  const mtc_c            = data[40]?.[5]  ?? 0;
-  const mtc_uncat        = data[41]?.[5]  ?? 0;
-  const mtc_recv_overall = data[38]?.[8]  ?? 0;
-  const mtc_recv_monthly = data[39]?.[8]  ?? 0;
-  const mtc_recv_today   = data[40]?.[8]  ?? 0;
+  const mtc_recv   = data[38]?.[2] ?? 0;
+  const mtc_qual   = data[39]?.[2] ?? 0;
+  const mtc_closed = data[40]?.[2] ?? 0;
+  const mtc_a      = data[38]?.[5] ?? 0;
+  const mtc_b      = data[39]?.[5] ?? 0;
+  const mtc_c      = data[40]?.[5] ?? 0;
+  const mtc_uncat  = data[41]?.[5] ?? 0;
+  const mtc_recv_overall = data[38]?.[8] ?? 0;
+  const mtc_recv_monthly = data[39]?.[8] ?? 0;
+  const mtc_recv_today   = data[40]?.[8] ?? 0;
   const mtc_qual_overall = data[38]?.[11] ?? 0;
   const mtc_qual_monthly = data[39]?.[11] ?? 0;
   const mtc_qual_today   = data[40]?.[11] ?? 0;
-
-  // WHATSAPP - rows 47-50 (array index 46-49)
-  const wa_recv         = data[46]?.[2]  ?? 0;
-  const wa_qual         = data[47]?.[2]  ?? 0;
-  const wa_closed       = data[48]?.[2]  ?? 0;
-  const wa_a            = data[46]?.[5]  ?? 0;
-  const wa_b            = data[47]?.[5]  ?? 0;
-  const wa_c            = data[48]?.[5]  ?? 0;
-  const wa_uncat        = data[49]?.[5]  ?? 0;
-  const wa_recv_overall = data[46]?.[8]  ?? 0;
-  const wa_recv_monthly = data[47]?.[8]  ?? 0;
-  const wa_recv_today   = data[48]?.[8]  ?? 0;
+  const wa_recv   = data[46]?.[2] ?? 0;
+  const wa_qual   = data[47]?.[2] ?? 0;
+  const wa_closed = data[48]?.[2] ?? 0;
+  const wa_a      = data[46]?.[5] ?? 0;
+  const wa_b      = data[47]?.[5] ?? 0;
+  const wa_c      = data[48]?.[5] ?? 0;
+  const wa_uncat  = data[49]?.[5] ?? 0;
+  const wa_recv_overall = data[46]?.[8] ?? 0;
+  const wa_recv_monthly = data[47]?.[8] ?? 0;
+  const wa_recv_today   = data[48]?.[8] ?? 0;
   const wa_qual_overall = data[46]?.[11] ?? 0;
   const wa_qual_monthly = data[47]?.[11] ?? 0;
   const wa_qual_today   = data[48]?.[11] ?? 0;
-
-  // PRECEPTOR - rows 54-57 (array index 53-56)
-  const pre_recv         = data[53]?.[2]  ?? 0;
-  const pre_qual         = data[54]?.[2]  ?? 0;
-  const pre_closed       = data[55]?.[2]  ?? 0;
-  const pre_a            = data[53]?.[5]  ?? 0;
-  const pre_b            = data[54]?.[5]  ?? 0;
-  const pre_c            = data[55]?.[5]  ?? 0;
-  const pre_uncat        = data[56]?.[5]  ?? 0;
-  const pre_recv_overall = data[53]?.[8]  ?? 0;
-  const pre_recv_monthly = data[54]?.[8]  ?? 0;
-  const pre_recv_today   = data[55]?.[8]  ?? 0;
+  const pre_recv   = data[53]?.[2] ?? 0;
+  const pre_qual   = data[54]?.[2] ?? 0;
+  const pre_closed = data[55]?.[2] ?? 0;
+  const pre_a      = data[53]?.[5] ?? 0;
+  const pre_b      = data[54]?.[5] ?? 0;
+  const pre_c      = data[55]?.[5] ?? 0;
+  const pre_uncat  = data[56]?.[5] ?? 0;
+  const pre_recv_overall = data[53]?.[8] ?? 0;
+  const pre_recv_monthly = data[54]?.[8] ?? 0;
+  const pre_recv_today   = data[55]?.[8] ?? 0;
   const pre_qual_overall = data[53]?.[11] ?? 0;
   const pre_qual_monthly = data[54]?.[11] ?? 0;
   const pre_qual_today   = data[55]?.[11] ?? 0;
-
-  // TIKTOK - rows 61-64 (array index 60-63)
-  const tt_recv         = data[60]?.[2]  ?? 0;
-  const tt_qual         = data[61]?.[2]  ?? 0;
-  const tt_closed       = data[62]?.[2]  ?? 0;
-  const tt_a            = data[60]?.[5]  ?? 0;
-  const tt_b            = data[61]?.[5]  ?? 0;
-  const tt_c            = data[62]?.[5]  ?? 0;
-  const tt_uncat        = data[63]?.[5]  ?? 0;
-  const tt_recv_overall = data[60]?.[8]  ?? 0;
-  const tt_recv_monthly = data[61]?.[8]  ?? 0;
-  const tt_recv_today   = data[62]?.[8]  ?? 0;
+  const tt_recv   = data[60]?.[2] ?? 0;
+  const tt_qual   = data[61]?.[2] ?? 0;
+  const tt_closed = data[62]?.[2] ?? 0;
+  const tt_a      = data[60]?.[5] ?? 0;
+  const tt_b      = data[61]?.[5] ?? 0;
+  const tt_c      = data[62]?.[5] ?? 0;
+  const tt_uncat  = data[63]?.[5] ?? 0;
+  const tt_recv_overall = data[60]?.[8] ?? 0;
+  const tt_recv_monthly = data[61]?.[8] ?? 0;
+  const tt_recv_today   = data[62]?.[8] ?? 0;
   const tt_qual_overall = data[60]?.[11] ?? 0;
   const tt_qual_monthly = data[61]?.[11] ?? 0;
   const tt_qual_today   = data[62]?.[11] ?? 0;
-
-  // CLOSED LEADS - rows 69-72 (array index 68-71)
   const cl_total   = data[68]?.[2] ?? 0;
   const cl_3months = data[69]?.[2] ?? 0;
   const cl_month   = data[70]?.[2] ?? 0;
   const cl_today   = data[71]?.[2] ?? 0;
 
-  const platforms = [
-    { name:'TA', label:'TA Class Ads', color:'gold',
-      recv:ta_recv, qual:ta_qual, closed:ta_closed,
-      a:ta_a, b:ta_b, c:ta_c, uncat:ta_uncat,
-      recv_ov:ta_recv_overall, recv_mn:ta_recv_monthly, recv_td:ta_recv_today,
-      qual_ov:ta_qual_overall, qual_mn:ta_qual_monthly, qual_td:ta_qual_today },
-    { name:'MTC', label:'MTC Class Ads', color:'purple',
-      recv:mtc_recv, qual:mtc_qual, closed:mtc_closed,
-      a:mtc_a, b:mtc_b, c:mtc_c, uncat:mtc_uncat,
-      recv_ov:mtc_recv_overall, recv_mn:mtc_recv_monthly, recv_td:mtc_recv_today,
-      qual_ov:mtc_qual_overall, qual_mn:mtc_qual_monthly, qual_td:mtc_qual_today },
-    { name:'WhatsApp', label:'WhatsApp Ads', color:'green',
-      recv:wa_recv, qual:wa_qual, closed:wa_closed,
-      a:wa_a, b:wa_b, c:wa_c, uncat:wa_uncat,
-      recv_ov:wa_recv_overall, recv_mn:wa_recv_monthly, recv_td:wa_recv_today,
-      qual_ov:wa_qual_overall, qual_mn:wa_qual_monthly, qual_td:wa_qual_today },
-    { name:'Preceptor', label:'Preceptor Ads', color:'cyan',
-      recv:pre_recv, qual:pre_qual, closed:pre_closed,
-      a:pre_a, b:pre_b, c:pre_c, uncat:pre_uncat,
-      recv_ov:pre_recv_overall, recv_mn:pre_recv_monthly, recv_td:pre_recv_today,
-      qual_ov:pre_qual_overall, qual_mn:pre_qual_monthly, qual_td:pre_qual_today },
-    { name:'TikTok', label:'TikTok Ads', color:'pink',
-      recv:tt_recv, qual:tt_qual, closed:tt_closed,
-      a:tt_a, b:tt_b, c:tt_c, uncat:tt_uncat,
-      recv_ov:tt_recv_overall, recv_mn:tt_recv_monthly, recv_td:tt_recv_today,
-      qual_ov:tt_qual_overall, qual_mn:tt_qual_monthly, qual_td:tt_qual_today },
+  const platforms=[
+    {name:'TA',label:'TA Class Ads',color:'#D97706',bg:'rgba(217,119,6,0.08)',
+     recv:ta_recv,qual:ta_qual,closed:ta_closed,a:ta_a,b:ta_b,c:ta_c,uncat:ta_uncat,
+     recv_ov:ta_recv_overall,recv_mn:ta_recv_monthly,recv_td:ta_recv_today,
+     qual_ov:ta_qual_overall,qual_mn:ta_qual_monthly,qual_td:ta_qual_today},
+    {name:'MTC',label:'MTC Class Ads',color:'#7C3AED',bg:'rgba(124,58,237,0.08)',
+     recv:mtc_recv,qual:mtc_qual,closed:mtc_closed,a:mtc_a,b:mtc_b,c:mtc_c,uncat:mtc_uncat,
+     recv_ov:mtc_recv_overall,recv_mn:mtc_recv_monthly,recv_td:mtc_recv_today,
+     qual_ov:mtc_qual_overall,qual_mn:mtc_qual_monthly,qual_td:mtc_qual_today},
+    {name:'WhatsApp',label:'WhatsApp Ads',color:'#16A34A',bg:'rgba(22,163,74,0.08)',
+     recv:wa_recv,qual:wa_qual,closed:wa_closed,a:wa_a,b:wa_b,c:wa_c,uncat:wa_uncat,
+     recv_ov:wa_recv_overall,recv_mn:wa_recv_monthly,recv_td:wa_recv_today,
+     qual_ov:wa_qual_overall,qual_mn:wa_qual_monthly,qual_td:wa_qual_today},
+    {name:'Preceptor',label:'Preceptor Ads',color:'#2563EB',bg:'rgba(37,99,235,0.08)',
+     recv:pre_recv,qual:pre_qual,closed:pre_closed,a:pre_a,b:pre_b,c:pre_c,uncat:pre_uncat,
+     recv_ov:pre_recv_overall,recv_mn:pre_recv_monthly,recv_td:pre_recv_today,
+     qual_ov:pre_qual_overall,qual_mn:pre_qual_monthly,qual_td:pre_qual_today},
+    {name:'TikTok',label:'TikTok Ads',color:'#DC2626',bg:'rgba(220,38,38,0.08)',
+     recv:tt_recv,qual:tt_qual,closed:tt_closed,a:tt_a,b:tt_b,c:tt_c,uncat:tt_uncat,
+     recv_ov:tt_recv_overall,recv_mn:tt_recv_monthly,recv_td:tt_recv_today,
+     qual_ov:tt_qual_overall,qual_mn:tt_qual_monthly,qual_td:tt_qual_today},
   ];
 
-  return `
-    <div style="display:flex;flex-direction:column;gap:14px;">
-
-      ${platforms.map(p => `
-      <div style="background:#fff;border:1.5px solid #0d9488;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(13,148,136,0.12);position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#10b981,#0d9488,#06b6d4);border-radius:16px 16px 0 0;"></div>
-
-        <!-- Header -->
-        <div style="padding:14px 20px;border-bottom:1px solid #ccfbf1;background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(6,182,212,0.08));display:flex;align-items:center;justify-content:space-between;margin-top:3px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#0d9488);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(13,148,136,0.3);animation:iconFloat 3s ease-in-out infinite;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            </div>
-            <span style="font-size:0.88rem;font-weight:800;color:#065f46;letter-spacing:0.02em;">📱 ${p.label}</span>
+  function platCard(p){
+    return `
+    <div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:${p.bg};">
+        <div class="section-hdr-icon" style="background:${p.bg};border:1px solid ${p.color}20;">📱</div>
+        <span class="section-hdr-title" style="color:${p.color};">${p.label}</span>
+        <div style="margin-left:auto;display:flex;gap:16px;">
+          <div style="text-align:center;">
+            <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Recv</div>
+            <div style="font-size:1rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.recv}</div>
           </div>
-          <div style="display:flex;gap:16px;">
-            <div style="text-align:center;">
-              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Received</div>
-              <div style="font-size:1.1rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.recv}</div>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Qualified</div>
-              <div style="font-size:1.1rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.qual}</div>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:#6b7280;letter-spacing:0.06em;">Closed</div>
-              <div style="font-size:1.1rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.closed}</div>
-            </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Qual</div>
+            <div style="font-size:1rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.qual}</div>
           </div>
-        </div>
-
-        <!-- Body -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;">
-
-          <!-- Today -->
-          <div style="border-right:1px solid #ccfbf1;">
-            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#0d9488;background:rgba(13,148,136,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Today</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Received</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.recv}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Qualified</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.qual}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Closed</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.closed}</span>
-            </div>
-          </div>
-
-          <!-- Categories -->
-          <div style="border-right:1px solid #ccfbf1;">
-            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#06b6d4;background:rgba(6,182,212,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">Categories</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">A</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.a}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">B</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${p.b}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">C</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${p.c}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Un-cat</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#9ca3af;font-family:'DM Mono',monospace;">${p.uncat}</span>
-            </div>
-          </div>
-
-          <!-- Recv Avg -->
-          <div style="border-right:1px solid #ccfbf1;">
-            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#10b981;background:rgba(16,185,129,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Recv Avg</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Overall</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_ov}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Monthly</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_mn}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${p.recv_td}</span>
-            </div>
-          </div>
-
-          <!-- Qual Avg -->
-          <div>
-            <div style="padding:8px 14px;font-size:0.6rem;font-weight:800;text-transform:uppercase;color:#0d9488;background:rgba(13,148,136,0.06);border-bottom:1px solid #ccfbf1;letter-spacing:0.08em;">${p.name} Qual Avg</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Overall</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_ov}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0fdf4;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Monthly</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_mn}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;">
-              <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
-              <span style="font-size:0.9rem;font-weight:800;color:#0d9488;font-family:'DM Mono',monospace;">${p.qual_td}</span>
-            </div>
-          </div>
-
-        </div>
-      </div>`).join('')}
-
-      <!-- Closed Leads Paid Data -->
-      <div style="background:#fff;border:1.5px solid #0d9488;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(13,148,136,0.12);">
-        <div style="padding:14px 20px;border-bottom:1px solid #ccfbf1;background:linear-gradient(90deg,rgba(16,185,129,0.1),rgba(6,182,212,0.1));">
-          <span style="font-size:0.78rem;font-weight:800;color:#065f46;letter-spacing:0.08em;text-transform:uppercase;">📈 Closed Leads — Paid Data</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);">
-          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
-            <div style="width:40px;height:40px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(16,185,129,0.3);animation:iconFloat 3s ease-in-out infinite;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-            </div>
-            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Total Closed</div>
-            <div style="font-size:1.8rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${cl_total}</div>
-          </div>
-          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
-            <div style="width:40px;height:40px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(14,165,233,0.3);animation:iconFloat 3.5s ease-in-out infinite;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            </div>
-            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Last 3 Months</div>
-            <div style="font-size:1.8rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${cl_3months}</div>
-          </div>
-          <div style="padding:20px;text-align:center;border-right:1px solid #ccfbf1;">
-            <div style="width:40px;height:40px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(245,158,11,0.3);animation:iconFloat 4s ease-in-out infinite;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-            </div>
-            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">Current Month</div>
-            <div style="font-size:1.8rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${cl_month}</div>
-          </div>
-          <div style="padding:20px;text-align:center;">
-            <div style="width:40px;height:40px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(239,68,68,0.3);animation:iconFloat 2.5s ease-in-out infinite;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            </div>
-            <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#1A1A1A;margin-bottom:8px;">TODAY Closed</div>
-            <div style="font-size:1.8rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${cl_today}</div>
+          <div style="text-align:center;">
+            <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Closed</div>
+            <div style="font-size:1rem;font-weight:800;color:#DC2626;font-family:'DM Mono',monospace;">${p.closed}</div>
           </div>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr 1.2fr 1.2fr;gap:0;">
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${p.color};background:${p.bg};border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">${p.name} Today</div>
+          ${mr('Received',p.recv,'blue')}
+          ${mr('Qualified',p.qual,'blue')}
+          ${mr('Closed',p.closed,'red')}
+        </div>
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text2);background:#fafbfc;border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Categories</div>
+          ${mr('A',p.a,'green')}
+          ${mr('B',p.b,'gold')}
+          ${mr('C',p.c,'red')}
+          ${mr('Un-cat',p.uncat,'dim')}
+        </div>
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#16A34A;background:rgba(22,163,74,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Recv Avg</div>
+          ${mr('Overall',p.recv_ov,'green')}
+          ${mr('Monthly',p.recv_mn,'green')}
+          ${mr('Today',p.recv_td,'green')}
+        </div>
+        <div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7C3AED;background:rgba(124,58,237,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Qual Avg</div>
+          ${mr('Overall',p.qual_ov,'purple')}
+          ${mr('Monthly',p.qual_mn,'purple')}
+          ${mr('Today',p.qual_td,'purple')}
+        </div>
+      </div>
+    </div>`;
+  }
 
-    </div>
-  `;
+  return `
+    <div style="display:flex;flex-direction:column;gap:0;">
+      ${platforms.map(p=>platCard(p)).join('')}
+      <div class="section-card">
+        <div class="section-hdr" style="background:rgba(220,38,38,0.05);">
+          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.1);">📈</div>
+          <span class="section-hdr-title" style="color:#DC2626;">Closed Leads — Paid Data</span>
+        </div>
+        <div class="closing-grid">
+          <div class="closing-cell">
+            <div class="closing-label">Total Closed</div>
+            <div class="closing-val" style="color:#16A34A;">${cl_total}</div>
+          </div>
+          <div class="closing-cell">
+            <div class="closing-label">Last 3 Months</div>
+            <div class="closing-val" style="color:#2563EB;">${cl_3months}</div>
+          </div>
+          <div class="closing-cell">
+            <div class="closing-label">Current Month</div>
+            <div class="closing-val" style="color:#D97706;">${cl_month}</div>
+          </div>
+          <div class="closing-cell">
+            <div class="closing-label">TODAY Closed</div>
+            <div class="closing-val" style="color:#DC2626;">${cl_today}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderQualifier(data){
-  // QUALIFIER - exact row indices (row number - 1 for array)
   const q_today_qual  = data[82]?.[2] ?? 0;
   const q_email       = data[83]?.[2] ?? 0;
   const q_st          = data[84]?.[2] ?? 0;
@@ -963,8 +964,6 @@ function renderQualifier(data){
   const q_cl_3months  = data[92]?.[2] ?? 0;
   const q_cl_month    = data[93]?.[2] ?? 0;
   const q_cl_today    = data[94]?.[2] ?? 0;
-
-  // 4TH FLOOR - exact row indices
   const f_today_qual  = data[99]?.[2]  ?? 0;
   const f_email       = data[100]?.[2] ?? 0;
   const f_st          = data[101]?.[2] ?? 0;
@@ -976,131 +975,79 @@ function renderQualifier(data){
   const f_cl_month    = data[110]?.[2] ?? 0;
   const f_cl_today    = data[111]?.[2] ?? 0;
 
-  function deptCard(name,color,hex,today_qual,email,st,overall_avg,monthly_avg,today_avg,cl_total,cl_3months,cl_month,cl_today){
+  function dCard(name,color,bg,tq,email,st,ov,mn,td,cl_t,cl_3,cl_m,cl_today){
     return `
-    <div style="background:#fff;border:1.5px solid #d97706;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(217,119,6,0.15);position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#f59e0b,#fbbf24);border-radius:16px 16px 0 0;"></div>
-
-      <!-- Header -->
-      <div style="padding:16px 22px;border-bottom:1px solid #fef3c7;background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(251,191,36,0.1));display:flex;align-items:center;justify-content:space-between;margin-top:3px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#f97316,#f59e0b);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(249,115,22,0.4);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-          </div>
-          <div>
-            <div style="font-size:1rem;font-weight:800;color:#92400e;letter-spacing:0.02em;">🏢 ${name}</div>
-            <div style="font-size:0.65rem;color:#b45309;margin-top:2px;font-weight:500;">Department Performance</div>
-          </div>
-        </div>
-        <div style="background:linear-gradient(135deg,#f97316,#f59e0b);border-radius:12px;padding:8px 18px;text-align:center;box-shadow:0 4px 12px rgba(249,115,22,0.3);">
-          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.8);letter-spacing:0.08em;">Today Qualified</div>
-          <div style="font-size:1.6rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${today_qual}</div>
+    <div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:${bg};">
+        <div class="section-hdr-icon" style="background:${bg};border:1px solid ${color}30;">🏢</div>
+        <span class="section-hdr-title" style="color:${color};">${name}</span>
+        <div style="margin-left:auto;background:${color};border-radius:12px;padding:6px 16px;text-align:center;">
+          <div style="font-size:0.58rem;color:rgba(255,255,255,0.7);font-weight:600;text-transform:uppercase;">Today Qualified</div>
+          <div style="font-size:1.3rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${tq}</div>
         </div>
       </div>
-
-      <!-- Body -->
       <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;">
-
-        <!-- Today Breakdown -->
-        <div style="border-right:1px solid #fef3c7;">
-          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#d97706;background:rgba(251,191,36,0.08);border-bottom:1px solid #fef3c7;letter-spacing:0.08em;">Today Breakdown</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #fef3c7;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #fef3c7;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3s ease-in-out infinite;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              </div>
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#92400e;margin-bottom:4px;font-weight:700;">Total</div>
-              <div style="font-size:1.5rem;font-weight:800;color:#d97706;font-family:'DM Mono',monospace;">${today_qual}</div>
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1px solid #f1f5f9;">Today Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #f1f5f9;">
+            <div style="padding:16px 8px;text-align:center;border-right:1px solid #f8fafc;">
+              <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Total</div>
+              <div style="font-size:1.6rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${tq}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #fef3c7;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3.5s ease-in-out infinite;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              </div>
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#92400e;margin-bottom:4px;font-weight:700;">Email</div>
-              <div style="font-size:1.5rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${email}</div>
+            <div style="padding:16px 8px;text-align:center;border-right:1px solid #f8fafc;">
+              <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Email</div>
+              <div style="font-size:1.6rem;font-weight:700;color:#2563EB;font-family:'DM Mono',monospace;">${email}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 4s ease-in-out infinite;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              </div>
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#92400e;margin-bottom:4px;font-weight:700;">ST</div>
-              <div style="font-size:1.5rem;font-weight:800;color:#fbbf24;font-family:'DM Mono',monospace;">${st}</div>
+            <div style="padding:16px 8px;text-align:center;">
+              <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">ST</div>
+              <div style="font-size:1.6rem;font-weight:700;color:#7C3AED;font-family:'DM Mono',monospace;">${st}</div>
             </div>
           </div>
-          <div style="padding:8px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#92400e;background:#fffbeb;border-bottom:1px solid #fef3c7;letter-spacing:0.08em;">Qualified Averages</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #fef3c7;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Overall</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#d97706;font-family:'DM Mono',monospace;">${overall_avg}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #fef3c7;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Monthly</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#d97706;font-family:'DM Mono',monospace;">${monthly_avg}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#d97706;font-family:'DM Mono',monospace;">${today_avg}</span>
-          </div>
+          <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1px solid #f1f5f9;">Qualified Averages</div>
+          ${mr('Overall',ov,'blue')} ${mr('Monthly',mn,'blue')} ${mr('Today',td,'blue')}
         </div>
-
-        <!-- Closing Ratios -->
-        <div style="border-right:1px solid #fef3c7;">
-          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#dc2626;background:rgba(239,68,68,0.05);border-bottom:1px solid #fef3c7;letter-spacing:0.08em;">Closing Average</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #fef3c7;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Total</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${cl_total}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #fef3c7;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Last 3 Months</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${cl_3months}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #fef3c7;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Current Month</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${cl_month}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
-            <span style="font-size:0.74rem;color:#4b5563;font-weight:500;">Today</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${cl_today}</span>
-          </div>
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1px solid #f1f5f9;">Closing Average</div>
+          ${mr('Total Closed',cl_t,'green')}
+          ${mr('Last 3 Months',cl_3,'blue')}
+          ${mr('Current Month',cl_m,'gold')}
+          ${mr('TODAY Closed',cl_today,'red')}
         </div>
-
-        <!-- Summary -->
         <div>
-          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#92400e;background:#fffbeb;border-bottom:1px solid #fef3c7;letter-spacing:0.08em;">Summary</div>
-          <div style="padding:16px 14px;">
-            <div style="font-size:0.62rem;color:#92400e;margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Email vs ST</div>
-            <div style="display:flex;gap:4px;align-items:center;margin-bottom:6px;">
-              <div style="flex:${email||1};height:10px;background:linear-gradient(90deg,#f97316,#f59e0b);border-radius:5px;min-width:4px;"></div>
-              <div style="flex:${st||1};height:10px;background:linear-gradient(90deg,#fbbf24,#fde68a);border-radius:5px;min-width:4px;"></div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1px solid #f1f5f9;">Summary</div>
+          <div style="padding:16px;">
+            <div style="font-size:0.62rem;color:var(--text3);margin-bottom:8px;font-weight:600;text-transform:uppercase;">Email vs ST</div>
+            <div style="display:flex;gap:3px;align-items:center;margin-bottom:4px;">
+              <div style="flex:${email||1};height:8px;background:#2563EB;border-radius:4px;min-width:4px;opacity:0.8;"></div>
+              <div style="flex:${st||1};height:8px;background:#7C3AED;border-radius:4px;min-width:4px;opacity:0.8;"></div>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-              <span style="font-size:0.64rem;color:#f97316;font-weight:700;">📧 Email ${email}</span>
-              <span style="font-size:0.64rem;color:#d97706;font-weight:700;">💬 ST ${st}</span>
+              <span style="font-size:0.62rem;color:#2563EB;font-weight:600;">Email ${email}</span>
+              <span style="font-size:0.62rem;color:#7C3AED;font-weight:600;">ST ${st}</span>
             </div>
-            <div style="border-top:1px solid #fef3c7;padding-top:12px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#fffbeb;padding:8px 10px;border-radius:8px;">
-                <span style="font-size:0.72rem;color:#92400e;font-weight:600;">Monthly Avg</span>
-                <span style="font-size:1rem;font-weight:800;color:#d97706;font-family:'DM Mono',monospace;">${monthly_avg}</span>
+            <div style="border-top:1px solid #f1f5f9;padding-top:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
+                <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Monthly Avg</span>
+                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${mn}</span>
               </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(249,115,22,0.08);padding:8px 10px;border-radius:8px;">
-                <span style="font-size:0.72rem;color:#92400e;font-weight:600;">Today</span>
-                <span style="font-size:1rem;font-weight:800;color:#f97316;font-family:'DM Mono',monospace;">${today_qual}</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:${bg};padding:8px 10px;border-radius:10px;">
+                <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Today</span>
+                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${tq}</span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>`;
   }
 
-  return `<div style="display:flex;flex-direction:column;gap:16px;">
-    ${deptCard('Qualifier Department','orange','#f97316',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
-    ${deptCard('4th Floor','amber','#f59e0b',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
+  return `<div>
+    ${dCard('Qualifier Department','#2563EB','rgba(37,99,235,0.06)',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
+    ${dCard('4th Floor','#D97706','rgba(217,119,6,0.06)',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
   </div>`;
 }
 
 function renderRevived(data){
-  // TOTAL REVIVED LEADS - rows 121-129 (array index 120-128)
   const rv_today       = data[121]?.[2] ?? 0;
   const rv_email       = data[122]?.[2] ?? 0;
   const rv_st          = data[123]?.[2] ?? 0;
@@ -1109,151 +1056,99 @@ function renderRevived(data){
   const rv_overall_avg = data[126]?.[2] ?? 0;
   const rv_monthly_avg = data[127]?.[2] ?? 0;
   const rv_today_avg   = data[128]?.[2] ?? 0;
+  const maheen_members=[data[133],data[134],data[135],data[136],data[137],data[138],data[139],data[140]].filter(r=>r?.[1]&&r[1]!=='');
+  const khurram_members=[data[146],data[147],data[148],data[149],data[150],data[151],data[152]].filter(r=>r?.[1]&&r[1]!=='');
 
-  // TEAM MAHEEN - rows 134-140 (array index 133-139)
-  // columns: B=name, C=Revived, D=Duplicate, E=Existing, F=Email, G=RC, H=Total Revived, I=Total Closed
-  const maheen_members = [
-    data[133], data[134], data[135], data[136], data[137], data[138], data[139], data[140]
-  ].filter(r => r?.[1] && r[1] !== '');
-
-  // TEAM KHURRAM - rows 147-152 (array index 146-151)
-  const khurram_members = [
-    data[146], data[147], data[148], data[149], data[150], data[151], data[152]
-  ].filter(r => r?.[1] && r[1] !== '');
-
-  function teamTable(title,hex,members){
-    return `<div style="background:#fff;border:1.5px solid ${hex};border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(14,165,233,0.12);position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0ea5e9,#06b6d4);border-radius:14px 14px 0 0;"></div>
-      <div style="padding:14px 20px;border-bottom:1px solid #e0f2fe;background:linear-gradient(135deg,rgba(14,165,233,0.08),rgba(6,182,212,0.05));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:34px;height:34px;background:linear-gradient(135deg,${hex},#0284c7);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(14,165,233,0.3);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          </div>
-          <span style="font-size:0.9rem;font-weight:800;color:#0c4a6e;">👥 ${title}</span>
-        </div>
-        <span style="font-size:0.65rem;color:#0284c7;font-weight:600;background:rgba(14,165,233,0.1);padding:4px 10px;border-radius:20px;">${members.length} members</span>
+  function teamTable(title,color,members){
+    return `<div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:rgba(37,99,235,0.04);">
+        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">👥</div>
+        <span class="section-hdr-title" style="color:${color};">${title}</span>
+        <span style="margin-left:auto;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${color};font-weight:600;">${members.length} members</span>
       </div>
-      <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;">
-          <thead>
-            <tr style="background:linear-gradient(90deg,rgba(14,165,233,0.06),rgba(6,182,212,0.04));border-bottom:1px solid #e0f2fe;">
-              <th style="padding:10px 16px;text-align:left;font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0c4a6e;">Member</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0ea5e9;">Revived</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#ef4444;">Duplicate</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#f59e0b;">Existing</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#06b6d4;">Email</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#8b5cf6;">RC</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0ea5e9;">Total Revived</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#f59e0b;">Total Closed</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${members.map((r,i)=>`
-            <tr style="border-bottom:1px solid #f0f9ff;background:${i%2===0?'#fff':'rgba(14,165,233,0.02)'};" onmouseover="this.style.background='rgba(14,165,233,0.06)'" onmouseout="this.style.background='${i%2===0?'#fff':'rgba(14,165,233,0.02)'}'">
-              <td style="padding:11px 16px;font-size:0.8rem;color:#0c4a6e;font-weight:600;">${r[1]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#0ea5e9;font-weight:700;font-family:'DM Mono',monospace;">${r[2]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#ef4444;font-weight:700;font-family:'DM Mono',monospace;">${r[3]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#f59e0b;font-weight:700;font-family:'DM Mono',monospace;">${r[4]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#06b6d4;font-weight:700;font-family:'DM Mono',monospace;">${r[5]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#8b5cf6;font-weight:700;font-family:'DM Mono',monospace;">${r[6]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.95rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${r[7]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.95rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${r[8]||'—'}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
+      <table class="team-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding-left:20px;">Member</th>
+            <th style="color:#2563EB;">Revived</th>
+            <th style="color:#DC2626;">Duplicate</th>
+            <th style="color:#D97706;">Existing</th>
+            <th style="color:#16A34A;">Email</th>
+            <th style="color:#7C3AED;">RC</th>
+            <th style="color:#2563EB;">Total Revived</th>
+            <th style="color:#D97706;">Total Closed</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${members.map((r,i)=>`
+          <tr style="${i%2===0?'':'background:#FAFBFC;'}">
+            <td style="font-weight:600;color:var(--text);">${r[1]||'—'}</td>
+            <td style="color:#2563EB;font-weight:600;">${r[2]||'—'}</td>
+            <td style="color:#DC2626;font-weight:600;">${r[3]||'—'}</td>
+            <td style="color:#D97706;font-weight:600;">${r[4]||'—'}</td>
+            <td style="color:#16A34A;font-weight:600;">${r[5]||'—'}</td>
+            <td style="color:#7C3AED;font-weight:600;">${r[6]||'—'}</td>
+            <td style="color:#2563EB;font-weight:700;font-size:0.95rem;">${r[7]||'—'}</td>
+            <td style="color:#D97706;font-weight:700;font-size:0.95rem;">${r[8]||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
     </div>`;
   }
 
   return `
-    <div style="background:#fff;border:1.5px solid #0284c7;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(2,132,199,0.15);margin-bottom:14px;position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0ea5e9,#06b6d4,#0284c7);border-radius:16px 16px 0 0;"></div>
-
-      <!-- Summary Header -->
-      <div style="padding:16px 22px;border-bottom:1px solid #e0f2fe;background:linear-gradient(135deg,rgba(14,165,233,0.1),rgba(6,182,212,0.08));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:42px;height:42px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(14,165,233,0.4);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
-          </div>
-          <div>
-            <div style="font-size:1rem;font-weight:800;color:#0c4a6e;">🔄 Total Revived Leads Summary</div>
-            <div style="font-size:0.65rem;color:#0284c7;margin-top:2px;font-weight:500;">Live Data · Auto-refresh 30s</div>
-          </div>
+    <div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:rgba(22,163,74,0.05);">
+        <div class="section-hdr-icon" style="background:rgba(22,163,74,0.1);">🔄</div>
+        <span class="section-hdr-title" style="color:#16A34A;">Total Revived Leads Summary</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);">
+        <div class="closing-cell">
+          <div class="closing-label">Revived Today</div>
+          <div class="closing-val" style="color:#16A34A;">${rv_today}</div>
         </div>
-        <div style="background:linear-gradient(135deg,#0ea5e9,#06b6d4);border-radius:12px;padding:8px 20px;text-align:center;box-shadow:0 4px 12px rgba(14,165,233,0.3);">
-          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.8);letter-spacing:0.08em;">Revived Today</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${rv_today}</div>
+        <div class="closing-cell">
+          <div class="closing-label">Email</div>
+          <div class="closing-val" style="color:#2563EB;">${rv_email}</div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">ST</div>
+          <div class="closing-val" style="color:#7C3AED;">${rv_st}</div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Duplicate</div>
+          <div class="closing-val" style="color:#DC2626;">${rv_duplicate}</div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Existing</div>
+          <div class="closing-val" style="color:#D97706;">${rv_existing}</div>
         </div>
       </div>
-
-      <!-- Stats Row -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e0f2fe;">
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e0f2fe;">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 4px 10px rgba(14,165,233,0.3);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          </div>
-          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:6px;">Email</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${rv_email}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #f1f5f9;">
+        <div class="closing-cell">
+          <div class="closing-label">Overall Avg</div>
+          <div class="closing-val" style="color:#2563EB;">${rv_overall_avg}</div>
         </div>
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e0f2fe;">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#06b6d4,#0891b2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 4px 10px rgba(6,182,212,0.3);animation:iconFloat 3.5s ease-in-out infinite;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          </div>
-          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:6px;">ST</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#06b6d4;font-family:'DM Mono',monospace;">${rv_st}</div>
+        <div class="closing-cell">
+          <div class="closing-label">Monthly Avg</div>
+          <div class="closing-val" style="color:#D97706;">${rv_monthly_avg}</div>
         </div>
-        <div style="padding:18px 12px;text-align:center;border-right:1px solid #e0f2fe;">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 4px 10px rgba(239,68,68,0.3);animation:iconFloat 4s ease-in-out infinite;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-          </div>
-          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:6px;">Duplicate</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#ef4444;font-family:'DM Mono',monospace;">${rv_duplicate}</div>
-        </div>
-        <div style="padding:18px 12px;text-align:center;">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 4px 10px rgba(245,158,11,0.3);animation:iconFloat 2.5s ease-in-out infinite;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          </div>
-          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:6px;">Existing</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#f59e0b;font-family:'DM Mono',monospace;">${rv_existing}</div>
-        </div>
-      </div>
-
-      <!-- Averages -->
-      <div style="padding:8px 20px;background:linear-gradient(90deg,rgba(14,165,233,0.08),rgba(6,182,212,0.05));border-bottom:1px solid #e0f2fe;">
-        <span style="font-size:0.62rem;font-weight:800;color:#0284c7;letter-spacing:0.1em;text-transform:uppercase;">📊 Averages</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
-        <div style="padding:16px 12px;text-align:center;border-right:1px solid #e0f2fe;">
-          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:8px;">Overall Avg</div>
-          <div style="font-size:1.6rem;font-weight:800;color:#0ea5e9;font-family:'DM Mono',monospace;">${rv_overall_avg}</div>
-        </div>
-        <div style="padding:16px 12px;text-align:center;border-right:1px solid #e0f2fe;">
-          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:8px;">Monthly Avg</div>
-          <div style="font-size:1.6rem;font-weight:800;color:#06b6d4;font-family:'DM Mono',monospace;">${rv_monthly_avg}</div>
-        </div>
-        <div style="padding:16px 12px;text-align:center;">
-          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:8px;">Today Avg</div>
-          <div style="font-size:1.6rem;font-weight:800;color:#0284c7;font-family:'DM Mono',monospace;">${rv_today_avg}</div>
+        <div class="closing-cell">
+          <div class="closing-label">Today Avg</div>
+          <div class="closing-val" style="color:#16A34A;">${rv_today_avg}</div>
         </div>
       </div>
     </div>
-
-    <!-- Team Tables -->
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      ${teamTable('Team Maheen','#0ea5e9',maheen_members)}
-      ${teamTable('Team Khurram','#06b6d4',khurram_members)}
-    </div>`;
+    ${teamTable('Team Maheen','#2563EB',maheen_members)}
+    ${teamTable('Team Khurram','#0891B2',khurram_members)}
+  `;
 }
 
 function renderClosed(data){
-  // CLOSERS - rows 170-173 (array index 169-172)
   const cl_today    = data[169]?.[2] ?? 0;
   const cl_email    = data[170]?.[2] ?? 0;
   const cl_st       = data[171]?.[2] ?? 0;
   const cl_whatsapp = data[172]?.[2] ?? 0;
-
-  // CLOSERS AVG - rows 177-179 (array index 176-178)
-  // cols: B=label, C=Total, D=Email, E=ST, F=Whatsapp, G=Unique, H=Revived
   const cl_avg_overall = data[176]?.[2] ?? 0;
   const cl_avg_month   = data[177]?.[2] ?? 0;
   const cl_avg_today   = data[178]?.[2] ?? 0;
@@ -1262,14 +1157,10 @@ function renderClosed(data){
   const cl_wa_ov       = data[176]?.[5] ?? 0;
   const cl_uniq_ov     = data[176]?.[6] ?? 0;
   const cl_rev_ov      = data[176]?.[7] ?? 0;
-
-  // MANAGERS - rows 184-187 (array index 183-186)
   const mg_today    = data[183]?.[2] ?? 0;
   const mg_email    = data[184]?.[2] ?? 0;
   const mg_st       = data[185]?.[2] ?? 0;
   const mg_whatsapp = data[186]?.[2] ?? 0;
-
-  // MANAGERS AVG - rows 191-193 (array index 190-192)
   const mg_avg_overall = data[190]?.[2] ?? 0;
   const mg_avg_month   = data[191]?.[2] ?? 0;
   const mg_avg_today   = data[192]?.[2] ?? 0;
@@ -1278,190 +1169,136 @@ function renderClosed(data){
   const mg_wa_ov       = data[190]?.[5] ?? 0;
   const mg_uniq_ov     = data[190]?.[6] ?? 0;
   const mg_rev_ov      = data[190]?.[7] ?? 0;
-
-  // TEAM MAHEEN - rows 199-205 (array index 198-204)
-  const maheen_cl = [
-    data[199], data[200], data[201], data[202], data[203], data[204], data[205]
-  ].filter(r => r?.[1] && r[1] !== '');
-
-  // TEAM KHURRAM - rows 215-220 (array index 214-219)
-  const khurram_cl = [
-    data[214], data[215], data[216], data[217], data[218], data[219]
-  ].filter(r => r?.[1] && r[1] !== '');
+  const maheen_cl = [data[199],data[200],data[201],data[202],data[203],data[204],data[205]].filter(r=>r?.[1]&&r[1]!=='');
+  const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219]].filter(r=>r?.[1]&&r[1]!=='');
 
   function sCard(title,hex,color,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
-    return `<div style="background:#fff;border:1.5px solid #7c3aed;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(124,58,237,0.15);position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#a855f7,#eab308);border-radius:16px 16px 0 0;"></div>
-
-      <!-- Header -->
-      <div style="padding:16px 22px;border-bottom:1px solid #ede9fe;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(234,179,8,0.06));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(124,58,237,0.4);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-          </div>
-          <div>
-            <div style="font-size:1rem;font-weight:800;color:#4c1d95;">✅ ${title}</div>
-            <div style="font-size:0.65rem;color:#7c3aed;margin-top:2px;font-weight:500;">Closing Performance</div>
-          </div>
+    return `<div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:rgba(124,58,237,0.06);">
+        <div class="section-hdr-icon" style="background:rgba(124,58,237,0.1);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
         </div>
-        <div style="background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;padding:8px 20px;text-align:center;box-shadow:0 4px 12px rgba(124,58,237,0.3);">
-          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.8);letter-spacing:0.08em;">Today Closed</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${today}</div>
+        <span class="section-hdr-title" style="color:${hex};">${title}</span>
+        <div style="margin-left:auto;background:${hex};border-radius:12px;padding:6px 20px;text-align:center;">
+          <div style="font-size:0.58rem;color:rgba(255,255,255,0.8);font-weight:600;text-transform:uppercase;">Today Closed</div>
+          <div style="font-size:1.5rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${today}</div>
         </div>
       </div>
-
-      <!-- Body -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-
-        <!-- Left: Today + Averages -->
-        <div style="border-right:1px solid #ede9fe;">
-          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#7c3aed;background:rgba(124,58,237,0.05);border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Today Closed</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #ede9fe;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3s ease-in-out infinite;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-              </div>
-              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">Total</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${today}</div>
+        <div style="border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${hex};background:rgba(124,58,237,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Today Closed</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">Total</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#7C3AED;font-family:'DM Mono',monospace;">${today}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#a855f7,#7c3aed);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 3.5s ease-in-out infinite;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              </div>
-              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">Email</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${email}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">Email</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#A855F7;font-family:'DM Mono',monospace;">${email}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#eab308,#ca8a04);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 4s ease-in-out infinite;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              </div>
-              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">ST</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${st}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">ST</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${st}</div>
             </div>
             <div style="padding:14px 8px;text-align:center;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;animation:iconFloat 2.5s ease-in-out infinite;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-              </div>
-              <div style="font-size:0.54rem;text-transform:uppercase;color:#4c1d95;margin-bottom:4px;font-weight:700;">WhatsApp</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${whatsapp}</div>
+              <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">WhatsApp</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#10B981;font-family:'DM Mono',monospace;">${whatsapp}</div>
             </div>
           </div>
-          <div style="padding:8px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#4c1d95;background:#faf5ff;border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Averages</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #ede9fe;">
-            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Overall Avg</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${avg_overall}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #ede9fe;">
-            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Current Month Avg</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${avg_month}</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
-            <span style="font-size:0.74rem;color:#6b7280;font-weight:500;">Today Avg</span>
-            <span style="font-size:0.9rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${avg_today}</span>
-          </div>
+          <div style="padding:8px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:#4C1D95;background:#faf5ff;border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Averages</div>
+          ${mr('Overall Avg',avg_overall,'purple')}
+          ${mr('Current Month Avg',avg_month,'purple')}
+          ${mr('Today Avg',avg_today,'gold')}
         </div>
-
-        <!-- Right: Overall AVG Breakdown -->
         <div>
-          <div style="padding:9px 16px;font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#eab308;background:rgba(234,179,8,0.06);border-bottom:1px solid #ede9fe;letter-spacing:0.08em;">Overall AVG Breakdown</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #ede9fe;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Email</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#a855f7;font-family:'DM Mono',monospace;">${email_ov}</div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#EAB308;background:rgba(234,179,8,0.06);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Overall AVG Breakdown</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">Email</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#A855F7;font-family:'DM Mono',monospace;">${email_ov}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">ST</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${st_ov}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">ST</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${st_ov}</div>
             </div>
             <div style="padding:14px 8px;text-align:center;">
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">WhatsApp</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#10b981;font-family:'DM Mono',monospace;">${wa_ov}</div>
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">WhatsApp</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#10B981;font-family:'DM Mono',monospace;">${wa_ov}</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #ede9fe;">
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Unique</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#eab308;font-family:'DM Mono',monospace;">${uniq_ov}</div>
+            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">Unique</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${uniq_ov}</div>
             </div>
             <div style="padding:14px 8px;text-align:center;">
-              <div style="font-size:0.56rem;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;font-weight:700;">Revived</div>
-              <div style="font-size:1.3rem;font-weight:800;color:#7c3aed;font-family:'DM Mono',monospace;">${rev_ov}</div>
+              <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">Revived</div>
+              <div style="font-size:1.3rem;font-weight:800;color:#7C3AED;font-family:'DM Mono',monospace;">${rev_ov}</div>
             </div>
           </div>
         </div>
-
       </div>
     </div>`;
   }
 
   function teamTable(title,hex,members){
-    return `<div style="background:#fff;border:1.5px solid #7c3aed;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(124,58,237,0.12);position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#a855f7,#eab308);border-radius:14px 14px 0 0;"></div>
-      <div style="padding:14px 20px;border-bottom:1px solid #ede9fe;background:linear-gradient(135deg,rgba(124,58,237,0.07),rgba(234,179,8,0.05));margin-top:3px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:34px;height:34px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(124,58,237,0.3);animation:iconFloat 3s ease-in-out infinite;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          </div>
-          <span style="font-size:0.9rem;font-weight:800;color:#4c1d95;">👥 ${title}</span>
-        </div>
-        <span style="font-size:0.65rem;color:#7c3aed;font-weight:600;background:rgba(124,58,237,0.08);padding:4px 12px;border-radius:20px;border:1px solid rgba(124,58,237,0.2);">${members.length} members</span>
+    return `<div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:rgba(124,58,237,0.04);">
+        <div class="section-hdr-icon" style="background:rgba(124,58,237,0.1);">👥</div>
+        <span class="section-hdr-title" style="color:${hex};">${title}</span>
+        <span style="margin-left:auto;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${hex};font-weight:600;">${members.length} members</span>
       </div>
-      <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;">
-          <thead>
-            <tr style="background:linear-gradient(90deg,rgba(124,58,237,0.05),rgba(234,179,8,0.03));border-bottom:1px solid #ede9fe;">
-              <th style="padding:10px 16px;text-align:left;font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4c1d95;">Member</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#10b981;">In-bound</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7c3aed;">Out-bound</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#a855f7;">Facebook</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#eab308;">Referral</th>
-              <th style="padding:10px 8px;text-align:center;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#4c1d95;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${members.map((r,i)=>`
-            <tr style="border-bottom:1px solid #faf5ff;background:${i%2===0?'#fff':'rgba(124,58,237,0.02)'};" onmouseover="this.style.background='rgba(124,58,237,0.05)'" onmouseout="this.style.background='${i%2===0?'#fff':'rgba(124,58,237,0.02)'}'">
-              <td style="padding:11px 16px;font-size:0.8rem;color:#4c1d95;font-weight:600;">${r[1]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#10b981;font-weight:700;font-family:'DM Mono',monospace;">${r[2]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#7c3aed;font-weight:700;font-family:'DM Mono',monospace;">${r[3]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#a855f7;font-weight:700;font-family:'DM Mono',monospace;">${r[4]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.82rem;color:#eab308;font-weight:700;font-family:'DM Mono',monospace;">${r[5]||'—'}</td>
-              <td style="padding:11px 8px;text-align:center;font-size:0.95rem;font-weight:800;color:#4c1d95;font-family:'DM Mono',monospace;">${r[6]||'—'}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
+      <table class="team-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding-left:20px;">Member</th>
+            <th style="color:#10B981;">In-bound</th>
+            <th style="color:#7C3AED;">Out-bound</th>
+            <th style="color:#A855F7;">Facebook</th>
+            <th style="color:#EAB308;">Referral</th>
+            <th style="color:#4C1D95;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${members.map((r,i)=>`
+          <tr style="${i%2===0?'':'background:#FAFBFC;'}">
+            <td style="font-weight:600;">${r[1]||'—'}</td>
+            <td style="color:#10B981;font-weight:600;">${r[2]||'—'}</td>
+            <td style="color:#7C3AED;font-weight:600;">${r[3]||'—'}</td>
+            <td style="color:#A855F7;font-weight:600;">${r[4]||'—'}</td>
+            <td style="color:#EAB308;font-weight:600;">${r[5]||'—'}</td>
+            <td style="color:#4C1D95;font-weight:700;font-size:0.95rem;">${r[6]||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
     </div>`;
   }
 
-  return `<div style="display:flex;flex-direction:column;gap:14px;">
-    ${sCard('Closed Lead (Closers)','#7c3aed','purple',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_ov,cl_st_ov,cl_wa_ov,cl_uniq_ov,cl_rev_ov)}
-    ${sCard('Closed Lead (Managers)','#eab308','gold',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_ov,mg_st_ov,mg_wa_ov,mg_uniq_ov,mg_rev_ov)}
-    ${teamTable('Team Maheen','#7c3aed',maheen_cl)}
-    ${teamTable('Team Khurram','#eab308',khurram_cl)}
+  return `<div style="display:flex;flex-direction:column;gap:0;">
+    ${sCard('Closed Lead (Closers)','#7C3AED','purple',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_ov,cl_st_ov,cl_wa_ov,cl_uniq_ov,cl_rev_ov)}
+    ${sCard('Closed Lead (Managers)','#EAB308','gold',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_ov,mg_st_ov,mg_wa_ov,mg_uniq_ov,mg_rev_ov)}
+    ${teamTable('Team Maheen','#7C3AED',maheen_cl)}
+    ${teamTable('Team Khurram','#EAB308',khurram_cl)}
   </div>`;
 }
 
 function renderGeneric(data, deptName, icon){
-  const rows=data.filter(r=>r.some(c=>c!==''));
-  let cards=''; let metrics=''; let cardCount=0;
-  const colors=['green','cyan','gold','purple','red','blue'];
-  rows.forEach(row=>{
-    const label=String(row[0]||row[1]||'').trim();
+  const rows = data.filter(r => r.some(c => c !== ''));
+  let metrics = '';
+  rows.forEach(row => {
+    const label = String(row[0]||row[1]||'').trim();
     if(!label) return;
-    let val='';
+    let val = '';
     for(let i=1;i<row.length;i++){if(row[i]!==''){val=row[i];break;}}
-    if(val!==''&&cardCount<6){
-      cards+=kpi(label,val,colors[cardCount%colors.length],'');
-      cardCount++;
-    }
-    if(val!=='') metrics+=mr(label,val,'green');
+    if(val !== '') metrics += mr(label, val, 'blue');
   });
   return `
-    <div class="kpi-grid">${cards||'<div style="color:var(--text2);padding:20px;grid-column:span 6;">No data available yet</div>'}</div>
-    <div class="detail-card" style="margin-bottom:20px;">
-      <div class="detail-title green">${icon} ${deptName} — Full Detail</div>
-      ${metrics||'<div style="padding:20px;color:var(--text2);">No detailed data</div>'}
+    <div class="section-card">
+      <div class="section-hdr">
+        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">${icon}</div>
+        <span class="section-hdr-title" style="color:#2563EB;">${deptName} — Full Detail</span>
+      </div>
+      ${metrics || '<div style="padding:20px;color:var(--text2);">No detailed data available</div>'}
     </div>
   `;
 }
@@ -1474,7 +1311,7 @@ async function loadDept(sheet, deptName, icon, btnId){
   document.getElementById('deptContent').innerHTML=`
     <div class="dept-hdr">
       <div class="dept-hdr-icon">${icon}</div>
-      <div><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
+      <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
     </div>
     <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading ${deptName}...</div></div>`;
 
@@ -1482,19 +1319,19 @@ async function loadDept(sheet, deptName, icon, btnId){
 
   async function fetch_render(){
     try{
-      const cacheKey = sheet;
-      const now = Date.now();
+      const cacheKey=sheet;
+      const now=Date.now();
       let json;
 
-      if(dataCache[cacheKey] && (now - dataCache[cacheKey].ts) < CACHE_TTL){
-        json = dataCache[cacheKey].data;
+      if(dataCache[cacheKey]&&(now-dataCache[cacheKey].ts)<CACHE_TTL){
+        json=dataCache[cacheKey].data;
       } else {
-        const res = await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet));
-        json = await res.json();
-        if(json.success) dataCache[cacheKey] = { data: json, ts: now };
+        const res=await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet));
+        json=await res.json();
+        if(json.success) dataCache[cacheKey]={data:json,ts:now};
       }
 
-      if(!json || !json.success){
+      if(!json||!json.success){
         document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>Data load failed</div></div>';
         return;
       }
@@ -1511,8 +1348,11 @@ async function loadDept(sheet, deptName, icon, btnId){
       document.getElementById('deptContent').innerHTML=`
         <div class="dept-hdr">
           <div class="dept-hdr-icon">${icon}</div>
-          <div><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
-          <div class="dept-hdr-time">Updated: <span>${now2}</span></div>
+          <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
+          <div class="dept-hdr-time">
+            <div class="dept-hdr-time-label">LAST UPDATED</div>
+            <div class="dept-hdr-time-val">${now2}</div>
+          </div>
         </div>
         ${content}`;
     }catch(e){
