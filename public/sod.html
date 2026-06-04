@@ -115,7 +115,7 @@ nav{
   z-index:9999;box-shadow:0 20px 50px rgba(0,0,0,0.1);
 }
 .user-menu.show{display:block;}
-.menu-hdr{padding:10px 12px;border-bottom:1px solid #f1f5f9;margin-bottom:6px;}
+.menu-hdr{padding:10px 12px;border-bottom:1.5px solid #CBD5E1;margin-bottom:6px;}
 .menu-name{font-size:0.82rem;font-weight:700;color:var(--text);}
 .menu-desig{font-size:0.65rem;color:var(--text3);margin-top:2px;}
 .logout-item{
@@ -314,15 +314,15 @@ nav{
 
 /* ═══ SECTION CARDS ═══ */
 .section-card{
-  background:#fff;border:2px solid #E2E8F0;
+  background:#fff;border:2px solid #CBD5E1;
   border-radius:24px;overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,0.06);
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
   margin-bottom:20px;
 }
 .section-hdr{
   padding:16px 24px;
   display:flex;align-items:center;gap:10px;
-  border-bottom:1px solid #f1f5f9;
+  border-bottom:1.5px solid #CBD5E1;
 }
 .section-hdr-icon{
   width:32px;height:32px;border-radius:8px;
@@ -340,7 +340,7 @@ nav{
 }
 .breakdown-cell{
   padding:24px 20px;text-align:center;
-  border-right:1px solid #f8fafc;
+  border-right:2px solid #CBD5E1;
 }
 .breakdown-cell:last-child{border-right:none;}
 .breakdown-icon{
@@ -366,13 +366,13 @@ nav{
   padding:11px 16px;text-align:center;
   font-size:0.68rem;font-weight:700;
   letter-spacing:0.1em;text-transform:uppercase;
-  border-bottom:2px solid #E2E8F0;
-  background:#F8FAFC;
+  border-bottom:2px solid #94A3B8;
+  background:#F1F5F9;
 }
 .avg-table th:first-child{text-align:left;}
 .avg-table td{
   padding:12px 16px;font-size:0.88rem;
-  font-weight:600;border-bottom:1px solid #f8fafc;
+  font-weight:600;border-bottom:1.5px solid #CBD5E1;
 }
 .avg-table td:first-child{color:var(--text);text-align:left;}
 .avg-table td:not(:first-child){text-align:center;font-family:'DM Mono',monospace;}
@@ -383,7 +383,7 @@ nav{
 .closing-grid{display:grid;grid-template-columns:repeat(4,1fr);}
 .closing-cell{
   padding:28px 20px;text-align:center;
-  border-right:2px solid #F1F5F9;
+  border-right:2px solid #94A3B8;
   position:relative;
 }
 .closing-cell:last-child{border-right:none;}
@@ -411,20 +411,20 @@ nav{
 /* Detail cards */
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 .detail-card{
-  background:#fff;border:1px solid var(--border);
+  background:#fff;border:2px solid #CBD5E1;
   border-radius:20px;overflow:hidden;
-  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
 }
 .detail-title{
   padding:14px 20px;font-size:0.7rem;
   font-weight:700;letter-spacing:0.1em;
   text-transform:uppercase;
-  border-bottom:1px solid #f1f5f9;
+  border-bottom:1.5px solid #CBD5E1;
   display:flex;align-items:center;gap:8px;
 }
 .mrow{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px;border-bottom:1px solid #f8fafc;
+  padding:12px 20px;border-bottom:1.5px solid #CBD5E1;
   transition:background 0.12s;
 }
 .mrow:last-child{border-bottom:none;}
@@ -444,7 +444,7 @@ nav{
   padding:8px 20px;font-size:0.62rem;
   font-weight:700;letter-spacing:0.12em;
   text-transform:uppercase;color:var(--text3);
-  background:#fafbfc;border-bottom:1px solid #f1f5f9;
+  background:#F1F5F9;border-bottom:1.5px solid #CBD5E1;
 }
 
 /* Team tables */
@@ -454,11 +454,11 @@ nav{
   font-size:0.62rem;font-weight:700;
   letter-spacing:0.08em;text-transform:uppercase;
   color:var(--text2);
-  background:#F8FAFC;
-  border-bottom:1.5px solid var(--border);
+  background:#E2E8F0;
+  border-bottom:2px solid #94A3B8;
 }
 .team-table thead th:first-child{text-align:left;padding-left:20px;}
-.team-table tbody tr{border-bottom:1px solid #f8fafc;transition:background 0.1s;}
+.team-table tbody tr{border-bottom:1.5px solid #CBD5E1;transition:background 0.1s;}
 .team-table tbody tr:hover{background:#F8FAFC;}
 .team-table tbody td{padding:11px 14px;text-align:center;color:var(--text);font-weight:500;}
 .team-table tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;color:var(--text);}
@@ -895,27 +895,27 @@ function renderMarketing(data){
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1.1fr 1fr 1.2fr 1.2fr;gap:0;">
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${p.color};background:${p.bg};border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">${p.name} Today</div>
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${p.color};background:${p.bg};border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">${p.name} Today</div>
           ${mr('Received',p.recv,'blue')}
           ${mr('Qualified',p.qual,'blue')}
           ${mr('Closed',p.closed,'red')}
         </div>
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text2);background:#fafbfc;border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Categories</div>
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text2);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Categories</div>
           ${mr('A',p.a,'green')}
           ${mr('B',p.b,'gold')}
           ${mr('C',p.c,'red')}
           ${mr('Un-cat',p.uncat,'dim')}
         </div>
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#16A34A;background:rgba(22,163,74,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Recv Avg</div>
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#16A34A;background:rgba(22,163,74,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Recv Avg</div>
           ${mr('Overall',p.recv_ov,'green')}
           ${mr('Monthly',p.recv_mn,'green')}
           ${mr('Today',p.recv_td,'green')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7C3AED;background:rgba(124,58,237,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Qual Avg</div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7C3AED;background:rgba(124,58,237,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Qual Avg</div>
           ${mr('Overall',p.qual_ov,'purple')}
           ${mr('Monthly',p.qual_mn,'purple')}
           ${mr('Today',p.qual_td,'purple')}
@@ -988,14 +988,14 @@ function renderQualifier(data){
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;">
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1px solid #f1f5f9;">Today Breakdown</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #f1f5f9;">
-            <div style="padding:16px 8px;text-align:center;border-right:1px solid #f8fafc;">
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;">Today Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1.5px solid #CBD5E1;">
+            <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Total</div>
               <div style="font-size:1.6rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${tq}</div>
             </div>
-            <div style="padding:16px 8px;text-align:center;border-right:1px solid #f8fafc;">
+            <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Email</div>
               <div style="font-size:1.6rem;font-weight:700;color:#2563EB;font-family:'DM Mono',monospace;">${email}</div>
             </div>
@@ -1004,18 +1004,18 @@ function renderQualifier(data){
               <div style="font-size:1.6rem;font-weight:700;color:#7C3AED;font-family:'DM Mono',monospace;">${st}</div>
             </div>
           </div>
-          <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1px solid #f1f5f9;">Qualified Averages</div>
+          <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
           ${mr('Overall',ov,'blue')} ${mr('Monthly',mn,'blue')} ${mr('Today',td,'blue')}
         </div>
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1px solid #f1f5f9;">Closing Average</div>
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
           ${mr('Total Closed',cl_t,'green')}
           ${mr('Last 3 Months',cl_3,'blue')}
           ${mr('Current Month',cl_m,'gold')}
           ${mr('TODAY Closed',cl_today,'red')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1px solid #f1f5f9;">Summary</div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Summary</div>
           <div style="padding:16px;">
             <div style="font-size:0.62rem;color:var(--text3);margin-bottom:8px;font-weight:600;text-transform:uppercase;">Email vs ST</div>
             <div style="display:flex;gap:3px;align-items:center;margin-bottom:4px;">
@@ -1026,7 +1026,7 @@ function renderQualifier(data){
               <span style="font-size:0.62rem;color:#2563EB;font-weight:600;">Email ${email}</span>
               <span style="font-size:0.62rem;color:#7C3AED;font-weight:600;">ST ${st}</span>
             </div>
-            <div style="border-top:1px solid #f1f5f9;padding-top:12px;">
+            <div style="border-top:1.5px solid #CBD5E1;padding-top:12px;">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
                 <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Monthly Avg</span>
                 <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${mn}</span>
@@ -1125,7 +1125,7 @@ function renderRevived(data){
           <div class="closing-val" style="color:#D97706;">${rv_existing}</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #f1f5f9;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid #CBD5E1;">
         <div class="closing-cell">
           <div class="closing-label">Overall Avg</div>
           <div class="closing-val" style="color:#2563EB;">${rv_overall_avg}</div>
@@ -1186,18 +1186,18 @@ function renderClosed(data){
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-        <div style="border-right:1px solid #f1f5f9;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${hex};background:rgba(124,58,237,0.04);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Today Closed</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #f1f5f9;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+        <div style="border-right:2px solid #CBD5E1;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${hex};background:rgba(124,58,237,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Today Closed</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1.5px solid #CBD5E1;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">Total</div>
               <div style="font-size:1.3rem;font-weight:800;color:#7C3AED;font-family:'DM Mono',monospace;">${today}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">Email</div>
               <div style="font-size:1.3rem;font-weight:800;color:#A855F7;font-family:'DM Mono',monospace;">${email}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.54rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:700;">ST</div>
               <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${st}</div>
             </div>
@@ -1212,13 +1212,13 @@ function renderClosed(data){
           ${mr('Today Avg',avg_today,'gold')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#EAB308;background:rgba(234,179,8,0.06);border-bottom:1px solid #f1f5f9;letter-spacing:0.08em;">Overall AVG Breakdown</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #f1f5f9;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#EAB308;background:rgba(234,179,8,0.06);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Overall AVG Breakdown</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1.5px solid #CBD5E1;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">Email</div>
               <div style="font-size:1.3rem;font-weight:800;color:#A855F7;font-family:'DM Mono',monospace;">${email_ov}</div>
             </div>
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">ST</div>
               <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${st_ov}</div>
             </div>
@@ -1228,7 +1228,7 @@ function renderClosed(data){
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;">
-            <div style="padding:14px 8px;text-align:center;border-right:1px solid #f1f5f9;">
+            <div style="padding:14px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.56rem;text-transform:uppercase;color:#7C3AED;margin-bottom:6px;font-weight:700;">Unique</div>
               <div style="font-size:1.3rem;font-weight:800;color:#EAB308;font-family:'DM Mono',monospace;">${uniq_ov}</div>
             </div>
