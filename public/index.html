@@ -249,7 +249,7 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .results-section.show{display:block;}
 
 .results-header{
-  max-width:1200px;margin:0 auto 24px;
+  max-width:100%;margin:0 auto 24px;
   display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:12px;
 }
@@ -286,30 +286,29 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 
 /* Results Table */
 .results-card{
-  max-width:1200px;margin:0 auto;
+  max-width:100%;margin:0 auto;
   background:#fff;border-radius:16px;
   border:1px solid #e2e8f0;
   box-shadow:0 4px 20px rgba(0,0,0,0.06);
   overflow:hidden;
 }
 .results-subtitle{
-  padding:14px 20px;font-size:0.7rem;
-  font-weight:700;color:#fff;
-  background:linear-gradient(135deg,#2563EB,#DC2626);
-  display:flex;align-items:center;gap:8px;
-  font-style:italic;
+  padding:18px 28px;font-size:1rem;
+  font-weight:800;color:#ffffff;
+  background:linear-gradient(135deg,#1e3a8a,#2563EB 40%,#DC2626);
+  display:flex;align-items:center;gap:10px;
+  font-style:italic;letter-spacing:0.02em;
 }
 .results-subtitle::before{
   content:'⚡';font-style:normal;
 }
 
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:0.92rem;}
+.table-wrap{overflow-x:hidden;width:100%;}
+table{width:100%;border-collapse:collapse;font-size:0.92rem;table-layout:fixed;}
 thead th{
-  padding:14px 20px;text-align:center;
+  padding:14px 12px;text-align:center;
   font-size:0.72rem;font-weight:700;
-  white-space:nowrap;
-  min-width:130px;
+  word-wrap:break-word;
   letter-spacing:0.1em;text-transform:uppercase;
   color:#fff;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
@@ -320,7 +319,7 @@ thead th:first-child{text-align:left;padding-left:20px;}
 tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
 tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
-tbody td{padding:13px 20px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:500;white-space:nowrap;}
+tbody td{padding:13px 12px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:600;word-wrap:break-word;line-height:1.4;}
 tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:700;}
 .row-num{color:#94a3b8;font-family:'DM Mono',monospace;font-size:0.78rem;}
 
