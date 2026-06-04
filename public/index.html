@@ -306,8 +306,10 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:0.92rem;}
 thead th{
-  padding:14px 16px;text-align:center;
+  padding:14px 20px;text-align:center;
   font-size:0.72rem;font-weight:700;
+  white-space:nowrap;
+  min-width:130px;
   letter-spacing:0.1em;text-transform:uppercase;
   color:#fff;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
@@ -318,7 +320,7 @@ thead th:first-child{text-align:left;padding-left:20px;}
 tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
 tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
-tbody td{padding:13px 16px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:500;}
+tbody td{padding:13px 20px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:500;white-space:nowrap;}
 tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:700;}
 .row-num{color:#94a3b8;font-family:'DM Mono',monospace;font-size:0.78rem;}
 
@@ -720,10 +722,33 @@ async function getSheetData(){
   return cachedData;
 }
 
+function formatDate(val){
+  if(!val || val === '—') return val;
+  const str = String(val).trim();
+  if(str.match(/^\d{4}-\d{2}-\d{2}T/)){
+    const d = new Date(str);
+    if(!isNaN(d)){
+      return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).replace(/ /g,', ').replace(',',',');
+    }
+  }
+  if(str.match(/^\d{4}-\d{2}-\d{2}$/)){
+    const d = new Date(str + 'T00:00:00');
+    if(!isNaN(d)){
+      return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    }
+  }
+  return str;
+}
+
 // Search
 async function doSearch(){
   const query = document.getElementById('searchInput').value.trim();
-  if(!query) return;
+  if(!query){
+    document.getElementById('searchInput').focus();
+    document.getElementById('searchWrap').style.boxShadow='0 0 0 3px rgba(220,38,38,0.5), 0 24px 70px rgba(0,0,0,0.4)';
+    setTimeout(()=>{ document.getElementById('searchWrap').style.boxShadow='0 0 0 2px rgba(251,191,36,0.4), 0 20px 60px rgba(0,0,0,0.3)'; },1000);
+    return;
+  }
   currentQuery = query;
 
   const btn = document.getElementById('searchBtn');
@@ -827,7 +852,11 @@ function showResults(rows, headers, query){
     const isTotal = Object.values(row).some(v=>String(v).toLowerCase().includes('total'));
     html+=`<tr class="${isTotal?'total-row':''}">
       <td class="row-num" style="text-align:left;padding-left:20px;">${i+1}</td>
-      ${visibleHeaders.map(h=>`<td>${row[h]||'<span class="zero">—</span>'}</td>`).join('')}
+      ${visibleHeaders.map(h=>{
+        const val = row[h]||'';
+        const formatted = formatDate(val);
+        return `<td>${formatted||'<span class="zero">—</span>'}</td>`;
+      }).join('')}
     </tr>`;
   });
 
