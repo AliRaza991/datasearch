@@ -323,7 +323,7 @@ tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
 tbody td{padding:13px 12px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:600;word-wrap:break-word;line-height:1.4;}
 tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:700;}
-.row-num{color:#94a3b8;font-family:'DM Mono',monospace;font-size:0.78rem;}
+.row-num{color:#fff;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;}
 
 /* Loading */
 .loading-hero{
@@ -680,7 +680,10 @@ let currentQuery = '';
 // Pre-fetch on page load silently
 async function prefetchData(){
   try{
-    const res = await fetch(SHEET_URL);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(SHEET_URL, { signal: controller.signal });
+    clearTimeout(timeout);
     const json = await res.json();
     if(!json.success) return;
     const data = json.data;
@@ -699,10 +702,16 @@ async function prefetchData(){
 
 async function getSheetData(){
   const now = Date.now();
-  if(cachedData && (now - lastFetch) < 30000){
+  if(cachedData && (now - lastFetch) < 60000){
     return cachedData;
   }
-  const res = await fetch(SHEET_URL + '&t=' + now);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  const res = await fetch(SHEET_URL + '&t=' + now, {
+    signal: controller.signal,
+    cache: 'no-store'
+  });
+  clearTimeout(timeout);
   if(!res.ok) throw new Error('Fetch failed');
   const json = await res.json();
   if(!json.success) throw new Error(json.error || 'Script error');
@@ -857,14 +866,14 @@ function showResults(rows, headers, query){
   }
 
   let html = `<table><thead><tr>
-    <th style="text-align:left;padding-left:12px;width:40px;">#</th>
+    <th style="text-align:center;padding:14px 6px;width:40px;background:linear-gradient(135deg,#0f172a,#1e293b);">#</th>
     ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${h}</th>`).join('')}
   </tr></thead><tbody>`;
 
   rows.forEach((row,i)=>{
     const isTotal = Object.values(row).some(v=>String(v).toLowerCase().includes('total'));
     html+=`<tr class="${isTotal?'total-row':''}">
-      <td class="row-num" style="text-align:center;padding:13px 6px;width:40px;">${i+1}</td>
+      <td class="row-num" style="text-align:center;padding:13px 6px;width:40px;background:linear-gradient(135deg,#1e3a8a,#2563EB);color:#fff;font-weight:700;">${i+1}</td>
       ${visibleHeaders.map(h=>{
         const val = row[h]||'';
         const formatted = formatDate(val);
