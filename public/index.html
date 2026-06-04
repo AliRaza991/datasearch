@@ -309,6 +309,8 @@ thead th{
   padding:14px 12px;text-align:center;
   font-size:0.72rem;font-weight:700;
   word-wrap:break-word;
+}
+thead th:first-child{ width:40px !important; padding:14px 6px; }
   letter-spacing:0.1em;text-transform:uppercase;
   color:#fff;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
@@ -842,15 +844,27 @@ function showResults(rows, headers, query){
   }
 
   // Build table
+  function getColWidth(h){
+    const header = h.toLowerCase();
+    if(header.includes('client') && header.includes('name')) return 'width:200px;';
+    if(header.includes('data') && header.includes('type')) return 'width:160px;';
+    if(header.includes('lead') && header.includes('qualifier')) return 'width:180px;';
+    if(header.includes('closer')) return 'width:160px;';
+    if(header.includes('date')) return 'width:130px;';
+    if(header.includes('status')) return 'width:100px;';
+    if(header.includes('qualified on')) return 'width:130px;';
+    return 'width:120px;';
+  }
+
   let html = `<table><thead><tr>
-    <th style="text-align:left;padding-left:20px;">#</th>
-    ${visibleHeaders.map(h=>`<th>${h}</th>`).join('')}
+    <th style="text-align:left;padding-left:12px;width:40px;">#</th>
+    ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${h}</th>`).join('')}
   </tr></thead><tbody>`;
 
   rows.forEach((row,i)=>{
     const isTotal = Object.values(row).some(v=>String(v).toLowerCase().includes('total'));
     html+=`<tr class="${isTotal?'total-row':''}">
-      <td class="row-num" style="text-align:left;padding-left:20px;">${i+1}</td>
+      <td class="row-num" style="text-align:center;padding:13px 6px;width:40px;">${i+1}</td>
       ${visibleHeaders.map(h=>{
         const val = row[h]||'';
         const formatted = formatDate(val);
