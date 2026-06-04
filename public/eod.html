@@ -9,32 +9,25 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{visibility:hidden}
 :root{
-  --blue:#2563EB;--red:#DC2626;--gold:#FBBF24;
+  --blue:#2563EB;--red:#DC2626;--gold:#F59E0B;
   --green:#16A34A;--purple:#7C3AED;--cyan:#0891B2;
   --orange:#EA580C;--bg:#F8FAFC;--white:#FFFFFF;
   --border:#CBD5E1;--text:#0F172A;--text2:#64748B;--text3:#94A3B8;
-  --maheen:#2563EB;--khurram:#D97706;
+  --maheen:#2563EB;--khurram:#DC2626;
 }
 body{
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,#F8FAFC 0%,#F1F5F9 100%);
+  background:#F1F5F9;
   color:var(--text);min-height:100vh;
   padding-top:80px;
-  position:relative;
-}
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(ellipse 40% 30% at 10% 20%,rgba(37,99,235,0.06) 0%,transparent 60%),
-    radial-gradient(ellipse 35% 25% at 90% 80%,rgba(220,38,38,0.05) 0%,transparent 60%);
 }
 
 /* ═══ NAVBAR ═══ */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:1000;
-  background:rgba(255,255,255,0.85);
+  background:rgba(255,255,255,0.95);
   backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(203,213,225,0.8);
+  border-bottom:1px solid var(--border);
   height:80px;display:flex;align-items:center;
   padding:0 32px;justify-content:space-between;
   box-shadow:0 4px 24px rgba(0,0,0,0.04);
@@ -47,7 +40,7 @@ nav{
   justify-content:center;font-size:20px;font-weight:900;color:#fff;
   box-shadow:0 6px 20px rgba(37,99,235,0.3);
 }
-.nav-brand-text{font-size:1.15rem;font-weight:800;letter-spacing:-0.01em;}
+.nav-brand-text{font-size:1.15rem;font-weight:800;}
 .nav-brand-text .massive{color:var(--blue);}
 .nav-brand-text .dynamics{color:var(--red);}
 .nav-pills{
@@ -56,25 +49,18 @@ nav{
   padding:5px;border:1px solid var(--border);
 }
 .nav-pill{
-  padding:8px 24px;border-radius:999px;
-  font-size:0.8rem;font-weight:600;
-  text-decoration:none;color:var(--text2);
-  background:transparent;border:none;
-  transition:all 0.25s;cursor:pointer;
-  display:flex;align-items:center;gap:7px;
+  padding:8px 24px;border-radius:999px;font-size:0.8rem;
+  font-weight:600;text-decoration:none;color:var(--text2);
+  background:transparent;border:none;transition:all 0.25s;
+  cursor:pointer;display:flex;align-items:center;gap:7px;
 }
 .nav-pill:hover{color:var(--text);background:rgba(255,255,255,0.8);}
-.nav-pill.active{
-  color:#fff;
-  background:linear-gradient(135deg,var(--blue),var(--red));
-  box-shadow:0 4px 16px rgba(37,99,235,0.35);
-}
+.nav-pill.active{color:#fff;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 4px 16px rgba(37,99,235,0.35);}
 .nav-user{
   display:flex;align-items:center;gap:12px;cursor:pointer;
-  position:relative;background:rgba(255,255,255,0.8);
+  position:relative;background:rgba(255,255,255,0.9);
   border:1px solid var(--border);border-radius:999px;
-  padding:6px 16px 6px 6px;backdrop-filter:blur(10px);
-  transition:all 0.2s;
+  padding:6px 16px 6px 6px;transition:all 0.2s;
 }
 .nav-user:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
 .nav-avatar{
@@ -83,7 +69,6 @@ nav{
   display:flex;align-items:center;justify-content:center;
   font-size:0.88rem;font-weight:800;color:#fff;
   border:2px solid var(--gold);
-  box-shadow:0 0 0 3px rgba(251,191,36,0.2);
 }
 .nav-user-name{font-size:0.8rem;font-weight:700;color:var(--text);}
 .nav-user-role{font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
@@ -97,158 +82,150 @@ nav{
 .menu-hdr{padding:10px 12px;border-bottom:1px solid #f1f5f9;margin-bottom:6px;}
 .menu-name{font-size:0.82rem;font-weight:700;color:var(--text);}
 .menu-desig{font-size:0.65rem;color:var(--text3);margin-top:2px;}
-.logout-item{
-  display:flex;align-items:center;gap:8px;padding:9px 12px;
-  border-radius:10px;cursor:pointer;color:#ef4444;
-  font-size:0.76rem;font-weight:600;transition:all 0.15s;
-}
+.logout-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;cursor:pointer;color:#ef4444;font-size:0.76rem;font-weight:600;transition:all 0.15s;}
 .logout-item:hover{background:#fef2f2;}
 
 /* ═══ MAIN ═══ */
-main{
-  position:relative;z-index:1;
-  padding:32px 36px;
-  min-height:calc(100vh - 80px);
-}
+main{padding:28px 32px;position:relative;z-index:1;}
 
 /* ═══ PAGE HEADER ═══ */
 .page-hdr{
   display:flex;align-items:flex-start;justify-content:space-between;
-  margin-bottom:28px;flex-wrap:wrap;gap:16px;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
 }
-.page-title{
-  font-family:'Manrope',sans-serif;
-  font-size:2.8rem;font-weight:700;
-  color:var(--text);letter-spacing:-0.03em;line-height:1.1;
-}
+.page-title{font-family:'Manrope',sans-serif;font-size:2.2rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.1;}
 .page-title .highlight{color:var(--red);}
-.page-sub{color:var(--text2);font-size:0.78rem;margin-top:6px;font-weight:500;}
+.page-sub{color:var(--text2);font-size:0.76rem;margin-top:4px;font-weight:500;}
+.header-right{display:flex;align-items:center;gap:12px;}
 .live-badge{
-  display:inline-flex;align-items:center;gap:8px;
+  display:inline-flex;align-items:center;gap:7px;
   background:rgba(22,163,74,0.1);border:1.5px solid rgba(22,163,74,0.25);
-  border-radius:999px;padding:8px 20px;font-size:0.72rem;
+  border-radius:999px;padding:7px 16px;font-size:0.7rem;
   color:var(--green);letter-spacing:0.06em;font-weight:700;
 }
-.live-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--green);animation:blink 1.5s ease infinite;
-  box-shadow:0 0 8px var(--green);
-}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s ease infinite;box-shadow:0 0 6px var(--green);}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
-@keyframes spin{to{transform:rotate(360deg);}}
+.refresh-pill{font-size:0.7rem;color:var(--text2);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px;}
+.refresh-pill span{color:var(--blue);font-weight:600;}
 
-/* ═══ OVERALL STAT CARDS ═══ */
-.overall-grid{
-  display:grid;grid-template-columns:repeat(5,1fr);
-  gap:16px;margin-bottom:28px;
-}
+/* ═══ OVERALL CARDS ═══ */
+.overall-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
 .ov-card{
-  background:#fff;border:2px solid var(--border);
-  border-radius:20px;padding:20px 18px;
+  background:#fff;border-radius:16px;padding:18px 20px;
   position:relative;overflow:hidden;
-  transition:transform 0.25s,box-shadow 0.25s;
-  box-shadow:0 4px 16px rgba(0,0,0,0.05);
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  border:1.5px solid var(--border);
+  transition:transform 0.2s,box-shadow 0.2s;
 }
-.ov-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
-.ov-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;
-  height:4px;border-radius:20px 20px 0 0;
-}
-.ov-card.c1::before{background:linear-gradient(90deg,#2563EB,#60A5FA);}
-.ov-card.c2::before{background:linear-gradient(90deg,#2563EB,#60A5FA);}
-.ov-card.c3::before{background:linear-gradient(90deg,#D97706,#FCD34D);}
-.ov-card.c4::before{background:linear-gradient(90deg,#FBBF24,#FDE68A);}
-.ov-card.c5::before{background:linear-gradient(90deg,#16A34A,#4ADE80);}
-.ov-label{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;}
-.ov-val{font-size:2.4rem;font-weight:700;line-height:1;margin-bottom:6px;font-family:'Manrope',sans-serif;letter-spacing:-0.03em;}
-.ov-sub{font-size:0.62rem;color:var(--text3);font-weight:500;}
+.ov-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+.ov-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.ov-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.ov-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);}
+.ov-val{font-size:2.4rem;font-weight:800;line-height:1;font-family:'Manrope',sans-serif;letter-spacing:-0.03em;margin-bottom:4px;}
+.ov-sub{font-size:0.65rem;color:var(--text3);font-weight:500;}
+.ov-accent{position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 16px 16px;}
 
 /* ═══ TEAM SECTION ═══ */
-.team-section{margin-bottom:28px;}
-.team-header{
+.team-section{margin-bottom:20px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+
+.team-banner{
+  padding:16px 24px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:18px 24px;border-radius:20px 20px 0 0;
-  border:2px solid var(--border);border-bottom:none;
 }
-.team-header.maheen{background:linear-gradient(135deg,#1d4ed8,#2563EB);border-color:#1d4ed8;}
-.team-header.khurram{background:linear-gradient(135deg,#b91c1c,#DC2626);border-color:#b91c1c;}
-.team-name{font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;}
-.team-name.maheen{color:#fff;}
-.team-name.khurram{color:#fff;}
-.team-dot{width:10px;height:10px;border-radius:50%;}
-.team-dot.maheen{background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);}
-.team-dot.khurram{background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);}
-.team-kpis{display:flex;gap:20px;}
-.team-kpi{text-align:right;}
-.team-kpi-val{font-size:1.3rem;font-weight:800;font-family:'DM Mono',monospace;line-height:1;}
-.team-kpi-val.maheen{color:#fff;}
-.team-kpi-val.khurram{color:#fff;}
-.team-kpi-label{font-size:0.58rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px;font-weight:600;}
+.team-banner.maheen{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
+.team-banner.khurram{background:linear-gradient(135deg,#b91c1c,#ef4444);}
+
+.team-banner-left{display:flex;align-items:center;gap:12px;}
+.team-banner-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  backdrop-filter:blur(8px);
+}
+.team-banner-name{font-family:'Manrope',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;}
+
+.team-banner-stats{display:flex;gap:24px;}
+.team-stat{text-align:center;}
+.team-stat-val{font-size:1.5rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1;}
+.team-stat-label{font-size:0.56rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;font-weight:600;}
 
 /* ═══ TABLE ═══ */
-.tbl-wrap{
-  background:#fff;border:2px solid var(--border);
-  border-radius:0 0 20px 20px;border-top:none;overflow:hidden;
-}
+.tbl-container{background:#fff;border:1.5px solid var(--border);border-top:none;border-radius:0 0 16px 16px;overflow:hidden;}
 .tbl-scroll{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+table{width:100%;border-collapse:collapse;font-size:0.76rem;}
 
-.sec-head{
-  text-align:center;font-size:0.6rem;letter-spacing:0.1em;
-  text-transform:uppercase;padding:8px 6px;
-  border-bottom:2px solid var(--border);font-weight:700;
+/* Section header rows */
+.sh-row th{
+  padding:7px 6px;text-align:center;
+  font-size:0.58rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  border-bottom:1.5px solid var(--border);
+  white-space:nowrap;
 }
-.sec-head.month{background:rgba(37,99,235,0.08);color:var(--blue);}
-.sec-head.today{background:rgba(22,163,74,0.08);color:var(--green);}
-.sec-head.closed{background:rgba(217,119,6,0.08);color:var(--khurram);}
+.sh-blue{background:rgba(37,99,235,0.1);color:#1d4ed8;border-right:2px solid #93C5FD;}
+.sh-gold{background:rgba(245,158,11,0.1);color:#92400e;border-right:2px solid #FCD34D;}
+.sh-green{background:rgba(22,163,74,0.1);color:#15803d;border-right:2px solid #86EFAC;}
+.sh-purple{background:rgba(124,58,237,0.1);color:#6d28d9;}
 
-thead th{
-  padding:10px 10px;text-align:center;
-  font-size:0.62rem;font-weight:700;
-  letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--text2);background:#F1F5F9;
+/* Sub header rows */
+.sub-row th{
+  padding:6px 6px;text-align:center;
+  font-size:0.58rem;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text2);background:#F8FAFC;
   border-bottom:2px solid #94A3B8;
   white-space:nowrap;
 }
-thead th:first-child{text-align:left;padding-left:20px;font-size:0.78rem;}
+.sub-row th.member-th{
+  text-align:left;padding-left:16px;
+  font-size:0.72rem;font-weight:800;
+  color:var(--text);background:#F1F5F9;
+}
 
-tbody tr{border-bottom:1.5px solid var(--border);transition:background 0.12s;}
-tbody tr:hover{background:#F8FAFC;}
+/* Data rows */
+tbody tr{border-bottom:1.5px solid #E2E8F0;transition:background 0.1s;}
+tbody tr:hover{background:#EFF6FF;}
 tbody tr:nth-child(even){background:#FAFBFC;}
-tbody tr:nth-child(even):hover{background:#F1F5F9;}
+tbody tr:nth-child(even):hover{background:#EFF6FF;}
 tbody tr.total-row{
-  background:linear-gradient(90deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));
-  border-top:2px solid var(--border);font-weight:700;
+  background:linear-gradient(90deg,rgba(37,99,235,0.08),rgba(220,38,38,0.05));
+  border-top:2px solid var(--border);
 }
-tbody tr.total-row:hover{background:linear-gradient(90deg,rgba(37,99,235,0.1),rgba(220,38,38,0.07));}
+tbody tr.total-row:hover{background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(220,38,38,0.08));}
 
-tbody td{padding:11px 10px;text-align:center;color:var(--text);font-weight:500;}
-tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size:0.88rem;color:var(--text);}
-.row-num{
-  color:#fff;font-family:'DM Mono',monospace;font-size:0.72rem;
-  font-weight:700;
-  background:linear-gradient(135deg,#1e3a8a,#2563EB);
-  padding:3px 8px;border-radius:6px;
+tbody td{padding:9px 8px;text-align:center;color:#374151;font-weight:500;white-space:nowrap;}
+tbody td.member-td{
+  text-align:left;padding-left:16px;
+  font-weight:700;font-size:0.84rem;color:var(--text);
 }
-.zero{color:var(--text3);}
+tbody td.total-td{
+  text-align:left;padding-left:16px;
+  font-weight:800;font-size:0.78rem;
+  color:var(--blue);text-transform:uppercase;letter-spacing:0.04em;
+}
 
-/* Ratio badges */
-.ratio-h{background:rgba(22,163,74,0.1);color:#16A34A;border:1.5px solid rgba(22,163,74,0.25);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
-.ratio-m{background:rgba(217,119,6,0.1);color:#D97706;border:1.5px solid rgba(217,119,6,0.25);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
-.ratio-l{background:rgba(220,38,38,0.08);color:#DC2626;border:1.5px solid rgba(220,38,38,0.2);border-radius:20px;padding:3px 10px;font-size:0.65rem;font-weight:700;}
+/* Column group separators */
+.sep-right{border-right:2px solid #CBD5E1 !important;}
+
+/* Colored values */
+.val-blue{color:var(--blue);font-weight:700;}
+.val-gold{color:var(--gold);font-weight:700;}
+.val-green{color:var(--green);font-weight:700;}
+.val-red{color:var(--red);font-weight:700;}
+.val-purple{color:var(--purple);font-weight:700;}
+.val-cyan{color:var(--cyan);font-weight:700;}
+.zero{color:#CBD5E1;}
+
+/* Ratio badge */
+.ratio-h{color:#16A34A;font-weight:800;}
+.ratio-m{color:#D97706;font-weight:800;}
+.ratio-l{color:#DC2626;font-weight:800;}
 
 /* Loading */
-.loading-wrap{display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:16px;}
-.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;}
-.loading-text{font-size:0.8rem;color:var(--text2);font-weight:500;}
-
-/* Refresh info */
-.refresh-info{
-  text-align:center;color:var(--text3);
-  font-size:0.68rem;margin-top:20px;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.refresh-info span{color:var(--blue);font-weight:600;font-family:'DM Mono',monospace;}
+.loading-wrap{display:flex;align-items:center;justify-content:center;height:200px;flex-direction:column;gap:14px;}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:0.78rem;color:var(--text2);font-weight:500;}
 </style>
 </head>
 <body>
@@ -263,9 +240,7 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size
 <nav>
   <div class="nav-brand">
     <div class="nav-brand-icon">M</div>
-    <div class="nav-brand-text">
-      <span class="massive">Massive </span><span class="dynamics">Dynamics</span>
-    </div>
+    <div class="nav-brand-text"><span class="massive">Massive </span><span class="dynamics">Dynamics</span></div>
   </div>
   <div class="nav-pills">
     <a href="/index.html" class="nav-pill">⚡ DataSearch</a>
@@ -274,16 +249,10 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size
   </div>
   <div class="nav-user" onclick="toggleMenu()">
     <div class="nav-avatar" id="uAvatar"></div>
-    <div>
-      <div class="nav-user-name" id="uName"></div>
-      <div class="nav-user-role" id="uDesig"></div>
-    </div>
+    <div><div class="nav-user-name" id="uName"></div><div class="nav-user-role" id="uDesig"></div></div>
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
     <div class="user-menu" id="uMenu">
-      <div class="menu-hdr">
-        <div class="menu-name" id="mName"></div>
-        <div class="menu-desig" id="mDesig"></div>
-      </div>
+      <div class="menu-hdr"><div class="menu-name" id="mName"></div><div class="menu-desig" id="mDesig"></div></div>
       <div class="logout-item" onclick="doLogout()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
@@ -293,113 +262,120 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size
 </nav>
 
 <main>
+  <!-- PAGE HEADER -->
   <div class="page-hdr">
     <div>
-      <div class="page-title">END OF DAY <span class="highlight">REPORT</span></div>
-      <div class="page-sub">Live Intelligence Dashboard · All Teams · Auto-refreshes every 30 seconds</div>
+      <div class="page-title">End of Day <span class="highlight">Report</span></div>
+      <div class="page-sub">Live Intelligence Dashboard • All Teams</div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;">
+    <div class="header-right">
       <div class="live-badge"><span class="live-dot"></span> LIVE</div>
-      <div class="refresh-info">Updated: <span id="lastUpdated">—</span></div>
+      <div class="refresh-pill">🕐 Updated: <span id="lastUpdated">—</span></div>
     </div>
   </div>
 
-  <!-- OVERALL STATS -->
+  <!-- OVERALL CARDS -->
   <div class="overall-grid">
-    <div class="ov-card c1">
-      <div class="ov-label">Total Qualified</div>
+    <div class="ov-card">
+      <div class="ov-card-top">
+        <div class="ov-icon" style="background:rgba(37,99,235,0.1);">👥</div>
+        <div class="ov-label">Total Qualified</div>
+      </div>
       <div class="ov-val" style="color:var(--blue);" id="ovQ">—</div>
-      <div class="ov-sub">Both Teams · Month</div>
+      <div class="ov-sub">Both Teams · Worth</div>
+      <div class="ov-accent" style="background:linear-gradient(90deg,#2563EB,#60A5FA);"></div>
     </div>
-    <div class="ov-card c2">
-      <div class="ov-label">Team Maheen</div>
-      <div class="ov-val" style="color:var(--maheen);" id="mQ">—</div>
-      <div class="ov-sub" id="mR">Closing —</div>
-    </div>
-    <div class="ov-card c3">
-      <div class="ov-label">Team Khurram</div>
-      <div class="ov-val" style="color:var(--khurram);" id="kQ">—</div>
-      <div class="ov-sub" id="kR">Closing —</div>
-    </div>
-    <div class="ov-card c4">
-      <div class="ov-label">Total Closed</div>
+    <div class="ov-card">
+      <div class="ov-card-top">
+        <div class="ov-icon" style="background:rgba(245,158,11,0.1);">🔒</div>
+        <div class="ov-label">Total Closed</div>
+      </div>
       <div class="ov-val" style="color:var(--gold);" id="ovC">—</div>
-      <div class="ov-sub">Both Teams · Month</div>
+      <div class="ov-sub">Both Teams · Worth</div>
+      <div class="ov-accent" style="background:linear-gradient(90deg,#F59E0B,#FDE68A);"></div>
     </div>
-    <div class="ov-card c5">
-      <div class="ov-label">Overall Ratio</div>
+    <div class="ov-card">
+      <div class="ov-card-top">
+        <div class="ov-icon" style="background:rgba(124,58,237,0.1);">👤</div>
+        <div class="ov-label">Maheen Team Closed</div>
+      </div>
+      <div class="ov-val" style="color:var(--purple);" id="mClosedCard">—</div>
+      <div class="ov-sub" id="mRatioCard">Closing: —</div>
+      <div class="ov-accent" style="background:linear-gradient(90deg,#7C3AED,#A78BFA);"></div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-top">
+        <div class="ov-icon" style="background:rgba(220,38,38,0.1);">👤</div>
+        <div class="ov-label">Khurram Team Closed</div>
+      </div>
+      <div class="ov-val" style="color:var(--red);" id="kClosedCard">—</div>
+      <div class="ov-sub" id="kRatioCard">Closing: —</div>
+      <div class="ov-accent" style="background:linear-gradient(90deg,#DC2626,#F87171);"></div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-top">
+        <div class="ov-icon" style="background:rgba(22,163,74,0.1);">📈</div>
+        <div class="ov-label">Overall Ratio</div>
+      </div>
       <div class="ov-val" style="color:var(--green);" id="ovRatio">—</div>
       <div class="ov-sub">Closing Rate</div>
+      <div class="ov-accent" style="background:linear-gradient(90deg,#16A34A,#4ADE80);"></div>
     </div>
   </div>
 
   <!-- TEAM MAHEEN -->
   <div class="team-section">
-    <div class="team-header maheen">
-      <div class="team-name maheen">
-        <div class="team-dot maheen"></div>
-        Team Maheen
+    <div class="team-banner maheen">
+      <div class="team-banner-left">
+        <div class="team-banner-icon">👥</div>
+        <div class="team-banner-name">Team Maheen</div>
       </div>
-      <div class="team-kpis">
-        <div class="team-kpi">
-          <div class="team-kpi-val maheen" id="mTotal">—</div>
-          <div class="team-kpi-label">Qualified</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val maheen" id="mClosed">—</div>
-          <div class="team-kpi-label">Closed</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val maheen" id="mRatio">—</div>
-          <div class="team-kpi-label">Ratio</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val maheen" id="mQToday">—</div>
-          <div class="team-kpi-label">Today</div>
-        </div>
+      <div class="team-banner-stats">
+        <div class="team-stat"><div class="team-stat-val" id="mTotal">—</div><div class="team-stat-label">Qualified</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="mClosed">—</div><div class="team-stat-label">Closed</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="mRatio">—</div><div class="team-stat-label">Ratio</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="mQToday">—</div><div class="team-stat-label">Today</div></div>
       </div>
     </div>
-    <div class="tbl-wrap">
+    <div class="tbl-container">
       <div class="tbl-scroll">
         <table>
           <thead>
-            <tr>
-              <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#1e3a8a,#1e293b);color:#fff;border-bottom:2px solid var(--blue);">Member</th>
-              <th colspan="7" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(37,99,235,0.12);color:#1d4ed8;">Total Leads Qualified In The Month</th>
-              <th colspan="4" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Closed Leads (Month)</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Total Closed</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Ratio</th>
-              <th colspan="6" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Total Leads Qualified Today</th>
-              <th colspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Qual. Today</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
+            <tr class="sh-row">
+              <th rowspan="3" class="member-th sub-row" style="background:#F1F5F9;border-right:2px solid #CBD5E1;border-bottom:2px solid #94A3B8;">MEMBER</th>
+              <th colspan="7" class="sh-blue">Total Leads Qualified In The Month</th>
+              <th colspan="4" class="sh-gold">Closed Leads (Month)</th>
+              <th rowspan="3" class="sh-gold" style="border-right:2px solid #FCD34D;">Total</th>
+              <th rowspan="3" class="sh-gold" style="border-right:2px solid #CBD5E1;">Ratio</th>
+              <th colspan="6" class="sh-green">Total Leads Qualified Today</th>
+              <th colspan="3" class="sh-purple" style="border-right:none;">Closed Today</th>
+              <th rowspan="3" class="sh-green" style="border-right:1px solid #86EFAC;">Qual. Today</th>
+              <th rowspan="3" class="sh-purple" style="border-right:none;">Closed Today</th>
             </tr>
-            <tr>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
-              <th rowspan="2" class="sec-head month">Total Q</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Inbound</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Outbound</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">INB</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">OUT</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">FB</th>
+            <tr class="sh-row">
+              <th colspan="3" class="sh-blue" style="font-size:0.54rem;">New Leads</th>
+              <th colspan="3" class="sh-blue" style="font-size:0.54rem;border-right:2px solid #93C5FD;">Revive Leads</th>
+              <th rowspan="2" class="sh-blue" style="border-right:2px solid #CBD5E1;">Total</th>
+              <th colspan="2" class="sh-gold" style="font-size:0.54rem;">Inbound</th>
+              <th colspan="2" class="sh-gold" style="font-size:0.54rem;border-right:2px solid #FCD34D;">Outbound</th>
+              <th colspan="3" class="sh-green" style="font-size:0.54rem;">New Leads</th>
+              <th colspan="3" class="sh-green" style="font-size:0.54rem;border-right:2px solid #86EFAC;">Revive Leads</th>
+              <th class="sh-purple" style="font-size:0.54rem;">INB</th>
+              <th class="sh-purple" style="font-size:0.54rem;">OUT</th>
+              <th class="sh-purple" style="font-size:0.54rem;border-right:none;">FB</th>
             </tr>
-            <tr>
+            <tr class="sub-row">
               <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th>Email</th><th class="sep-right">RC</th>
+              <th>Email</th><th class="sep-right">RC</th>
               <th>Email</th><th>RC</th><th>WAPP</th>
-              <th>Email</th><th>RC</th>
-              <th>Email</th><th>RC</th>
-              <th>Email</th><th>RC</th><th>WAPP</th>
-              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th></th><th></th><th></th>
             </tr>
           </thead>
           <tbody id="maheenBody">
-            <tr><td colspan="22" style="text-align:center;padding:40px;color:var(--text3);">
-              <div class="loading-wrap" style="height:auto;"><div class="spinner"></div><div class="loading-text">Loading...</div></div>
-            </td></tr>
+            <tr><td colspan="25"><div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading Team Maheen data...</div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -408,71 +384,57 @@ tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size
 
   <!-- TEAM KHURRAM -->
   <div class="team-section">
-    <div class="team-header khurram">
-      <div class="team-name khurram">
-        <div class="team-dot khurram"></div>
-        Team Khurram
+    <div class="team-banner khurram">
+      <div class="team-banner-left">
+        <div class="team-banner-icon">👥</div>
+        <div class="team-banner-name">Team Khurram</div>
       </div>
-      <div class="team-kpis">
-        <div class="team-kpi">
-          <div class="team-kpi-val khurram" id="kTotal">—</div>
-          <div class="team-kpi-label">Qualified</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val khurram" id="kClosed">—</div>
-          <div class="team-kpi-label">Closed</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val khurram" id="kRatio">—</div>
-          <div class="team-kpi-label">Ratio</div>
-        </div>
-        <div class="team-kpi">
-          <div class="team-kpi-val khurram" id="kQToday">—</div>
-          <div class="team-kpi-label">Today</div>
-        </div>
+      <div class="team-banner-stats">
+        <div class="team-stat"><div class="team-stat-val" id="kTotal">—</div><div class="team-stat-label">Qualified</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="kClosed">—</div><div class="team-stat-label">Closed</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="kRatio">—</div><div class="team-stat-label">Ratio</div></div>
+        <div class="team-stat"><div class="team-stat-val" id="kQToday">—</div><div class="team-stat-label">Today</div></div>
       </div>
     </div>
-    <div class="tbl-wrap">
+    <div class="tbl-container">
       <div class="tbl-scroll">
         <table>
           <thead>
-            <tr>
-              <th rowspan="3" style="text-align:left;padding-left:20px;background:linear-gradient(135deg,#78350f,#92400e);color:#fff;border-bottom:2px solid var(--khurram);">Member</th>
-              <th colspan="7" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(37,99,235,0.12);color:#1d4ed8;">Total Leads Qualified In The Month</th>
-              <th colspan="4" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Closed Leads (Month)</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Total Closed</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(217,119,6,0.12);color:#92400e;">Ratio</th>
-              <th colspan="6" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Total Leads Qualified Today</th>
-              <th colspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(22,163,74,0.12);color:#15803d;">Qual. Today</th>
-              <th rowspan="3" style="text-align:center;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:700;background:rgba(124,58,237,0.12);color:#6d28d9;">Closed Today</th>
+            <tr class="sh-row">
+              <th rowspan="3" class="member-th sub-row" style="background:#F1F5F9;border-right:2px solid #CBD5E1;border-bottom:2px solid #94A3B8;">MEMBER</th>
+              <th colspan="7" class="sh-blue">Total Leads Qualified In The Month</th>
+              <th colspan="4" class="sh-gold">Closed Leads (Month)</th>
+              <th rowspan="3" class="sh-gold" style="border-right:2px solid #FCD34D;">Total</th>
+              <th rowspan="3" class="sh-gold" style="border-right:2px solid #CBD5E1;">Ratio</th>
+              <th colspan="6" class="sh-green">Total Leads Qualified Today</th>
+              <th colspan="3" class="sh-purple" style="border-right:none;">Closed Today</th>
+              <th rowspan="3" class="sh-green" style="border-right:1px solid #86EFAC;">Qual. Today</th>
+              <th rowspan="3" class="sh-purple" style="border-right:none;">Closed Today</th>
             </tr>
-            <tr>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
-              <th colspan="3" class="sec-head month" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
-              <th rowspan="2" class="sec-head month">Total Q</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Inbound</th>
-              <th colspan="2" class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">Outbound</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">New Leads</th>
-              <th colspan="3" class="sec-head today" style="font-size:0.52rem;border-top:1px solid var(--border);">Revive Leads</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">INB</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">OUT</th>
-              <th class="sec-head closed" style="font-size:0.52rem;border-top:1px solid var(--border);">FB</th>
+            <tr class="sh-row">
+              <th colspan="3" class="sh-blue" style="font-size:0.54rem;">New Leads</th>
+              <th colspan="3" class="sh-blue" style="font-size:0.54rem;border-right:2px solid #93C5FD;">Revive Leads</th>
+              <th rowspan="2" class="sh-blue" style="border-right:2px solid #CBD5E1;">Total</th>
+              <th colspan="2" class="sh-gold" style="font-size:0.54rem;">Inbound</th>
+              <th colspan="2" class="sh-gold" style="font-size:0.54rem;border-right:2px solid #FCD34D;">Outbound</th>
+              <th colspan="3" class="sh-green" style="font-size:0.54rem;">New Leads</th>
+              <th colspan="3" class="sh-green" style="font-size:0.54rem;border-right:2px solid #86EFAC;">Revive Leads</th>
+              <th class="sh-purple" style="font-size:0.54rem;">INB</th>
+              <th class="sh-purple" style="font-size:0.54rem;">OUT</th>
+              <th class="sh-purple" style="font-size:0.54rem;border-right:none;">FB</th>
             </tr>
-            <tr>
+            <tr class="sub-row">
               <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th>Email</th><th class="sep-right">RC</th>
+              <th>Email</th><th class="sep-right">RC</th>
               <th>Email</th><th>RC</th><th>WAPP</th>
-              <th>Email</th><th>RC</th>
-              <th>Email</th><th>RC</th>
-              <th>Email</th><th>RC</th><th>WAPP</th>
-              <th>Email</th><th>RC</th><th>WAPP</th>
+              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th></th><th></th><th></th>
             </tr>
           </thead>
           <tbody id="khurramBody">
-            <tr><td colspan="22" style="text-align:center;padding:40px;color:var(--text3);">
-              <div class="loading-wrap" style="height:auto;"><div class="spinner"></div><div class="loading-text">Loading...</div></div>
-            </td></tr>
+            <tr><td colspan="25"><div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading Team Khurram data...</div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -494,41 +456,50 @@ function toggleMenu(){const m=document.getElementById('uMenu');m.classList.toggl
 document.addEventListener('click',function(e){const p=document.querySelector('.nav-user');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.classList.remove('show');});
 function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
-function v(val){if(val===0||val===''||val===null||val===undefined)return '<span class="zero">—</span>';return val;}
+function v(val){
+  if(val===0||val===''||val===null||val===undefined)return '<span class="zero">-</span>';
+  return val;
+}
 function pct(ratio){const r=parseFloat(ratio)||0;return Math.round(r*100)+'%';}
 function ratioClass(ratio){const r=parseFloat(ratio)||0;if(r>=0.3)return 'ratio-h';if(r>=0.15)return 'ratio-m';return 'ratio-l';}
-function ratioBadge(ratio){const r=parseFloat(ratio)||0;if(!r)return '<span class="zero">—</span>';return `<span class="${ratioClass(r)}">${pct(r)}</span>`;}
+function ratioBadge(ratio){
+  const r=parseFloat(ratio)||0;
+  if(!r)return '<span class="zero">-</span>';
+  return `<span class="${ratioClass(r)}">${pct(r)}</span>`;
+}
 
 function makeRow(row,isTotal=false){
   const name=row[0];
   if(!name||name==='')return '';
-  const cls=isTotal?'total-row':'';
-  return `<tr class="${cls}">
-    <td style="text-align:left;padding-left:20px;${isTotal?'color:var(--blue);font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;':''}">${name}</td>
-    <td style="color:#374151;">${v(row[1])}</td>
-    <td style="color:#374151;">${v(row[2])}</td>
-    <td style="color:#374151;">${v(row[3])}</td>
-    <td style="color:#374151;">${v(row[4])}</td>
-    <td style="color:#374151;">${v(row[5])}</td>
-    <td style="color:#374151;">${v(row[6])}</td>
-    <td style="color:var(--blue);font-weight:700;">${v(row[7])}</td>
-    <td style="color:#374151;">${v(row[8])}</td>
-    <td style="color:#374151;">${v(row[9])}</td>
-    <td style="color:#374151;">${v(row[10])}</td>
-    <td style="color:#374151;">${v(row[11])}</td>
-    <td style="color:var(--khurram);font-weight:700;">${v(row[12])}</td>
-    <td>${ratioBadge(row[13])}</td>
-    <td style="color:var(--green);">${v(row[15])}</td>
-    <td style="color:var(--green);">${v(row[16])}</td>
-    <td style="color:var(--green);">${v(row[17])}</td>
-    <td style="color:var(--green);">${v(row[18])}</td>
-    <td style="color:var(--green);">${v(row[19])}</td>
-    <td style="color:var(--green);">${v(row[20])}</td>
-    <td style="color:var(--cyan);">${v(row[22])}</td>
-    <td style="color:var(--orange);">${v(row[23])}</td>
-    <td style="color:var(--purple);">${v(row[24])}</td>
-    <td style="color:var(--blue);font-weight:700;">${v(row[25])}</td>
-    <td style="color:var(--khurram);font-weight:700;">${v(row[26])}</td>
+  if(isTotal){
+    return `<tr class="total-row">
+      <td class="total-td sep-right">${name}</td>
+      <td class="val-blue">${v(row[1])}</td><td class="val-blue">${v(row[2])}</td><td class="val-blue">${v(row[3])}</td>
+      <td class="val-blue">${v(row[4])}</td><td class="val-blue">${v(row[5])}</td><td class="val-blue sep-right">${v(row[6])}</td>
+      <td class="val-blue sep-right" style="font-size:1rem;font-weight:800;">${v(row[7])}</td>
+      <td class="val-gold">${v(row[8])}</td><td class="val-gold sep-right">${v(row[9])}</td>
+      <td class="val-gold">${v(row[10])}</td><td class="val-gold sep-right">${v(row[11])}</td>
+      <td class="val-gold sep-right" style="font-size:1rem;font-weight:800;">${v(row[12])}</td>
+      <td class="sep-right">${ratioBadge(row[13])}</td>
+      <td class="val-green">${v(row[15])}</td><td class="val-green">${v(row[16])}</td><td class="val-green">${v(row[17])}</td>
+      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green sep-right">${v(row[20])}</td>
+      <td class="val-cyan">${v(row[22])}</td><td class="val-gold">${v(row[23])}</td><td>${v(row[24])}</td>
+      <td class="val-green">${v(row[25])}</td><td class="val-gold">${v(row[26])}</td>
+    </tr>`;
+  }
+  return `<tr>
+    <td class="member-td sep-right">${name}</td>
+    <td>${v(row[1])}</td><td>${v(row[2])}</td><td>${v(row[3])}</td>
+    <td>${v(row[4])}</td><td>${v(row[5])}</td><td class="sep-right">${v(row[6])}</td>
+    <td class="val-blue sep-right">${v(row[7])}</td>
+    <td>${v(row[8])}</td><td class="sep-right">${v(row[9])}</td>
+    <td>${v(row[10])}</td><td class="sep-right">${v(row[11])}</td>
+    <td class="val-gold sep-right">${v(row[12])}</td>
+    <td class="sep-right">${ratioBadge(row[13])}</td>
+    <td>${v(row[15])}</td><td>${v(row[16])}</td><td>${v(row[17])}</td>
+    <td>${v(row[18])}</td><td>${v(row[19])}</td><td class="sep-right">${v(row[20])}</td>
+    <td>${v(row[22])}</td><td>${v(row[23])}</td><td>${v(row[24])}</td>
+    <td class="val-green">${v(row[25])}</td><td class="val-gold">${v(row[26])}</td>
   </tr>`;
 }
 
@@ -561,27 +532,27 @@ async function loadData(){
       kMembers.map(r=>makeRow(r)).join('')+(kTotal?makeRow(kTotal,true):'');
 
     if(mTotal){
+      const mr=parseFloat(mTotal[13])||0;
       document.getElementById('mTotal').textContent=mTotal[7]||0;
       document.getElementById('mClosed').textContent=mTotal[12]||0;
-      const mr=parseFloat(mTotal[13])||0;
       document.getElementById('mRatio').textContent=Math.round(mr*100)+'%';
       document.getElementById('mQToday').textContent=mTotal[25]||0;
-      document.getElementById('mQ').textContent=mTotal[7]||0;
-      document.getElementById('mR').textContent='Closing '+Math.round(mr*100)+'%';
+      document.getElementById('mClosedCard').textContent=mTotal[12]||0;
+      document.getElementById('mRatioCard').textContent='Closing: '+Math.round(mr*100)+'%';
     }
     if(kTotal){
+      const kr=parseFloat(kTotal[13])||0;
       document.getElementById('kTotal').textContent=kTotal[7]||0;
       document.getElementById('kClosed').textContent=kTotal[12]||0;
-      const kr=parseFloat(kTotal[13])||0;
       document.getElementById('kRatio').textContent=Math.round(kr*100)+'%';
       document.getElementById('kQToday').textContent=kTotal[25]||0;
-      document.getElementById('kQ').textContent=kTotal[7]||0;
-      document.getElementById('kR').textContent='Closing '+Math.round(kr*100)+'%';
+      document.getElementById('kClosedCard').textContent=kTotal[12]||0;
+      document.getElementById('kRatioCard').textContent='Closing: '+Math.round(kr*100)+'%';
     }
     if(ov){
+      const or=parseFloat(ov[13])||0;
       document.getElementById('ovQ').textContent=ov[7]||0;
       document.getElementById('ovC').textContent=ov[12]||0;
-      const or=parseFloat(ov[13])||0;
       document.getElementById('ovRatio').textContent=Math.round(or*100)+'%';
     }
 
