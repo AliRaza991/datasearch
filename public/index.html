@@ -680,10 +680,7 @@ let currentQuery = '';
 // Pre-fetch on page load silently
 async function prefetchData(){
   try{
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(SHEET_URL, { signal: controller.signal });
-    clearTimeout(timeout);
+    const res = await fetch(SHEET_URL, { cache: 'no-store' });
     const json = await res.json();
     if(!json.success) return;
     const data = json.data;
@@ -705,13 +702,9 @@ async function getSheetData(){
   if(cachedData && (now - lastFetch) < 60000){
     return cachedData;
   }
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
   const res = await fetch(SHEET_URL + '&t=' + now, {
-    signal: controller.signal,
     cache: 'no-store'
   });
-  clearTimeout(timeout);
   if(!res.ok) throw new Error('Fetch failed');
   const json = await res.json();
   if(!json.success) throw new Error(json.error || 'Script error');
@@ -788,6 +781,7 @@ async function doSearch(){
     autoRefreshTimer = setInterval(async ()=>{
       if(!currentQuery) return;
       try{
+        cachedData = null;
         const {headers: h, rows: r} = await getSheetData();
         const q2 = currentQuery.toLowerCase().trim();
         const m = r.filter(row=>{
