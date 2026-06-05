@@ -478,32 +478,32 @@ function makeRow(row,isTotal=false){
       <td class="total-td" style="border-right:3px solid #94A3B8;">${name}</td>
       <td class="val-blue">${v(row[1])}</td><td class="val-blue">${v(row[2])}</td><td class="val-blue sep-right">${v(row[3])}</td>
       <td class="val-blue">${v(row[4])}</td><td class="val-blue">${v(row[5])}</td><td class="val-blue sep-right">${v(row[6])}</td>
-      <td class="val-blue sep-blue" style="font-size:1rem;font-weight:800;">${v(row[7])}</td>
+      <td class="val-blue sep-blue" style="font-size:1rem;font-weight:800;">${v(row[12])}</td>
       <td class="val-gold">${v(row[8])}</td><td class="val-gold sep-right">${v(row[9])}</td>
       <td class="val-gold">${v(row[10])}</td><td class="val-gold sep-right">${v(row[11])}</td>
       <td class="val-gold sep-right" style="font-size:1rem;font-weight:800;">${v(row[12])}</td>
       <td class="sep-gold">${ratioBadge(row[13])}</td>
-      <td class="val-green">${v(row[15])}</td><td class="val-green">${v(row[16])}</td><td class="val-green sep-right">${v(row[17])}</td>
-      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green sep-green">${v(row[20])}</td>
-      <td class="val-green">${v(row[25])}</td>
-      <td class="val-gold">${v(row[26])}</td>
-      <td class="val-cyan">${v(row[22])}</td><td class="val-gold">${v(row[23])}</td><td>${v(row[24])}</td>
+      <td class="val-green">${v(row[14])}</td><td class="val-green">${v(row[15])}</td><td class="val-green sep-right">${v(row[16])}</td>
+      <td class="val-green">${v(row[17])}</td><td class="val-green">${v(row[18])}</td><td class="val-green sep-green">${v(row[19])}</td>
+      <td class="val-green">${v(row[23])}</td>
+      <td class="val-gold">${v(row[24])}</td>
+      <td class="val-cyan">${v(row[20])}</td><td class="val-gold">${v(row[21])}</td><td>${v(row[22])}</td>
     </tr>`;
   }
   return `<tr>
     <td class="member-td" style="border-right:3px solid #94A3B8;">${name}</td>
     <td>${v(row[1])}</td><td>${v(row[2])}</td><td class="sep-right">${v(row[3])}</td>
     <td>${v(row[4])}</td><td>${v(row[5])}</td><td class="sep-right">${v(row[6])}</td>
-    <td class="val-blue sep-blue">${v(row[7])}</td>
+    <td class="val-blue sep-blue">${v(row[1])||0+row[2]||0+row[3]||0+row[4]||0+row[5]||0+row[6]||0}</td>
     <td>${v(row[8])}</td><td class="sep-right">${v(row[9])}</td>
     <td>${v(row[10])}</td><td class="sep-right">${v(row[11])}</td>
     <td class="val-gold sep-right">${v(row[12])}</td>
     <td class="sep-gold">${ratioBadge(row[13])}</td>
-    <td>${v(row[15])}</td><td>${v(row[16])}</td><td class="sep-right">${v(row[17])}</td>
-    <td>${v(row[18])}</td><td>${v(row[19])}</td><td class="sep-green">${v(row[20])}</td>
-    <td class="val-green">${v(row[25])}</td>
-    <td class="val-gold">${v(row[26])}</td>
-    <td>${v(row[22])}</td><td>${v(row[23])}</td><td>${v(row[24])}</td>
+    <td>${v(row[14])}</td><td>${v(row[15])}</td><td class="sep-right">${v(row[16])}</td>
+    <td>${v(row[17])}</td><td>${v(row[18])}</td><td class="sep-green">${v(row[19])}</td>
+    <td class="val-green">${v(row[23])}</td>
+    <td class="val-gold">${v(row[24])}</td>
+    <td class="val-cyan">${v(row[20])}</td><td class="val-gold">${v(row[21])}</td><td>${v(row[22])}</td>
   </tr>`;
 }
 
@@ -514,21 +514,16 @@ async function loadData(){
     if(!json.success)return;
     const d=json.data;
 
-    let mStartIdx=-1,mTotalIdx=-1,kStartIdx=-1,kTotalIdx=-1,ovIdx=-1;
-    for(let i=0;i<d.length;i++){
-      const cell=String(d[i][0]||'').trim();
-      if(cell.toLowerCase().includes('maheen')&&mStartIdx===-1)mStartIdx=i+3;
-      if(cell.toLowerCase().includes('khurram')&&kStartIdx===-1)kStartIdx=i+3;
-      if(cell.toLowerCase().includes('total leads')&&mStartIdx>0&&mTotalIdx===-1)mTotalIdx=i;
-      if(cell.toLowerCase().includes('total leads')&&kStartIdx>0&&mTotalIdx>0&&kTotalIdx===-1)kTotalIdx=i;
-      if(cell.toLowerCase().includes('overall'))ovIdx=i;
-    }
+    // Maheen: rows 4-14 (0-indexed), Total at row 15
+    // Khurram: rows 19-29 (0-indexed), Total at row 30
+    const mRows = d.slice(4,15).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
+    const mTotal = d[15]||null;
+    const kRows = d.slice(19,30).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
+    const kTotal = d[30]||null;
+    const ov = d[31]||null;
 
-    const mMembers=mStartIdx>0?d.slice(mStartIdx,mTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''):[];
-    const mTotal=mTotalIdx>0?d[mTotalIdx]:null;
-    const kMembers=kStartIdx>0?d.slice(kStartIdx,kTotalIdx).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-'):[];
-    const kTotal=kTotalIdx>0?d[kTotalIdx]:null;
-    const ov=ovIdx>0?d[ovIdx]:null;
+    const mMembers = mRows;
+    const kMembers = kRows;
 
     console.log('Sample member row:', mMembers[0]);
     console.log('Total row:', mTotal);
