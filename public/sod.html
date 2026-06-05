@@ -525,8 +525,8 @@ nav{
   <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢','Marketing')" id="btn-Marketing">
     <div class="dept-icon">📢</div><div class="dept-name">Marketing</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🏢','Qualifier')" id="btn-Qualifier">
-    <div class="dept-icon">🏢</div><div class="dept-name">Qualifier & 4th Floor</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🎯','Qualifier')" id="btn-Qualifier">
+    <div class="dept-icon">🎯</div><div class="dept-name">Qualifier & 4th Floor</div>
   </button>
   <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄','Revived')" id="btn-Revived">
     <div class="dept-icon">🔄</div><div class="dept-name">Revived Leads</div>
@@ -985,9 +985,9 @@ function renderQualifier(data){
           <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${name.includes('4th')?'🏬':'🎯'} ${name}</div>
           <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Department Performance</div>
         </div>
-        <div style="margin-left:auto;background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.5);border-radius:12px;padding:8px 18px;text-align:center;backdrop-filter:blur(8px);">
-          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.8);letter-spacing:0.08em;">Today Qualified</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${tq}</div>
+        <div style="margin-left:auto;background:#000000;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:8px 18px;text-align:center;">
+          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.7);letter-spacing:0.08em;">Today Qualified</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.2;">${tq}</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;">
