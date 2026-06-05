@@ -207,6 +207,7 @@ tbody td.total-td{
 /* Column group separators */
 .sep-right{border-right:2px solid #CBD5E1 !important;}
 .sep-gold{border-right:3px solid #f59e0b !important;}
+.sep-green{border-right:3px solid #5eea5e !important;}
 .sep-blue{border-right:3px solid #1d4ed8 !important;}
 .sep-left{border-left:2px solid #CBD5E1 !important;}
 
@@ -362,7 +363,7 @@ tbody td.total-td{
               <th colspan="2" class="sh-gold">INBOUND</th>
               <th colspan="2" class="sh-gold">OUTBOUND</th>
               <th colspan="3" class="sh-green" style="">NEW LEADS</th>
-              <th colspan="3" class="sh-green" style="">REVIVE LEADS</th>
+              <th colspan="3" class="sh-green sep-green">REVIVE LEADS</th>
               <th class="sh-purple">INB</th>
               <th class="sh-purple">OUT</th>
               <th class="sh-purple">PB</th>
@@ -372,8 +373,8 @@ tbody td.total-td{
               <th>EMAIL</th><th>RC</th><th class="sep-right" style="border-right:none;">WAPP</th>
               <th>EMAIL</th><th class="sep-right">RC</th>
               <th>EMAIL</th><th class="sep-right">RC</th>
-              <th style="">EMAIL</th><th>RC</th><th class="sep-right">WAPP</th>
-              <th>EMAIL</th><th>RC</th><th style="">WAPP</th>
+              <th>EMAIL</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th>EMAIL</th><th>RC</th><th class="sep-green">WAPP</th>
               <th></th><th></th><th></th>
             </tr>
           </thead>
@@ -421,7 +422,7 @@ tbody td.total-td{
               <th colspan="2" class="sh-gold">INBOUND</th>
               <th colspan="2" class="sh-gold">OUTBOUND</th>
               <th colspan="3" class="sh-green" style="">NEW LEADS</th>
-              <th colspan="3" class="sh-green" style="">REVIVE LEADS</th>
+              <th colspan="3" class="sh-green sep-green">REVIVE LEADS</th>
               <th class="sh-purple">INB</th>
               <th class="sh-purple">OUT</th>
               <th class="sh-purple">PB</th>
@@ -431,8 +432,8 @@ tbody td.total-td{
               <th>EMAIL</th><th>RC</th><th class="sep-right" style="border-right:none;">WAPP</th>
               <th>EMAIL</th><th class="sep-right">RC</th>
               <th>EMAIL</th><th class="sep-right">RC</th>
-              <th style="">EMAIL</th><th>RC</th><th class="sep-right">WAPP</th>
-              <th>EMAIL</th><th>RC</th><th style="">WAPP</th>
+              <th>EMAIL</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th>EMAIL</th><th>RC</th><th class="sep-green">WAPP</th>
               <th></th><th></th><th></th>
             </tr>
           </thead>
@@ -485,7 +486,7 @@ function makeRow(row,isTotal=false){
       <td class="val-gold sep-right" style="font-size:1rem;font-weight:800;">${v(row[12])}</td>
       <td class="sep-gold">${ratioBadge(row[13])}</td>
       <td class="val-green">${v(row[15])}</td><td class="val-green">${v(row[16])}</td><td class="val-green sep-right">${v(row[17])}</td>
-      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green">${v(row[20])}</td>
+      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green sep-green">${v(row[20])}</td>
       <td class="val-cyan">${v(row[22])}</td><td class="val-gold">${v(row[23])}</td><td>${v(row[24])}</td>
       <td class="val-green">${v(row[25])}</td>
       <td class="val-gold">${v(row[26])}</td>
@@ -501,7 +502,7 @@ function makeRow(row,isTotal=false){
     <td class="val-gold sep-right">${v(row[12])}</td>
     <td class="sep-gold">${ratioBadge(row[13])}</td>
     <td>${v(row[15])}</td><td>${v(row[16])}</td><td class="sep-right">${v(row[17])}</td>
-    <td>${v(row[18])}</td><td>${v(row[19])}</td><td>${v(row[20])}</td>
+    <td>${v(row[18])}</td><td>${v(row[19])}</td><td class="sep-green">${v(row[20])}</td>
     <td>${v(row[22])}</td><td>${v(row[23])}</td><td>${v(row[24])}</td>
     <td class="val-green">${v(row[25])}</td>
     <td class="val-gold">${v(row[26])}</td>
