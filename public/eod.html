@@ -153,6 +153,19 @@ main{padding:28px 32px;position:relative;z-index:1;}
 .tbl-container{background:#fff;border:1.5px solid var(--border);border-top:none;border-radius:0 0 16px 16px;overflow:hidden;}
 .tbl-scroll{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+table th, table td{min-width:0;}
+col.col-member{width:120px;}
+col.col-email{width:48px;}
+col.col-st{width:48px;}
+col.col-wapp{width:48px;}
+col.col-total{width:52px;}
+col.col-closed-total{width:65px;}
+col.col-ratio{width:70px;}
+col.col-qual{width:70px;}
+col.col-closedtoday{width:70px;}
+col.col-inb{width:44px;}
+col.col-out{width:44px;}
+col.col-fb{width:44px;}
 
 /* Section header rows */
 .sh-row th{
@@ -345,6 +358,19 @@ tbody td.total-td{
     <div class="tbl-container">
       <div class="tbl-scroll">
         <table>
+          <colgroup>
+            <col class="col-member">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-total">
+            <col class="col-email"><col class="col-st">
+            <col class="col-email"><col class="col-st">
+            <col class="col-closed-total"><col class="col-ratio">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-qual"><col class="col-closedtoday">
+            <col class="col-inb"><col class="col-out"><col class="col-fb">
+          </colgroup>
           <thead>
             <tr class="sh-row">
               <th rowspan="3" class="sub-row" style="text-align:left;padding-left:16px;background:#F1F5F9;border-right:3px solid #94A3B8;border-bottom:2px solid #94A3B8;font-size:0.72rem;font-weight:800;color:var(--text);">MEMBER</th>
@@ -403,6 +429,19 @@ tbody td.total-td{
     <div class="tbl-container">
       <div class="tbl-scroll">
         <table>
+          <colgroup>
+            <col class="col-member">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-total">
+            <col class="col-email"><col class="col-st">
+            <col class="col-email"><col class="col-st">
+            <col class="col-closed-total"><col class="col-ratio">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-email"><col class="col-st"><col class="col-wapp">
+            <col class="col-qual"><col class="col-closedtoday">
+            <col class="col-inb"><col class="col-out"><col class="col-fb">
+          </colgroup>
           <thead>
             <tr class="sh-row">
               <th rowspan="3" class="sub-row" style="text-align:left;padding-left:16px;background:#F1F5F9;border-right:3px solid #94A3B8;border-bottom:2px solid #94A3B8;font-size:0.72rem;font-weight:800;color:var(--text);">MEMBER</th>
