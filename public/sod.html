@@ -393,9 +393,10 @@ nav{
   color:var(--text2);margin-bottom:12px;
 }
 .closing-val{
-  font-size:2.4rem;font-weight:700;
+  font-size:2.6rem;font-weight:800;
   font-family:'Manrope',sans-serif;
   letter-spacing:-0.02em;margin-bottom:8px;
+  color:#0f172a;
 }
 .closing-trend{
   height:40px;display:flex;align-items:flex-end;
@@ -430,16 +431,16 @@ nav{
 .mrow:last-child{border-bottom:none;}
 .mrow:hover{background:#fafbfc;}
 .mrow-label{font-size:0.78rem;color:var(--text2);font-weight:500;}
-.mrow-val{font-size:0.92rem;font-weight:700;font-family:'DM Mono',monospace;}
-.mrow-val.blue{color:var(--blue);}
-.mrow-val.red{color:var(--red);}
-.mrow-val.green{color:var(--green);}
-.mrow-val.gold{color:var(--gold);}
-.mrow-val.purple{color:var(--purple);}
-.mrow-val.cyan{color:#0891b2;}
-.mrow-val.orange{color:#ea580c;}
+.mrow-val{font-size:1rem;font-weight:700;font-family:'DM Mono',monospace;}
+.mrow-val.blue{color:#1d4ed8;}
+.mrow-val.red{color:#b91c1c;}
+.mrow-val.green{color:#15803d;}
+.mrow-val.gold{color:#b45309;}
+.mrow-val.purple{color:#6d28d9;}
+.mrow-val.cyan{color:#0e7490;}
+.mrow-val.orange{color:#c2410c;}
 .mrow-val.dim{color:var(--text3);}
-.mrow-val.text{color:var(--text);}
+.mrow-val.text{color:#0f172a;}
 .divider-label{
   padding:8px 20px;font-size:0.62rem;
   font-weight:700;letter-spacing:0.12em;
@@ -456,12 +457,15 @@ nav{
   color:var(--text2);
   background:#E2E8F0;
   border-bottom:2px solid #94A3B8;
+  border-right:1.5px solid #CBD5E1;
 }
-.team-table thead th:first-child{text-align:left;padding-left:20px;}
+.team-table thead th:first-child{text-align:left;padding-left:20px;border-right:1.5px solid #CBD5E1;}
+.team-table thead th:last-child{border-right:none;}
 .team-table tbody tr{border-bottom:1.5px solid #CBD5E1;transition:background 0.1s;}
 .team-table tbody tr:hover{background:#F8FAFC;}
-.team-table tbody td{padding:11px 14px;text-align:center;color:var(--text);font-weight:500;}
-.team-table tbody td:first-child{text-align:left;padding-left:20px;font-weight:600;color:var(--text);}
+.team-table tbody td{padding:11px 14px;text-align:center;color:var(--text);font-weight:600;font-size:0.88rem;border-right:1.5px solid #E2E8F0;}
+.team-table tbody td:first-child{text-align:left;padding-left:20px;font-weight:700;font-size:0.88rem;color:var(--text);border-right:1.5px solid #CBD5E1;}
+.team-table tbody td:last-child{border-right:none;}
 
 /* Loading */
 .loading-wrap{display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:16px;}
@@ -882,15 +886,15 @@ function renderMarketing(data){
         <div style="margin-left:auto;display:flex;gap:16px;">
           <div style="text-align:center;">
             <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Recv</div>
-            <div style="font-size:1rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.recv}</div>
+            <div style="font-size:1.2rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.recv}</div>
           </div>
           <div style="text-align:center;">
             <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Qual</div>
-            <div style="font-size:1rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.qual}</div>
+            <div style="font-size:1.2rem;font-weight:800;color:${p.color};font-family:'DM Mono',monospace;">${p.qual}</div>
           </div>
           <div style="text-align:center;">
             <div style="font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;">Closed</div>
-            <div style="font-size:1rem;font-weight:800;color:#DC2626;font-family:'DM Mono',monospace;">${p.closed}</div>
+            <div style="font-size:1.2rem;font-weight:800;color:#b91c1c;font-family:'DM Mono',monospace;">${p.closed}</div>
           </div>
         </div>
       </div>
@@ -996,15 +1000,15 @@ function renderQualifier(data){
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1.5px solid #CBD5E1;">
             <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Total</div>
-              <div style="font-size:1.6rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${tq}</div>
+              <div style="font-size:2rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;">${tq}</div>
             </div>
             <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Email</div>
-              <div style="font-size:1.6rem;font-weight:700;color:#2563EB;font-family:'DM Mono',monospace;">${email}</div>
+              <div style="font-size:2rem;font-weight:800;color:#1d4ed8;font-family:'DM Mono',monospace;">${email}</div>
             </div>
             <div style="padding:16px 8px;text-align:center;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">ST</div>
-              <div style="font-size:1.6rem;font-weight:700;color:#7C3AED;font-family:'DM Mono',monospace;">${st}</div>
+              <div style="font-size:2rem;font-weight:800;color:#6d28d9;font-family:'DM Mono',monospace;">${st}</div>
             </div>
           </div>
           <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
