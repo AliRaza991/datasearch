@@ -1065,10 +1065,10 @@ function renderRevived(data){
 
   function teamTable(title,color,members){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.6),rgba(79,70,229,0.5))':'linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.35)':'rgba(180,83,9,0.35)'};">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${title.includes('Maheen')?'rgba(29,78,216,0.4)':'rgba(180,83,9,0.4)'};">👥</div>
-        <span class="section-hdr-title" style="color:${color};">${title}</span>
-        <span style="margin-left:auto;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${color};font-weight:600;">${members.length} members</span>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">👥</div>
+        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">👥 ${title}</span>
+        <span style="margin-left:auto;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:#ffffff;font-weight:600;">${members.length} members</span>
       </div>
       <table class="team-table">
         <thead>
@@ -1102,9 +1102,9 @@ function renderRevived(data){
 
   return `
     <div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.6),rgba(8,145,178,0.5));border-bottom:2px solid rgba(29,78,216,0.6);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(29,78,216,0.4);">🔄</div>
-        <span class="section-hdr-title" style="color:#1D4ED8;">Total Revived Leads Summary</span>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">🔄</div>
+        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">🔄 Total Revived Leads Summary</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);">
         <div class="closing-cell">
@@ -1178,12 +1178,15 @@ function renderClosed(data){
 
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:${bg};border-bottom:2px solid ${hex}50;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${hex}50;">✅</div>
-        <span class="section-hdr-title" style="color:${hex};">${title}</span>
-        <div style="margin-left:auto;background:${hex};border-radius:12px;padding:6px 20px;text-align:center;">
-          <div style="font-size:0.58rem;color:rgba(255,255,255,0.8);font-weight:600;text-transform:uppercase;">Today Closed</div>
-          <div style="font-size:1.5rem;font-weight:800;color:#fff;font-family:'DM Mono',monospace;line-height:1.2;">${today}</div>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">✅</div>
+        <div>
+          <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">✅ ${title}</div>
+          <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Closing Performance</div>
+        </div>
+        <div style="margin-left:auto;background:#000000;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:8px 20px;text-align:center;">
+          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.7);letter-spacing:0.08em;">Today Closed</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.2;">${today}</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
@@ -1245,9 +1248,9 @@ function renderClosed(data){
 
   function teamTable(title,hex,members){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.6),rgba(79,70,229,0.5))':'linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.3)':'rgba(180,83,9,0.3)'};">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${title.includes('Maheen')?'rgba(29,78,216,0.4)':'rgba(180,83,9,0.4)'};">👥</div>
-        <span class="section-hdr-title" style="color:${hex};">${title}</span>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">👥</div>
+        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">👥 ${title}</span>
         <span style="margin-left:auto;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${hex};font-weight:600;">${members.length} members</span>
       </div>
       <table class="team-table">
