@@ -208,6 +208,7 @@ tbody td.total-td{
 .sep-right{border-right:2px solid #CBD5E1 !important;}
 .sep-gold{border-right:3px solid #f59e0b !important;}
 .sep-green{border-right:3px solid #5eea5e !important;}
+.sep-darkgreen{border-right:3px solid #355E3B !important;}
 .sep-blue{border-right:3px solid #1d4ed8 !important;}
 .sep-left{border-left:2px solid #CBD5E1 !important;}
 
@@ -352,8 +353,8 @@ tbody td.total-td{
               <th rowspan="3" class="sh-gold sep-right">TOTAL CLOSED</th>
               <th rowspan="3" class="sh-gold sep-gold">CLOSING RATIO</th>
               <th colspan="6" class="sh-green sep-green">TOTAL LEADS QUALIFIED TODAY</th>
-              <th rowspan="3" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">QUAL.<br>TODAY</th>
-              <th rowspan="3" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED<br>TODAY</th>
+              <th rowspan="3" class="sep-darkgreen" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">QUAL.<br>TODAY</th>
+              <th rowspan="3" class="sep-darkgreen" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED<br>TODAY</th>
               <th rowspan="2" colspan="3" style="background:#000000;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED BREAKDOWN</th>
             </tr>
             <tr class="sh-row">
@@ -410,8 +411,8 @@ tbody td.total-td{
               <th rowspan="3" class="sh-gold sep-right">TOTAL CLOSED</th>
               <th rowspan="3" class="sh-gold sep-gold">CLOSING RATIO</th>
               <th colspan="6" class="sh-green sep-green">TOTAL LEADS QUALIFIED TODAY</th>
-              <th rowspan="3" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">QUAL.<br>TODAY</th>
-              <th rowspan="3" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED<br>TODAY</th>
+              <th rowspan="3" class="sep-darkgreen" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">QUAL.<br>TODAY</th>
+              <th rowspan="3" class="sep-darkgreen" style="background:#355E3B;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED<br>TODAY</th>
               <th rowspan="2" colspan="3" style="background:#000000;color:#fff;text-align:center;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:8px 6px;border-bottom:2px solid var(--border);">CLOSED BREAKDOWN</th>
             </tr>
             <tr class="sh-row">
@@ -485,8 +486,8 @@ function makeRow(row,isTotal=false){
       <td class="sep-gold">${ratioBadge(row[13])}</td>
       <td class="val-green">${v(row[14])}</td><td class="val-green">${v(row[15])}</td><td class="val-green sep-right">${v(row[16])}</td>
       <td class="val-green">${v(row[17])}</td><td class="val-green">${v(row[18])}</td><td class="val-green sep-green">${v(row[19])}</td>
-      <td class="val-green">${v(row[23])}</td>
-      <td class="val-gold">${v(row[24])}</td>
+      <td class="val-green sep-darkgreen">${v(row[23])}</td>
+      <td class="val-gold sep-darkgreen">${v(row[24])}</td>
       <td class="val-cyan">${v(row[20])}</td><td class="val-gold">${v(row[21])}</td><td>${v(row[22])}</td>
     </tr>`;
   }
@@ -501,8 +502,8 @@ function makeRow(row,isTotal=false){
     <td class="sep-gold">${ratioBadge(row[13])}</td>
     <td>${v(row[14])}</td><td>${v(row[15])}</td><td class="sep-right">${v(row[16])}</td>
     <td>${v(row[17])}</td><td>${v(row[18])}</td><td class="sep-green">${v(row[19])}</td>
-    <td class="val-green">${v(row[23])}</td>
-    <td class="val-gold">${v(row[24])}</td>
+    <td class="val-green sep-darkgreen">${v(row[23])}</td>
+    <td class="val-gold sep-darkgreen">${v(row[24])}</td>
     <td class="val-cyan">${v(row[20])}</td><td class="val-gold">${v(row[21])}</td><td>${v(row[22])}</td>
   </tr>`;
 }
