@@ -851,23 +851,23 @@ function renderMarketing(data){
   const cl_today   = data[71]?.[2] ?? 0;
 
   const platforms=[
-    {name:'TA',label:'TA Class Ads',color:'#D97706',bg:'linear-gradient(135deg,rgba(217,119,6,0.15),rgba(245,158,11,0.1))',
+    {name:'TA',label:'TA Class Ads',color:'#D97706',bg:'linear-gradient(135deg,rgba(217,119,6,0.55),rgba(245,158,11,0.45))',
      recv:ta_recv,qual:ta_qual,closed:ta_closed,a:ta_a,b:ta_b,c:ta_c,uncat:ta_uncat,
      recv_ov:ta_recv_overall,recv_mn:ta_recv_monthly,recv_td:ta_recv_today,
      qual_ov:ta_qual_overall,qual_mn:ta_qual_monthly,qual_td:ta_qual_today},
-    {name:'MTC',label:'MTC Class Ads',color:'#7C3AED',bg:'linear-gradient(135deg,rgba(124,58,237,0.15),rgba(168,85,247,0.1))',
+    {name:'MTC',label:'MTC Class Ads',color:'#7C3AED',bg:'linear-gradient(135deg,rgba(124,58,237,0.55),rgba(168,85,247,0.45))',
      recv:mtc_recv,qual:mtc_qual,closed:mtc_closed,a:mtc_a,b:mtc_b,c:mtc_c,uncat:mtc_uncat,
      recv_ov:mtc_recv_overall,recv_mn:mtc_recv_monthly,recv_td:mtc_recv_today,
      qual_ov:mtc_qual_overall,qual_mn:mtc_qual_monthly,qual_td:mtc_qual_today},
-    {name:'WhatsApp',label:'WhatsApp Ads',color:'#059669',bg:'linear-gradient(135deg,rgba(5,150,105,0.15),rgba(16,185,129,0.1))',
+    {name:'WhatsApp',label:'WhatsApp Ads',color:'#059669',bg:'linear-gradient(135deg,rgba(5,150,105,0.55),rgba(16,185,129,0.45))',
      recv:wa_recv,qual:wa_qual,closed:wa_closed,a:wa_a,b:wa_b,c:wa_c,uncat:wa_uncat,
      recv_ov:wa_recv_overall,recv_mn:wa_recv_monthly,recv_td:wa_recv_today,
      qual_ov:wa_qual_overall,qual_mn:wa_qual_monthly,qual_td:wa_qual_today},
-    {name:'Preceptor',label:'Preceptor Ads',color:'#0891B2',bg:'linear-gradient(135deg,rgba(8,145,178,0.15),rgba(6,182,212,0.1))',
+    {name:'Preceptor',label:'Preceptor Ads',color:'#0891B2',bg:'linear-gradient(135deg,rgba(8,145,178,0.55),rgba(6,182,212,0.45))',
      recv:pre_recv,qual:pre_qual,closed:pre_closed,a:pre_a,b:pre_b,c:pre_c,uncat:pre_uncat,
      recv_ov:pre_recv_overall,recv_mn:pre_recv_monthly,recv_td:pre_recv_today,
      qual_ov:pre_qual_overall,qual_mn:pre_qual_monthly,qual_td:pre_qual_today},
-    {name:'TikTok',label:'TikTok Ads',color:'#BE185D',bg:'linear-gradient(135deg,rgba(190,24,93,0.15),rgba(236,72,153,0.1))',
+    {name:'TikTok',label:'TikTok Ads',color:'#BE185D',bg:'linear-gradient(135deg,rgba(190,24,93,0.55),rgba(236,72,153,0.45))',
      recv:tt_recv,qual:tt_qual,closed:tt_closed,a:tt_a,b:tt_b,c:tt_c,uncat:tt_uncat,
      recv_ov:tt_recv_overall,recv_mn:tt_recv_monthly,recv_td:tt_recv_today,
      qual_ov:tt_qual_overall,qual_mn:tt_qual_monthly,qual_td:tt_qual_today},
@@ -928,7 +928,7 @@ function renderMarketing(data){
     <div style="display:flex;flex-direction:column;gap:0;">
       ${platforms.map(p=>platCard(p)).join('')}
       <div class="section-card">
-        <div class="section-hdr" style="background:linear-gradient(135deg,rgba(220,38,38,0.2),rgba(249,115,22,0.15));border-bottom:2px solid rgba(220,38,38,0.3);">
+        <div class="section-hdr" style="background:linear-gradient(135deg,rgba(220,38,38,0.55),rgba(249,115,22,0.45));border-bottom:2px solid rgba(220,38,38,0.5);">
           <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(220,38,38,0.4);">📈</div>
           <span class="section-hdr-title" style="color:#DC2626;">Closed Leads — Paid Data</span>
         </div>
@@ -1043,8 +1043,8 @@ function renderQualifier(data){
   }
 
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.18),rgba(124,58,237,0.12))',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.18),rgba(20,184,166,0.12))',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
+    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.55),rgba(124,58,237,0.45))',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
+    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.55),rgba(20,184,166,0.45))',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
   </div>`;
 }
 
@@ -1062,7 +1062,7 @@ function renderRevived(data){
 
   function teamTable(title,color,members){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.2),rgba(79,70,229,0.15))':'linear-gradient(135deg,rgba(180,83,9,0.2),rgba(217,119,6,0.15))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.35)':'rgba(180,83,9,0.35)'};">
+      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.6),rgba(79,70,229,0.5))':'linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.35)':'rgba(180,83,9,0.35)'};">
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${title.includes('Maheen')?'rgba(29,78,216,0.4)':'rgba(180,83,9,0.4)'};">👥</div>
         <span class="section-hdr-title" style="color:${color};">${title}</span>
         <span style="margin-left:auto;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${color};font-weight:600;">${members.length} members</span>
@@ -1099,7 +1099,7 @@ function renderRevived(data){
 
   return `
     <div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.18),rgba(8,145,178,0.12));border-bottom:2px solid rgba(29,78,216,0.3);">
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.6),rgba(8,145,178,0.5));border-bottom:2px solid rgba(29,78,216,0.6);">
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(29,78,216,0.4);">🔄</div>
         <span class="section-hdr-title" style="color:#1D4ED8;">Total Revived Leads Summary</span>
       </div>
@@ -1242,7 +1242,7 @@ function renderClosed(data){
 
   function teamTable(title,hex,members){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.18),rgba(79,70,229,0.12))':'linear-gradient(135deg,rgba(180,83,9,0.18),rgba(217,119,6,0.12))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.3)':'rgba(180,83,9,0.3)'};">
+      <div class="section-hdr" style="background:${title.includes('Maheen')?'linear-gradient(135deg,rgba(29,78,216,0.6),rgba(79,70,229,0.5))':'linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))'};border-bottom:2px solid ${title.includes('Maheen')?'rgba(29,78,216,0.3)':'rgba(180,83,9,0.3)'};">
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${title.includes('Maheen')?'rgba(29,78,216,0.4)':'rgba(180,83,9,0.4)'};">👥</div>
         <span class="section-hdr-title" style="color:${hex};">${title}</span>
         <span style="margin-left:auto;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:${hex};font-weight:600;">${members.length} members</span>
@@ -1274,8 +1274,8 @@ function renderClosed(data){
   }
 
   return `<div style="display:flex;flex-direction:column;gap:0;">
-    ${sCard('Closed Lead (Closers)','#6D28D9','linear-gradient(135deg,rgba(109,40,217,0.18),rgba(79,70,229,0.12))',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_ov,cl_st_ov,cl_wa_ov,cl_uniq_ov,cl_rev_ov)}
-    ${sCard('Closed Lead (Managers)','#B45309','linear-gradient(135deg,rgba(180,83,9,0.18),rgba(217,119,6,0.12))',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_ov,mg_st_ov,mg_wa_ov,mg_uniq_ov,mg_rev_ov)}
+    ${sCard('Closed Lead (Closers)','#6D28D9','linear-gradient(135deg,rgba(109,40,217,0.6),rgba(79,70,229,0.5))',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_ov,cl_st_ov,cl_wa_ov,cl_uniq_ov,cl_rev_ov)}
+    ${sCard('Closed Lead (Managers)','#B45309','linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_ov,mg_st_ov,mg_wa_ov,mg_uniq_ov,mg_rev_ov)}
     ${teamTable('Team Maheen','#7C3AED',maheen_cl)}
     ${teamTable('Team Khurram','#EAB308',khurram_cl)}
   </div>`;
