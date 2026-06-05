@@ -365,11 +365,12 @@ tbody td.total-td{
               <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th style="border-right:3px solid #1d4ed8;">Total</th>
+              <th style="border-left:3px solid #b45309;">Email</th><th class="sep-right">RC</th>
               <th>Email</th><th class="sep-right">RC</th>
-              <th>Email</th><th style="border-right:3px solid #b45309;">RC</th>
-              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th style="border-left:3px solid #15803d;">Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th>Email</th><th>RC</th><th style="border-right:3px solid #15803d;">WAPP</th>
-              <th style="border-right:3px solid #15803d;">INB</th><th>OUT</th><th>FB</th>
+              <th>Qual.</th>
+              <th>INB</th><th class="sep-right">OUT</th><th>FB</th>
             </tr>
           </thead>
           <tbody id="maheenBody">
@@ -421,11 +422,12 @@ tbody td.total-td{
               <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th style="border-right:3px solid #1d4ed8;">Total</th>
+              <th style="border-left:3px solid #b45309;">Email</th><th class="sep-right">RC</th>
               <th>Email</th><th class="sep-right">RC</th>
-              <th>Email</th><th style="border-right:3px solid #b45309;">RC</th>
-              <th>Email</th><th>RC</th><th class="sep-right">WAPP</th>
+              <th style="border-left:3px solid #15803d;">Email</th><th>RC</th><th class="sep-right">WAPP</th>
               <th>Email</th><th>RC</th><th style="border-right:3px solid #15803d;">WAPP</th>
-              <th style="border-right:3px solid #15803d;">INB</th><th>OUT</th><th>FB</th>
+              <th>Qual.</th>
+              <th>INB</th><th class="sep-right">OUT</th><th>FB</th>
             </tr>
           </thead>
           <tbody id="khurramBody">
@@ -468,33 +470,33 @@ function makeRow(row,isTotal=false){
   if(!name||name==='')return '';
   if(isTotal){
     return `<tr class="total-row">
-      <td class="total-td" style="border-right:3px solid #CBD5E1;">${name}</td>
+      <td class="total-td" style="border-right:1.5px solid #CBD5E1;">${name}</td>
       <td class="val-blue">${v(row[1])}</td><td class="val-blue">${v(row[2])}</td><td class="val-blue sep-right">${v(row[3])}</td>
       <td class="val-blue">${v(row[4])}</td><td class="val-blue">${v(row[5])}</td><td class="val-blue sep-right">${v(row[6])}</td>
       <td class="val-blue" style="font-size:1rem;font-weight:800;border-right:3px solid #1d4ed8;">${v(row[7])}</td>
-      <td class="val-gold">${v(row[8])}</td><td class="val-gold sep-right">${v(row[9])}</td>
-      <td class="val-gold">${v(row[10])}</td><td class="val-gold" style="border-right:3px solid #b45309;">${v(row[11])}</td>
+      <td class="val-gold" style="border-left:3px solid #b45309;">${v(row[8])}</td><td class="val-gold sep-right">${v(row[9])}</td>
+      <td class="val-gold">${v(row[10])}</td><td class="val-gold sep-right">${v(row[11])}</td>
       <td class="val-gold sep-right" style="font-size:1rem;font-weight:800;">${v(row[12])}</td>
       <td style="border-right:3px solid #CBD5E1;">${ratioBadge(row[13])}</td>
-      <td class="val-green">${v(row[15])}</td><td class="val-green">${v(row[16])}</td><td class="val-green sep-right">${v(row[17])}</td>
-      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green sep-right">${v(row[20])}</td>
-      <td class="val-green" style="border-right:3px solid #15803d;">${v(row[25])}</td>
+      <td class="val-green" style="border-left:3px solid #15803d;">${v(row[15])}</td><td class="val-green">${v(row[16])}</td><td class="val-green sep-right">${v(row[17])}</td>
+      <td class="val-green">${v(row[18])}</td><td class="val-green">${v(row[19])}</td><td class="val-green" style="border-right:3px solid #15803d;">${v(row[20])}</td>
+      <td class="val-green">${v(row[25])}</td>
       <td class="val-cyan sep-right">${v(row[22])}</td><td class="val-gold sep-right">${v(row[23])}</td><td>${v(row[24])}</td>
     </tr>`;
   }
   return `<tr>
-    <td class="member-td" style="border-right:3px solid #CBD5E1;">${name}</td>
+    <td class="member-td" style="border-right:1.5px solid #CBD5E1;">${name}</td>
     <td>${v(row[1])}</td><td>${v(row[2])}</td><td class="sep-right">${v(row[3])}</td>
     <td>${v(row[4])}</td><td>${v(row[5])}</td><td class="sep-right">${v(row[6])}</td>
     <td class="val-blue" style="border-right:3px solid #1d4ed8;">${v(row[7])}</td>
-    <td>${v(row[8])}</td><td class="sep-right">${v(row[9])}</td>
-    <td>${v(row[10])}</td><td class="val-gold" style="border-right:3px solid #b45309;">${v(row[11])}</td>
+    <td style="border-left:3px solid #b45309;">${v(row[8])}</td><td class="sep-right">${v(row[9])}</td>
+    <td>${v(row[10])}</td><td class="sep-right">${v(row[11])}</td>
     <td class="val-gold sep-right">${v(row[12])}</td>
     <td style="border-right:3px solid #CBD5E1;">${ratioBadge(row[13])}</td>
-    <td>${v(row[15])}</td><td>${v(row[16])}</td><td class="sep-right">${v(row[17])}</td>
-    <td>${v(row[18])}</td><td>${v(row[19])}</td><td class="sep-right">${v(row[20])}</td>
-    <td style="border-right:3px solid #15803d;" class="val-green">${v(row[25])}</td>
-    <td class="sep-right">${v(row[22])}</td><td class="sep-right">${v(row[23])}</td><td>${v(row[24])}</td>
+    <td style="border-left:3px solid #15803d;">${v(row[15])}</td><td>${v(row[16])}</td><td class="sep-right">${v(row[17])}</td>
+    <td>${v(row[18])}</td><td>${v(row[19])}</td><td style="border-right:3px solid #15803d;">${v(row[20])}</td>
+    <td class="val-green">${v(row[25])}</td>
+    <td>${v(row[22])}</td><td class="sep-right">${v(row[23])}</td><td>${v(row[24])}</td>
   </tr>`;
 }
 
