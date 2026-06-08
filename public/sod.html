@@ -993,7 +993,7 @@ function renderQualifier(data){
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">${name.includes('4th')?'🏬':'🎯'}</div>
         <div>
-          <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${name.includes('4th')?'🏬':'🎯'} ${name}</div>
+          <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${name}</div>
           <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Department Performance</div>
         </div>
         <div style="margin-left:auto;background:#000000;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:8px 18px;text-align:center;">
@@ -1019,14 +1019,14 @@ function renderQualifier(data){
             </div>
           </div>
           <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
-          ${mr('Overall',ov,'blue')} ${mr('Monthly',mn,'blue')} ${mr('Today',td,'blue')}
+          ${mr('Overall',avg(ov),'blue')} ${mr('Monthly',avg(mn),'blue')} ${mr('Today',avg(td),'blue')}
         </div>
         <div style="border-right:2px solid #CBD5E1;">
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
-          ${mr('Total Closed',cl_t,'green')}
-          ${mr('Last 3 Months',cl_3,'blue')}
-          ${mr('Current Month',cl_m,'gold')}
-          ${mr('TODAY Closed',cl_today,'red')}
+          ${mr('Total Closed',avg(cl_t),'green')}
+          ${mr('Last 3 Months',avg(cl_3),'blue')}
+          ${mr('Current Month',avg(cl_m),'gold')}
+          ${mr('TODAY Closed',avg(cl_today),'red')}
         </div>
         <div>
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Summary</div>
@@ -1043,11 +1043,11 @@ function renderQualifier(data){
             <div style="border-top:1.5px solid #CBD5E1;padding-top:12px;">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
                 <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Monthly Avg</span>
-                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${mn}</span>
+                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${avg(mn)}</span>
               </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;background:${bg};padding:8px 10px;border-radius:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
                 <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Today</span>
-                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${tq}</span>
+                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${avg(tq)}</span>
               </div>
             </div>
           </div>
