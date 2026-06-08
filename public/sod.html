@@ -580,13 +580,20 @@ function v(val){
   if(val===0||val===''||val===null||val===undefined) return '<span class="mrow-val dim">—</span>';
   return val;
 }
+function avg(val){
+  if(val===0||val===''||val===null||val===undefined) return '—';
+  const n = parseFloat(val);
+  if(isNaN(n)) return val;
+  return n % 1 === 0 ? n : n.toFixed(2);
+}
 function pct(val){
   if(!val&&val!==0) return '—';
   const n=parseFloat(val);
   return n<=1&&n>0?Math.round(n*100)+'%':val;
 }
 function mr(label,val,color='blue'){
-  return `<div class="mrow"><span class="mrow-label">${label}</span><span class="mrow-val ${color}">${v(val)}</span></div>`;
+  const formatted = (val===0||val===''||val===null||val===undefined)?'—':(() => { const n=parseFloat(val); return isNaN(n)?val:(n%1===0?n:n.toFixed(2)); })();
+  return `<div class="mrow"><span class="mrow-label">${label}</span><span class="mrow-val ${color}">${formatted}</span></div>`;
 }
 
 function kpiCard(icon,iconBg,label,val,valColor,sub){
@@ -712,9 +719,9 @@ function renderOrganic(data){
               </tr>
             </thead>
             <tbody>
-              <tr><td>Overall</td><td style="color:#16A34A;">${popup_recv_overall}</td><td style="color:#2563EB;">${popup_qual_overall}</td></tr>
-              <tr><td>Monthly</td><td style="color:#16A34A;">${popup_recv_monthly}</td><td style="color:#2563EB;">${popup_qual_monthly}</td></tr>
-              <tr><td>Today</td><td style="color:#16A34A;">${popup_recv_today}</td><td style="color:#2563EB;">${popup_qual_today}</td></tr>
+              <tr><td>Overall</td><td style="color:#16A34A;">${avg(popup_recv_overall)}</td><td style="color:#2563EB;">${avg(popup_qual_overall)}</td></tr>
+              <tr><td>Monthly</td><td style="color:#16A34A;">${avg(popup_recv_monthly)}</td><td style="color:#2563EB;">${avg(popup_qual_monthly)}</td></tr>
+              <tr><td>Today</td><td style="color:#16A34A;">${avg(popup_recv_today)}</td><td style="color:#2563EB;">${avg(popup_qual_today)}</td></tr>
             </tbody>
           </table>
         </div>
@@ -734,9 +741,9 @@ function renderOrganic(data){
               </tr>
             </thead>
             <tbody>
-              <tr><td>Overall</td><td style="color:#DC2626;">${hot_recv_overall}</td><td style="color:#2563EB;">${hot_qual_overall}</td></tr>
-              <tr><td>Monthly</td><td style="color:#DC2626;">${hot_recv_monthly}</td><td style="color:#2563EB;">${hot_qual_monthly}</td></tr>
-              <tr><td>Today</td><td style="color:#DC2626;">${hot_recv_today}</td><td style="color:#2563EB;">${hot_qual_today}</td></tr>
+              <tr><td>Overall</td><td style="color:#DC2626;">${avg(hot_recv_overall)}</td><td style="color:#2563EB;">${avg(hot_qual_overall)}</td></tr>
+              <tr><td>Monthly</td><td style="color:#DC2626;">${avg(hot_recv_monthly)}</td><td style="color:#2563EB;">${avg(hot_qual_monthly)}</td></tr>
+              <tr><td>Today</td><td style="color:#DC2626;">${avg(hot_recv_today)}</td><td style="color:#2563EB;">${avg(hot_qual_today)}</td></tr>
             </tbody>
           </table>
         </div>
@@ -752,28 +759,28 @@ function renderOrganic(data){
       <div class="closing-grid">
         <div class="closing-cell">
           <div class="closing-label">Total Closed</div>
-          <div class="closing-val" style="color:#16A34A;">${total_closed}</div>
+          <div class="closing-val" style="color:#16A34A;">${avg(total_closed)}</div>
           <div class="closing-trend" style="color:#16A34A;">
             ${[3,5,4,6,5,7,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Last 3 Months</div>
-          <div class="closing-val" style="color:#2563EB;">${last3months}</div>
+          <div class="closing-val" style="color:#2563EB;">${avg(last3months)}</div>
           <div class="closing-trend" style="color:#2563EB;">
             ${[4,3,5,4,6,5,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Current Month</div>
-          <div class="closing-val" style="color:#D97706;">${current_month}</div>
+          <div class="closing-val" style="color:#D97706;">${avg(current_month)}</div>
           <div class="closing-trend" style="color:#D97706;">
             ${[5,6,5,7,6,7,8].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Today Closed</div>
-          <div class="closing-val" style="color:#DC2626;">${today_closed}</div>
+          <div class="closing-val" style="color:#DC2626;">${avg(today_closed)}</div>
           <div class="closing-trend" style="color:#DC2626;">
             ${[2,4,3,5,4,6,5].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
@@ -1135,15 +1142,15 @@ function renderRevived(data){
       <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid #CBD5E1;">
         <div class="closing-cell">
           <div class="closing-label">Overall Avg</div>
-          <div class="closing-val" style="color:#2563EB;">${rv_overall_avg}</div>
+          <div class="closing-val" style="color:#2563EB;">${avg(rv_overall_avg)}</div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Monthly Avg</div>
-          <div class="closing-val" style="color:#D97706;">${rv_monthly_avg}</div>
+          <div class="closing-val" style="color:#D97706;">${avg(rv_monthly_avg)}</div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Today Avg</div>
-          <div class="closing-val" style="color:#16A34A;">${rv_today_avg}</div>
+          <div class="closing-val" style="color:#16A34A;">${avg(rv_today_avg)}</div>
         </div>
       </div>
     </div>
