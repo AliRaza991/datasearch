@@ -17,10 +17,29 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   designation: { type: String, default: '' },
   role: { type: String, default: 'user' },
-  active: { type: Boolean, default: true }
+  active: { type: Boolean, default: true },
+  deviceCode: String,
+  registeredDeviceToken: String,
+  deviceRegistered: Boolean
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
+
+function generateDeviceCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for(let i=0; i<8; i++){
+    if(i===4) code+='-';
+    code += chars[Math.floor(Math.random()*chars.length)];
+  }
+  return code;
+}
+
+function generateDeviceToken(){
+  const arr = new Uint8Array(32);
+  for(let i=0;i<32;i++) arr[i]=Math.floor(Math.random()*256);
+  return Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 mongoose.connect(MONGO_URI)
   .then(async () => {
@@ -82,17 +101,80 @@ async function requireAdmin(req, res, next) {
 }
 
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, deviceCode, deviceToken } = req.body;
   const user = await User.findOne({ username, password, active: true });
-  if (!user) return res.status(401).json({ error: 'Invalid username or password' });
+  if(!user) return res.status(401).json({ error: 'Invalid username or password' });
+
+  // Admin bypass - no device restriction
+  if(user.role === 'admin'){
+    const token = createToken(user);
+    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
+  }
+
+  // Check if device already registered
+  if(user.deviceRegistered){
+    if(!deviceToken || deviceToken !== user.registeredDeviceToken){
+      return res.status(403).json({ error: 'DEVICE_NOT_AUTHORIZED', message: 'This device is not authorized. Please use your registered device.' });
+    }
+    const token = createToken(user);
+    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
+  }
+
+  // First time - device not registered yet
+  if(!deviceCode){
+    return res.status(403).json({ error: 'DEVICE_CODE_REQUIRED', message: 'Please enter your device code to register this device.' });
+  }
+
+  if(deviceCode.toUpperCase().replace(/-/g,'') !== (user.deviceCode||'').replace(/-/g,'')){
+    return res.status(403).json({ error: 'INVALID_DEVICE_CODE', message: 'Invalid device code. Please contact admin.' });
+  }
+
+  // Register device
+  const newDeviceToken = generateDeviceToken();
+  await User.findByIdAndUpdate(user._id, {
+    deviceRegistered: true,
+    registeredDeviceToken: newDeviceToken
+  });
+
   const token = createToken(user);
-  res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
+  return res.json({
+    token,
+    deviceToken: newDeviceToken,
+    user: { name: user.name, role: user.role, designation: user.designation, username: user.username }
+  });
 });
 
 app.post('/api/logout', (req, res) => res.json({ success: true }));
 
 app.get('/api/me', requireAuth, (req, res) => {
   res.json({ user: { name: req.user.name, role: req.user.role, username: req.user.username } });
+});
+
+app.post('/api/admin/users/:id/device-code', requireAdmin, async (req, res) => {
+  try{
+    const code = generateDeviceCode();
+    await User.findByIdAndUpdate(req.params.id, {
+      deviceCode: code,
+      deviceRegistered: false,
+      registeredDeviceToken: null
+    });
+    res.json({ success: true, deviceCode: code });
+  }catch(e){
+    res.status(500).json({ error: 'Failed to generate device code' });
+  }
+});
+
+app.post('/api/admin/users/:id/reset-device', requireAdmin, async (req, res) => {
+  try{
+    await User.findByIdAndUpdate(req.params.id, {
+      deviceRegistered: false,
+      registeredDeviceToken: null,
+      deviceCode: generateDeviceCode()
+    });
+    res.json({ success: true, message: 'Device reset successfully' });
+  }catch(e){
+    res.status(500).json({ error: 'Failed to reset device' });
+  }
 });
 
 app.get('/api/admin/users', requireAdmin, async (req, res) => {

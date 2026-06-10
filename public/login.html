@@ -70,6 +70,68 @@ button:disabled{ opacity:.55; cursor:wait; }
 <script>
   if (localStorage.getItem('ds_token')) window.location.replace('/');
 
+  function showError(msg){
+    const errMsg = document.getElementById('errMsg');
+    errMsg.textContent = msg;
+  }
+
+  function showDeviceCodeForm(username, password){
+    const container = document.querySelector('.card');
+    const existing = document.getElementById('deviceCodeSection');
+    if(existing) existing.remove();
+
+    const div = document.createElement('div');
+    div.id = 'deviceCodeSection';
+    div.style.cssText = 'margin-top:16px;padding:16px;background:rgba(251,191,36,0.1);border:1.5px solid #FBBF24;border-radius:12px;';
+    div.innerHTML = `
+      <div style="font-size:0.78rem;font-weight:700;color:#FBBF24;margin-bottom:8px;">🔐 First Time Device Registration</div>
+      <div style="font-size:0.7rem;color:#aab4cc;margin-bottom:12px;">Enter the device code provided by your admin to register this device.</div>
+      <input id="deviceCodeInput" type="text" placeholder="XXXX-XXXX" maxlength="9"
+        style="width:100%;padding:10px 14px;border:1.5px solid #FBBF24;border-radius:8px;font-size:1rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;outline:none;background:rgba(251,191,36,0.06);color:#eaf0fb;text-align:center;margin-bottom:10px;">
+      <button onclick="submitDeviceCode('${username}','${password}')"
+        style="width:100%;padding:10px;background:linear-gradient(135deg,#2563EB,#DC2626);color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;">
+        Register This Device
+      </button>
+    `;
+    container.appendChild(div);
+
+    const input = document.getElementById('deviceCodeInput');
+    input.focus();
+    input.addEventListener('input', function(){
+      let val = this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+      if(val.length > 4) val = val.slice(0,4) + '-' + val.slice(4,8);
+      this.value = val;
+    });
+  }
+
+  async function submitDeviceCode(username, password){
+    const deviceCode = document.getElementById('deviceCodeInput').value.trim();
+    if(!deviceCode || deviceCode.length < 9){
+      showError('Please enter complete device code (XXXX-XXXX)');
+      return;
+    }
+    try{
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, deviceCode })
+      });
+      const data = await res.json();
+      if(!res.ok){
+        showError(data.message || 'Invalid device code');
+        return;
+      }
+      if(data.deviceToken){
+        localStorage.setItem('ds_device_token', data.deviceToken);
+      }
+      localStorage.setItem('ds_token', data.token);
+      localStorage.setItem('ds_user', JSON.stringify(data.user || {}));
+      window.location.href = '/';
+    }catch(e){
+      showError('Connection error. Please try again.');
+    }
+  }
+
   async function doLogin() {
     const btn = document.getElementById('loginBtn');
     const errMsg = document.getElementById('errMsg');
@@ -78,13 +140,36 @@ button:disabled{ opacity:.55; cursor:wait; }
     btn.disabled = true;
     errMsg.textContent = '';
     try {
+      const deviceToken = localStorage.getItem('ds_device_token');
+      const body = { username, password };
+      if(deviceToken) body.deviceToken = deviceToken;
+
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify(body)
       });
       const data = await response.json();
-      if (!response.ok) { errMsg.textContent = data.error || data.message || 'Invalid credentials.'; btn.disabled = false; return; }
+      if(!response.ok){
+        if(data.error === 'DEVICE_NOT_AUTHORIZED'){
+          showError('This device is not authorized. Use your registered device.');
+          btn.disabled = false; return;
+        }
+        if(data.error === 'DEVICE_CODE_REQUIRED'){
+          btn.disabled = false;
+          showDeviceCodeForm(username, password);
+          return;
+        }
+        if(data.error === 'INVALID_DEVICE_CODE'){
+          showError('Invalid device code. Please contact admin.');
+          btn.disabled = false; return;
+        }
+        showError(data.error || data.message || 'Invalid credentials.');
+        btn.disabled = false; return;
+      }
+      if(data.deviceToken){
+        localStorage.setItem('ds_device_token', data.deviceToken);
+      }
       localStorage.removeItem('ds_token');
       localStorage.removeItem('ds_user');
       localStorage.setItem('ds_token', data.token);

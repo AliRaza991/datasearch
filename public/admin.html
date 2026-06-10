@@ -160,6 +160,8 @@ async function load() {
           ? `<button class="bs bs-dis" onclick="toggle('${u._id}',false)">Disable</button>`
           : `<button class="bs bs-en" onclick="toggle('${u._id}',true)">Enable</button>`}
         <button class="bs bs-del" onclick="del('${u._id}','${u.username}')">Delete</button>
+        <button onclick="generateDeviceCode('${u._id}')" style="padding:5px 10px;background:#FBBF24;color:#000;border:none;border-radius:6px;font-size:0.7rem;font-weight:600;cursor:pointer;">📱 Device Code</button>
+        <button onclick="resetDevice('${u._id}')" style="padding:5px 10px;background:#6B7280;color:#fff;border:none;border-radius:6px;font-size:0.7rem;font-weight:600;cursor:pointer;">🔄 Reset Device</button>
       </div></td>
     </tr>`).join('');
 }
@@ -222,6 +224,25 @@ async function del(id, username) {
   if (!res.ok) { toast('Failed','err'); return; }
   toast(`✓ "${username}" deleted`);
   load();
+}
+
+async function generateDeviceCode(userId){
+  const res = await api(`/api/admin/users/${userId}/device-code`, { method:'POST' });
+  const data = await res.json();
+  if(data.success){
+    alert(`Device Code Generated:\n\n${data.deviceCode}\n\nShare this code with the user for first-time device registration.`);
+    load();
+  }
+}
+
+async function resetDevice(userId){
+  if(!confirm('Reset this user device? They will need a new device code to login again.')) return;
+  const res = await api(`/api/admin/users/${userId}/reset-device`, { method:'POST' });
+  const data = await res.json();
+  if(data.success){
+    alert('Device reset! Generate a new device code for this user.');
+    load();
+  }
 }
 
 async function logout() {
