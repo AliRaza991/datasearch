@@ -588,6 +588,8 @@ setInterval(checkDeviceStatus, 30000);
 checkDeviceStatus();
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec?sheet=Client_History';
+const SKIP_COLS = ['email','phone','e-mail','phone number','mobile','contact','db_user','syedaliraza','_id','__v','password','token'];
+const CACHE_TTL = 60000; // 60 seconds
 
 // User setup
 const u = JSON.parse(localStorage.getItem('ds_user')||'{}');
@@ -642,7 +644,6 @@ function searchFor(q){
   doSearch();
 }
 
-// Mask values
 function maskValue(val){
   if(!val) return '—';
   if(val.includes('@')){
@@ -663,96 +664,97 @@ inp.addEventListener('input',function(){
 });
 inp.addEventListener('keydown',function(e){if(e.key==='Enter') doSearch();});
 
-// Parse CSV
-function parseCSV(text){
-  const lines = text.split('\n');
-  const headers = lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  const rows = [];
-  for(let i=1;i<lines.length;i++){
-    if(!lines[i].trim()) continue;
-    const vals = [];
-    let cur='';let inQ=false;
-    for(let c of lines[i]){
-      if(c==='"') inQ=!inQ;
-      else if(c===',' && !inQ){vals.push(cur.trim());cur='';}
-      else cur+=c;
-    }
-    vals.push(cur.trim());
-    const row={};
-    headers.forEach((h,idx)=>row[h]=vals[idx]||'');
-    rows.push(row);
-  }
-  return {headers,rows};
-}
+let cachedData = null;
+let lastFetch = 0;
+let isFetching = false;
+let autoRefreshTimer = null;
+let currentQuery = '';
 
-// Skip columns
-const SKIP_COLS=['email','phone','e-mail','phone number','mobile','contact','db_user','syedaliraza','_id','__v','password','token'];
 function shouldSkip(header){
   const h = header.toLowerCase().trim();
   if(!h) return true;
   return SKIP_COLS.some(s => h.includes(s));
 }
 
-let cachedData = null;
-let lastFetch = 0;
-let autoRefreshTimer = null;
-let currentQuery = '';
-
-// Pre-fetch on page load silently
-async function prefetchData(){
-  try{
-    const res = await fetch(SHEET_URL, { cache: 'no-store' });
-    const json = await res.json();
-    if(!json.success) return;
-    const data = json.data;
-    const headers = data[0].map(h => String(h||'').trim());
-    const rows = [];
-    for(let i=1; i<data.length; i++){
-      if(!data[i].some(c => c !== '')) continue;
-      const row = {};
-      headers.forEach((h,idx) => row[h] = String(data[i][idx]||'').trim());
-      rows.push(row);
-    }
-    cachedData = {headers, rows};
-    lastFetch = Date.now();
-  } catch(e){ console.log('Prefetch failed:', e); }
+// Single unified parse function
+function parseSheetResponse(json){
+  if(!json || !json.success) throw new Error(json?.error || 'Script returned error');
+  const data = json.data;
+  if(!data || !data[0]) throw new Error('No data in response');
+  const headers = data[0].map(h => String(h||'').trim());
+  const rows = [];
+  for(let i = 1; i < data.length; i++){
+    const rowData = data[i];
+    if(!rowData || !rowData.some(c => c !== '' && c !== null && c !== undefined)) continue;
+    const row = {};
+    headers.forEach((h, idx) => { row[h] = String(rowData[idx]||'').trim(); });
+    rows.push(row);
+  }
+  return { headers, rows };
 }
 
-async function getSheetData(){
-  const now = Date.now();
-  if(cachedData && (now - lastFetch) < 60000){
-    return cachedData;
+// Single unified fetch function - no duplicates
+async function fetchFromSheet(){
+  if(isFetching){
+    // Wait for existing fetch to complete
+    return new Promise((resolve, reject) => {
+      const check = setInterval(() => {
+        if(!isFetching){
+          clearInterval(check);
+          if(cachedData) resolve(cachedData);
+          else reject(new Error('Fetch failed'));
+        }
+      }, 100);
+      setTimeout(() => { clearInterval(check); reject(new Error('Timeout waiting')); }, 15000);
+    });
   }
+
+  isFetching = true;
   const controller = new AbortController();
-  const timeoutId = setTimeout(()=>controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 12000);
+
   try{
-    const res = await fetch(SHEET_URL + '&t=' + now, {
+    const res = await fetch(SHEET_URL + '&t=' + Date.now(), {
       cache: 'no-store',
       signal: controller.signal
     });
     clearTimeout(timeoutId);
-    if(!res.ok) throw new Error('Fetch failed');
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
-  if(!json.success) throw new Error(json.error || 'Script error');
-
-  // Convert 2D array to {headers, rows} format
-  const data = json.data;
-  const headers = data[0].map(h => String(h||'').trim());
-  const rows = [];
-  for(let i=1; i<data.length; i++){
-    if(!data[i].some(c => c !== '')) continue;
-    const row = {};
-    headers.forEach((h,idx) => row[h] = String(data[i][idx]||'').trim());
-    rows.push(row);
-  }
-
-    cachedData = {headers, rows};
+    const parsed = parseSheetResponse(json);
+    cachedData = parsed;
     lastFetch = Date.now();
-    return cachedData;
+    isFetching = false;
+    return parsed;
   } catch(err){
     clearTimeout(timeoutId);
+    isFetching = false;
     throw err;
   }
+}
+
+async function getSheetData(forceRefresh = false){
+  const now = Date.now();
+  if(!forceRefresh && cachedData && (now - lastFetch) < CACHE_TTL){
+    return cachedData;
+  }
+  return fetchFromSheet();
+}
+
+function filterRows(rows, query){
+  const q = query.toLowerCase().trim();
+  return rows.filter(row => {
+    return Object.values(row).some(val => {
+      if(!val || val === '') return false;
+      const strVal = String(val).toLowerCase().trim();
+      if(strVal.includes(q)) return true;
+      // Handle // separated values
+      if(strVal.includes('//')) {
+        return strVal.split('//').some(p => p.trim().includes(q));
+      }
+      return false;
+    });
+  });
 }
 
 function formatDate(val){
@@ -760,22 +762,20 @@ function formatDate(val){
   const str = String(val).trim();
   if(str.match(/^\d{4}-\d{2}-\d{2}T/)){
     const d = new Date(str);
-    if(!isNaN(d)){
-      return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).replace(/ /g,', ').replace(',',',');
-    }
+    if(!isNaN(d)) return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   }
   if(str.match(/^\d{4}-\d{2}-\d{2}$/)){
     const d = new Date(str + 'T00:00:00');
-    if(!isNaN(d)){
-      return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-    }
+    if(!isNaN(d)) return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   }
   return str;
 }
 
-// Search
+// Search function - clean and simple
 async function doSearch(){
   const query = document.getElementById('searchInput').value.trim();
+
+  // Strict empty/short check
   if(!query || query.length < 3){
     document.getElementById('searchInput').focus();
     document.getElementById('searchWrap').style.boxShadow='0 0 0 3px rgba(220,38,38,0.5), 0 24px 70px rgba(0,0,0,0.4)';
@@ -783,112 +783,65 @@ async function doSearch(){
     setTimeout(()=>{
       document.getElementById('searchWrap').style.boxShadow='0 0 0 2px rgba(251,191,36,0.4), 0 20px 60px rgba(0,0,0,0.3)';
       document.getElementById('searchInput').placeholder='name@company.com  or  +1 (415) 555-0142';
-    },2000);
+    }, 2000);
     return;
   }
-  currentQuery = query;
 
+  currentQuery = query;
   const btn = document.getElementById('searchBtn');
-  btn.disabled=true;
-  btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg> Searching...';
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg> Searching...';
 
   try{
-    const {headers, rows} = await getSheetData();
-    const q = query.toLowerCase().trim();
+    const { headers, rows } = await getSheetData();
+    const matched = filterRows(rows, query);
 
-    // Safety check - query too short or generic
-    if(q.length < 3){
+    // Block too many results
+    if(matched.length > 300){
       document.getElementById('resultsSection').classList.add('show');
-      document.getElementById('resultsBody').innerHTML=`
-        <div class="empty-state">
-          <div class="empty-icon">🔍</div>
-          <div class="empty-text">Please enter at least 3 characters to search.</div>
-        </div>`;
-      btn.disabled=false;
-      btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg> Search';
-      return;
-    }
-
-    const matched = rows.filter(row=>{
-      return Object.values(row).some(val=>{
-        if(val === null || val === undefined || val === '') return false;
-        const strVal = String(val).toLowerCase().trim();
-        // Split by common separators
-        const parts = strVal.split(/\s*[\/\/|,;]\s*/);
-        // Check direct match or any part match
-        if(strVal.includes(q)) return true;
-        return parts.some(p => p.trim().includes(q));
-      });
-    });
-
-    // Safety check - if too many results, probably a bad search
-    if(matched.length > 500){
-      document.getElementById('resultsSection').classList.add('show');
-      document.getElementById('resultsBody').innerHTML=`
+      document.getElementById('resultsBody').innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">⚠️</div>
-          <div class="empty-text">Too many results (${matched.length}). Please enter a more specific search term.</div>
+          <div class="empty-text">Too many results (${matched.length}). Please be more specific.</div>
         </div>`;
-      btn.disabled=false;
-      btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg> Search';
+      btn.disabled = false;
+      btn.innerHTML = resetBtnHTML();
       return;
     }
 
     showResults(matched, headers, query);
     addRecent(query);
 
-    // Start auto-refresh every 30 seconds
+    // Auto-refresh - only refresh cache, DON'T clear it unnecessarily
     if(autoRefreshTimer) clearInterval(autoRefreshTimer);
-    autoRefreshTimer = setInterval(async ()=>{
+    autoRefreshTimer = setInterval(async () => {
       if(!currentQuery) return;
       try{
-        cachedData = null;
-        const {headers: h, rows: r} = await getSheetData();
-        const q2 = currentQuery.toLowerCase().trim();
-        const m = r.filter(row=>{
-          return Object.values(row).some(val=>{
-            if(val === null || val === undefined || val === '') return false;
-            const strVal = String(val).toLowerCase().trim();
-            const parts = strVal.split(/\s*[\/\/|,;]\s*/);
-            if(strVal.includes(q2)) return true;
-            return parts.some(p => p.trim().includes(q2));
-          });
-        });
-        showResults(m, h, currentQuery);
-      } catch(e){ console.log('Auto-refresh error:', e); }
+        const fresh = await getSheetData(true); // force refresh
+        const m = filterRows(fresh.rows, currentQuery);
+        if(m.length <= 300) showResults(m, fresh.headers, currentQuery);
+      } catch(e){ console.log('Auto-refresh skipped:', e.message); }
     }, 30000);
 
   } catch(e){
-    console.error('Search error:', e);
-    // Try with no-cors as fallback
-    try{
-      const res = await fetch(SHEET_URL, {cache: 'no-store'});
-      const text = await res.text();
-      const {headers, rows} = parseCSV(text);
-      cachedData = {headers, rows};
-      lastFetch = Date.now();
-      const q = query.toLowerCase();
-      const matched = rows.filter(row=>{
-        return Object.values(row).some(val=>{
-          const parts = String(val).split(/\s*\/\/\s*/);
-          return parts.some(p=>p.toLowerCase().includes(q));
-        });
-      });
-      showResults(matched, headers, query);
-      addRecent(query);
-    } catch(e2){
-      document.getElementById('resultsSection').classList.add('show');
-      document.getElementById('resultsBody').innerHTML=`
-        <div class="empty-state">
-          <div class="empty-icon">⚠️</div>
-          <div class="empty-text">Could not load data. Please check your internet connection and try again.</div>
-          <button onclick="doSearch()" style="margin-top:12px;padding:10px 20px;background:#2563EB;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;">Retry</button>
-        </div>`;
-    }
+    console.error('Search error:', e.message);
+    let msg = 'Could not load data. Please try again.';
+    if(e.name === 'AbortError') msg = 'Request timed out. Please try again.';
+    document.getElementById('resultsSection').classList.add('show');
+    document.getElementById('resultsBody').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-text">${msg}</div>
+        <button onclick="doSearch()" style="margin-top:12px;padding:10px 20px;background:#2563EB;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;">Retry</button>
+      </div>`;
   }
 
-  btn.disabled=false;
-  btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg> Search';
+  btn.disabled = false;
+  btn.innerHTML = resetBtnHTML();
+}
+
+function resetBtnHTML(){
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg> Search';
 }
 
 function showResults(rows, headers, query){
@@ -902,29 +855,26 @@ function showResults(rows, headers, query){
   document.getElementById('resultsCount').innerHTML = `<span>${count}</span> record${count!==1?'s':''} found`;
   document.getElementById('resultsMeta').innerHTML = `<span class="results-query">••••••••••••</span>`;
   document.getElementById('resultsSubtitle').textContent = `Massive Dynamics · DataSearch · ${count} record${count!==1?'s':''} found`;
-
   const now = new Date();
   document.getElementById('resultTimestamp').textContent = `Generated on ${now.toLocaleDateString('en-PK',{month:'long',day:'numeric',year:'numeric'})} · ${now.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
 
   if(!count){
-    document.getElementById('resultsBody').innerHTML=`
+    document.getElementById('resultsBody').innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🔍</div>
-        <div class="empty-text">No records found for this search query.</div>
+        <div class="empty-text">No records found for "<strong>${query}</strong>"</div>
       </div>`;
     return;
   }
 
-  // Build table
   function getColWidth(h){
-    const header = h.toLowerCase();
-    if(header.includes('client') && header.includes('name')) return 'width:200px;';
-    if(header.includes('data') && header.includes('type')) return 'width:160px;';
-    if(header.includes('lead') && header.includes('qualifier')) return 'width:180px;';
-    if(header.includes('closer')) return 'width:160px;';
-    if(header.includes('date')) return 'width:130px;';
-    if(header.includes('status')) return 'width:100px;';
-    if(header.includes('qualified on')) return 'width:130px;';
+    const hh = h.toLowerCase();
+    if(hh.includes('client') && hh.includes('name')) return 'width:200px;';
+    if(hh.includes('data') && hh.includes('type')) return 'width:160px;';
+    if(hh.includes('lead') && hh.includes('qualifier')) return 'width:180px;';
+    if(hh.includes('closer')) return 'width:160px;';
+    if(hh.includes('date')) return 'width:130px;';
+    if(hh.includes('status')) return 'width:100px;';
     return 'width:120px;';
   }
 
@@ -933,11 +883,10 @@ function showResults(rows, headers, query){
     ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${h}</th>`).join('')}
   </tr></thead><tbody>`;
 
-  rows.forEach((row,i)=>{
-    const isTotal = Object.values(row).some(v=>String(v).toLowerCase().includes('total'));
-    html+=`<tr class="${isTotal?'total-row':''}">
+  rows.forEach((row, i) => {
+    html += `<tr>
       <td class="row-num" style="text-align:center;padding:13px 6px;width:40px;background:linear-gradient(135deg,#1e3a8a,#2563EB);color:#fff;font-weight:700;">${i+1}</td>
-      ${visibleHeaders.map(h=>{
+      ${visibleHeaders.map(h => {
         const val = row[h]||'';
         const formatted = formatDate(val);
         return `<td>${formatted||'<span class="zero">—</span>'}</td>`;
@@ -945,37 +894,33 @@ function showResults(rows, headers, query){
     </tr>`;
   });
 
-  html+='</tbody></table>';
-  document.getElementById('resultsBody').innerHTML=html;
+  html += '</tbody></table>';
+  document.getElementById('resultsBody').innerHTML = html;
 }
 
 function newSearch(){
-  if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer=null; }
-  currentQuery='';
+  if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  currentQuery = '';
   document.getElementById('resultsSection').classList.remove('show');
-  document.getElementById('searchInput').value='';
+  document.getElementById('searchInput').value = '';
   document.getElementById('heroSection').scrollIntoView({behavior:'smooth'});
 }
 
 async function downloadResult(format){
   const card = document.getElementById('resultsCard');
-  const canvas = await html2canvas(card,{
-    scale:2,backgroundColor:'#ffffff',
-    onclone:function(doc){
-      doc.querySelectorAll('*').forEach(el=>{
-        const s=el.style;
-        if(s.background&&s.background.includes('var(')) s.background='#ffffff';
-      });
-    }
-  });
-  const link=document.createElement('a');
-  link.download=`datasearch-results.${format}`;
-  link.href=canvas.toDataURL(format==='png'?'image/png':'image/jpeg',0.95);
+  const canvas = await html2canvas(card,{scale:2,backgroundColor:'#ffffff'});
+  const link = document.createElement('a');
+  link.download = `datasearch-results.${format}`;
+  link.href = canvas.toDataURL(format==='png'?'image/png':'image/jpeg',0.95);
   link.click();
 }
 
+// Prefetch silently on load
+setTimeout(() => {
+  getSheetData().catch(e => console.log('Prefetch failed silently'));
+}, 1000);
+
 renderRecent();
-prefetchData();
 </script>
 </body>
 </html>
