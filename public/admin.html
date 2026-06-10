@@ -241,6 +241,44 @@ tbody td{padding:14px 16px;color:#0F172A;font-weight:500;}
   </div>
 </div>
 
+<div class="modal-overlay" id="pageModal">
+  <div class="modal">
+    <div class="modal-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      Page Access
+    </div>
+    <div id="pageModalUserName" style="font-size:0.78rem;color:#64748B;margin-bottom:20px;"></div>
+    <input type="hidden" id="pageModalUserId">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#2563EB'" onmouseout="this.style.borderColor='#E2E8F0'">
+        <input type="checkbox" id="pageDs" value="datasearch" style="width:18px;height:18px;accent-color:#2563EB;">
+        <div>
+          <div style="font-size:0.85rem;font-weight:700;color:#0F172A;">⚡ DataSearch</div>
+          <div style="font-size:0.68rem;color:#64748B;">Lead history search by email or phone</div>
+        </div>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#F59E0B'" onmouseout="this.style.borderColor='#E2E8F0'">
+        <input type="checkbox" id="pageSod" value="sod" style="width:18px;height:18px;accent-color:#F59E0B;">
+        <div>
+          <div style="font-size:0.85rem;font-weight:700;color:#0F172A;">☀️ SOD Report</div>
+          <div style="font-size:0.68rem;color:#64748B;">Start of Day department intelligence</div>
+        </div>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E2E8F0'">
+        <input type="checkbox" id="pageEod" value="eod" style="width:18px;height:18px;accent-color:#7C3AED;">
+        <div>
+          <div style="font-size:0.85rem;font-weight:700;color:#0F172A;">🌙 EOD Report</div>
+          <div style="font-size:0.68rem;color:#64748B;">End of Day team performance analytics</div>
+        </div>
+      </label>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closePageModal()">Cancel</button>
+      <button class="modal-save" style="background:linear-gradient(135deg,#7C3AED,#2563EB);" onclick="savePageAccess()">Save Access</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const token = localStorage.getItem('ds_token');
 if(!token) window.location.replace('/login.html');
@@ -297,7 +335,8 @@ function renderUsers(users){
           : '<span class="badge badge-nodevice">— No Device</span>';
     const deviceBtns = u.role!=='admin' ? `
       <button type="button" class="action-btn btn-device" onclick="generateDeviceCode('${u._id}')">📱 Code</button>
-      <button type="button" class="action-btn btn-reset" onclick="resetDevice('${u._id}')">🔄 Reset</button>` : '';
+      <button type="button" class="action-btn btn-reset" onclick="resetDevice('${u._id}')">🔄 Reset</button>
+      <button type="button" class="action-btn" style="background:rgba(124,58,237,0.1);color:#6d28d9;" onclick="openPageAccess('${u._id}','${(u.name||'').replace(/'/g,"\\'")}',${JSON.stringify(u.pages||['datasearch','sod','eod'])})">🗂️ Pages</button>` : '';
     return `<tr>
       <td style="color:#94A3B8;font-family:'DM Mono',monospace;font-size:0.72rem;">${i+1}</td>
       <td><div class="user-cell"><div class="user-avatar-cell">${initial}</div><div class="user-cell-name">${u.name||'—'}</div></div></td>
@@ -400,6 +439,43 @@ async function resetDevice(userId){
 }
 
 document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+document.getElementById('pageModal').addEventListener('click',function(e){ if(e.target===this) closePageModal(); });
+
+function openPageAccess(userId, userName, currentPages){
+  document.getElementById('pageModalUserId').value = userId;
+  document.getElementById('pageModalUserName').textContent = 'User: ' + userName;
+  document.getElementById('pageDs').checked = currentPages.includes('datasearch');
+  document.getElementById('pageSod').checked = currentPages.includes('sod');
+  document.getElementById('pageEod').checked = currentPages.includes('eod');
+  document.getElementById('pageModal').classList.add('show');
+}
+
+function closePageModal(){
+  document.getElementById('pageModal').classList.remove('show');
+}
+
+async function savePageAccess(){
+  const userId = document.getElementById('pageModalUserId').value;
+  const pages = [];
+  if(document.getElementById('pageDs').checked) pages.push('datasearch');
+  if(document.getElementById('pageSod').checked) pages.push('sod');
+  if(document.getElementById('pageEod').checked) pages.push('eod');
+  if(pages.length === 0){ alert('At least one page must be selected!'); return; }
+  const res = await fetch(`/api/admin/users/${userId}/pages`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','authorization':token},
+    body: JSON.stringify({ pages })
+  });
+  const data = await res.json();
+  if(data.success){
+    closePageModal();
+    loadUsers();
+    alert(`Page access updated!\n\nUser now has access to:\n${pages.map(p=>'• '+p.toUpperCase()).join('\n')}\n\nUser will see changes on next login.`);
+  } else {
+    alert('Failed to update page access');
+  }
+}
+
 loadUsers();
 </script>
 </body>

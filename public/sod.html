@@ -482,8 +482,14 @@ nav{
 <script>
 (function(){
   const t=localStorage.getItem('ds_token');
-  if(!t){document.documentElement.style.visibility='hidden';window.location.replace('/login.html');}
-  else document.documentElement.style.visibility='visible';
+  if(!t){document.documentElement.style.visibility='hidden';window.location.replace('/login.html');return;}
+  const u=JSON.parse(localStorage.getItem('ds_user')||'{}');
+  if(u.role!=='admin' && u.pages && !u.pages.includes('sod')){
+    document.documentElement.style.visibility='hidden';
+    window.location.replace('/no-access.html');
+    return;
+  }
+  document.documentElement.style.visibility='visible';
 })();
 
 async function checkDeviceStatus(){
@@ -585,6 +591,18 @@ document.getElementById('uName').textContent=u.name||'User';
 document.getElementById('uDesig').textContent=u.designation||u.role||'';
 document.getElementById('mName').textContent=u.name||'User';
 document.getElementById('mDesig').textContent=u.designation||'';
+
+function updateNavAccess(){
+  const user = JSON.parse(localStorage.getItem('ds_user')||'{}');
+  const pages = user.role==='admin' ? ['datasearch','sod','eod'] : (user.pages || ['datasearch','sod','eod']);
+  document.querySelectorAll('.nav-pill').forEach(tab => {
+    const href = tab.getAttribute('href')||'';
+    if(href.includes('sod') && !pages.includes('sod')) tab.style.display='none';
+    if(href.includes('eod') && !pages.includes('eod')) tab.style.display='none';
+    if(href.includes('index') && !pages.includes('datasearch')) tab.style.display='none';
+  });
+}
+updateNavAccess();
 
 function toggleMenu(){const m=document.getElementById('uMenu');m.classList.toggle('show');}
 document.addEventListener('click',function(e){const p=document.querySelector('.nav-user');const m=document.getElementById('uMenu');if(p&&!p.contains(e.target)&&m)m.classList.remove('show');});

@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
   deviceCode: String,
   registeredDeviceToken: String,
   deviceRegistered: Boolean,
-  tokenVersion: Number
+  tokenVersion: Number,
+  pages: { type: [String], default: ['datasearch','sod','eod'] }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
@@ -54,7 +55,7 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.log('MongoDB error:', err));
 
 function createToken(user) {
-  const payload = JSON.stringify({ id: user._id, username: user.username, role: user.role, name: user.name, designation: user.designation, ts: Date.now() });
+  const payload = JSON.stringify({ id: user._id, username: user.username, role: user.role, name: user.name, designation: user.designation, pages: user.role === 'admin' ? ['datasearch','sod','eod'] : (user.pages || ['datasearch','sod','eod']), ts: Date.now() });
   const encoded = Buffer.from(payload).toString('base64');
   const sig = crypto.createHmac('sha256', SECRET).update(encoded).digest('hex');
   return `${encoded}.${sig}`;
@@ -113,7 +114,8 @@ app.post('/api/login', async (req, res) => {
   // Admin bypass - no device restriction
   if(user.role === 'admin'){
     const token = createToken(user);
-    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
+    const userPages = user.role === 'admin' ? ['datasearch','sod','eod'] : (user.pages || ['datasearch','sod','eod']);
+    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username, pages: userPages } });
   }
 
   // Check if device already registered
@@ -122,7 +124,8 @@ app.post('/api/login', async (req, res) => {
       return res.status(403).json({ error: 'DEVICE_NOT_AUTHORIZED', message: 'This device is not authorized. Please use your registered device.' });
     }
     const token = createToken(user);
-    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username } });
+    const userPages = user.role === 'admin' ? ['datasearch','sod','eod'] : (user.pages || ['datasearch','sod','eod']);
+    return res.json({ token, user: { name: user.name, role: user.role, designation: user.designation, username: user.username, pages: userPages } });
   }
 
   // First time - device not registered yet
@@ -142,17 +145,42 @@ app.post('/api/login', async (req, res) => {
   });
 
   const token = createToken(user);
+  const userPages = user.role === 'admin' ? ['datasearch','sod','eod'] : (user.pages || ['datasearch','sod','eod']);
   return res.json({
     token,
     deviceToken: newDeviceToken,
-    user: { name: user.name, role: user.role, designation: user.designation, username: user.username }
+    user: { name: user.name, role: user.role, designation: user.designation, username: user.username, pages: userPages }
   });
 });
 
 app.post('/api/logout', (req, res) => res.json({ success: true }));
 
+function requirePage(page){
+  return async (req, res, next) => {
+    if(req.user.role === 'admin') return next();
+    const userPages = req.user.pages || ['datasearch','sod','eod'];
+    if(!userPages.includes(page)){
+      return res.status(403).json({ error: 'ACCESS_DENIED', message: 'You do not have access to this page.' });
+    }
+    next();
+  };
+}
+
 app.get('/api/me', requireAuth, (req, res) => {
-  res.json({ user: { name: req.user.name, role: req.user.role, username: req.user.username } });
+  const pages = req.user.role === 'admin' ? ['datasearch','sod','eod'] : (req.user.pages || ['datasearch','sod','eod']);
+  res.json({ user: { name: req.user.name, role: req.user.role, designation: req.user.designation, username: req.user.username, pages } });
+});
+
+app.post('/api/admin/users/:id/pages', requireAdmin, async (req, res) => {
+  try{
+    const { pages } = req.body;
+    const validPages = ['datasearch','sod','eod'];
+    const filtered = (pages||[]).filter(p => validPages.includes(p));
+    await User.findByIdAndUpdate(req.params.id, { pages: filtered });
+    res.json({ success: true, pages: filtered });
+  }catch(e){
+    res.status(500).json({ error: 'Failed to update pages' });
+  }
 });
 
 app.post('/api/admin/users/:id/device-code', requireAdmin, async (req, res) => {
