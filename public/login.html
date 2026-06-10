@@ -1,185 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DataSearch — Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Massive Dynamics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{ box-sizing:border-box; margin:0; padding:0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{
-  background:#0A0E1A; color:#eaf0fb;
-  font-family:'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  min-height:100vh; display:flex; align-items:center; justify-content:center;
-  -webkit-font-smoothing:antialiased;
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  background:#040d1a;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
 }
-.card{
-  background:#1A2035; border:1px solid rgba(255,255,255,.07);
-  border-radius:18px; padding:40px 36px; width:min(420px, 92vw);
-  box-shadow:0 24px 60px -28px rgba(0,0,0,.9);
+body::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 40%,rgba(37,99,235,0.35) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 45% at 85% 35%,rgba(220,38,38,0.3) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 90%,rgba(251,191,36,0.08) 0%,transparent 60%);
+  pointer-events:none;
 }
-.logo{
-  display:flex; align-items:center; gap:10px; margin-bottom:32px; justify-content:center;
+.grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;
 }
-.logo-mark{
-  width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
-  background:linear-gradient(150deg, rgba(0,212,255,.22), rgba(255,215,0,.12));
-  border:1px solid rgba(0,212,255,.4);
-  box-shadow:0 0 22px rgba(0,212,255,.25);
-  font-size:18px;
+
+/* LEFT PANEL */
+.left-panel{
+  display:none;
+  width:480px;min-height:100vh;
+  background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 40%,#DC2626 100%);
+  padding:60px 48px;
+  flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
 }
-.logo-name{ font-size:14px; letter-spacing:.32em; text-transform:uppercase; }
-.logo-name b{ color:#00D4FF; }
-h1{ font-size:22px; font-weight:600; margin-bottom:8px; text-align:center; }
-.sub{ color:#aab4cc; font-size:13px; text-align:center; margin-bottom:28px; }
-label{ display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#6b7693; margin-bottom:6px; }
-input{
-  width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
-  border-radius:10px; padding:12px 14px; color:#eaf0fb; font-family:inherit; font-size:14px;
-  outline:none; transition:.2s; margin-bottom:18px;
+.left-panel::before{
+  content:'';position:absolute;
+  top:-100px;right:-100px;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 70%);
+  border-radius:50%;
 }
-input:focus{ border-color:rgba(0,212,255,.5); box-shadow:0 0 0 3px rgba(0,212,255,.1); }
-button{
-  width:100%; padding:14px; border:0; border-radius:12px; cursor:pointer;
-  background:linear-gradient(135deg, #00D4FF, #6fe6ff); color:#04121a;
-  font-family:inherit; font-weight:500; font-size:14px; letter-spacing:.06em;
-  box-shadow:0 8px 26px -8px rgba(0,212,255,.7);
-  transition:transform .18s, filter .18s;
+.left-panel::after{
+  content:'';position:absolute;
+  bottom:-80px;left:-80px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(251,191,36,0.1),transparent 70%);
+  border-radius:50%;
 }
-button:hover{ transform:translateY(-1px); filter:brightness(1.06); }
-button:disabled{ opacity:.55; cursor:wait; }
-.err{ color:#ff9a8a; font-size:12.5px; text-align:center; margin-top:14px; min-height:18px; }
+@media(min-width:900px){
+  .left-panel{display:flex;}
+  .right-panel{min-height:100vh;}
+}
+.brand-top{position:relative;z-index:1;}
+.brand-logo{
+  width:56px;height:56px;
+  background:rgba(255,255,255,0.15);
+  border:2px solid rgba(255,255,255,0.3);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:900;color:#fff;
+  margin-bottom:20px;
+  backdrop-filter:blur(10px);
+}
+.brand-name{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:800;color:#fff;line-height:1.1;}
+.brand-name span{color:#FBBF24;}
+.brand-tagline{font-size:0.82rem;color:rgba(255,255,255,0.6);margin-top:8px;font-weight:400;}
+
+.features{position:relative;z-index:1;margin-top:48px;}
+.feature{display:flex;align-items:flex-start;gap:14px;margin-bottom:24px;}
+.feature-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+  backdrop-filter:blur(8px);
+}
+.feature-text{}
+.feature-title{font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.feature-desc{font-size:0.72rem;color:rgba(255,255,255,0.55);}
+
+.left-footer{position:relative;z-index:1;}
+.left-footer-text{font-size:0.7rem;color:rgba(255,255,255,0.35);text-align:center;}
+
+/* RIGHT PANEL */
+.right-panel{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:40px 24px;position:relative;z-index:1;
+}
+.login-card{
+  width:100%;max-width:420px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;
+  padding:40px 36px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 32px 80px rgba(0,0,0,0.4);
+}
+.card-header{text-align:center;margin-bottom:32px;}
+.card-logo{
+  width:64px;height:64px;
+  background:linear-gradient(135deg,#2563EB,#DC2626);
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:900;color:#fff;
+  margin:0 auto 16px;
+  box-shadow:0 8px 32px rgba(37,99,235,0.4);
+}
+.card-title{font-family:'Manrope',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.card-sub{font-size:0.75rem;color:rgba(255,255,255,0.4);}
+
+.form-group{margin-bottom:16px;}
+.form-label{font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;display:block;}
+.form-input{
+  width:100%;padding:13px 16px;
+  background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+  font-size:0.9rem;color:#fff;
+  font-family:'Inter',sans-serif;
+  outline:none;transition:all 0.2s;
+}
+.form-input::placeholder{color:rgba(255,255,255,0.25);}
+.form-input:focus{
+  border-color:rgba(37,99,235,0.6);
+  background:rgba(255,255,255,0.1);
+  box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+}
+.form-input.error{border-color:rgba(220,38,38,0.6);box-shadow:0 0 0 3px rgba(220,38,38,0.12);}
+
+.login-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#2563EB,#DC2626);
+  color:#fff;border:none;border-radius:12px;
+  font-size:0.9rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  margin-top:8px;
+  box-shadow:0 4px 20px rgba(37,99,235,0.4);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,0.5);}
+.login-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+.error-box{
+  background:rgba(220,38,38,0.12);
+  border:1px solid rgba(220,38,38,0.3);
+  border-radius:10px;padding:12px 14px;
+  font-size:0.78rem;color:#fca5a5;
+  margin-bottom:16px;display:none;
+  display:flex;align-items:center;gap:8px;
+}
+.error-box.show{display:flex;}
+
+.device-section{
+  margin-top:16px;
+  background:rgba(251,191,36,0.08);
+  border:1.5px solid rgba(251,191,36,0.25);
+  border-radius:14px;padding:18px;
+  display:none;
+}
+.device-section.show{display:block;}
+.device-title{font-size:0.78rem;font-weight:700;color:#FBBF24;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.device-desc{font-size:0.68rem;color:rgba(255,255,255,0.4);margin-bottom:14px;line-height:1.5;}
+.device-input{
+  width:100%;padding:12px 16px;
+  background:rgba(251,191,36,0.08);
+  border:1.5px solid rgba(251,191,36,0.3);
+  border-radius:10px;
+  font-size:1.1rem;color:#FBBF24;
+  font-family:'DM Mono',monospace;
+  letter-spacing:0.15em;text-align:center;
+  outline:none;text-transform:uppercase;
+  margin-bottom:12px;transition:all 0.2s;
+}
+.device-input:focus{border-color:rgba(251,191,36,0.6);box-shadow:0 0 0 3px rgba(251,191,36,0.1);}
+.device-btn{
+  width:100%;padding:11px;
+  background:linear-gradient(135deg,#FBBF24,#F59E0B);
+  color:#000;border:none;border-radius:10px;
+  font-size:0.82rem;font-weight:700;cursor:pointer;
+  transition:all 0.2s;
+}
+.device-btn:hover{transform:translateY(-1px);}
+
+.card-footer{text-align:center;margin-top:24px;font-size:0.68rem;color:rgba(255,255,255,0.2);}
+
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+.shake{animation:shake 0.4s ease;}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">
-    <div class="logo-mark">◎</div>
-    <div class="logo-name">Data<b>Search</b></div>
+<div class="grid"></div>
+
+<div style="display:flex;width:100%;min-height:100vh;">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="brand-top">
+      <div class="brand-logo">M</div>
+      <div class="brand-name">Massive <span>Dynamics</span></div>
+      <div class="brand-tagline">Enterprise CRM Intelligence Platform</div>
+
+      <div class="features" style="margin-top:40px;">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">
+            <div class="feature-title">DataSearch</div>
+            <div class="feature-desc">Instant lead history lookup by email or phone</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">☀️</div>
+          <div class="feature-text">
+            <div class="feature-title">Start of Day Report</div>
+            <div class="feature-desc">Live department intelligence dashboard</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🌙</div>
+          <div class="feature-text">
+            <div class="feature-title">End of Day Report</div>
+            <div class="feature-desc">Team performance & closing analytics</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔐</div>
+          <div class="feature-text">
+            <div class="feature-title">Device Authentication</div>
+            <div class="feature-desc">Secure device-locked access control</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-footer">
+      <div class="left-footer-text">© 2026 Massive Dynamics. All rights reserved.</div>
+    </div>
   </div>
-  <h1>Sign in</h1>
-  <p class="sub">Enter your credentials to continue</p>
-  <form id="loginForm" onsubmit="return false;">
-    <label for="username">Username</label>
-    <input id="username" type="text" autocomplete="username" required />
-    <label for="password">Password</label>
-    <input id="password" type="password" autocomplete="current-password" required />
-    <button id="loginBtn" type="button" onclick="doLogin()">Sign in</button>
-    <div class="err" id="errMsg"></div>
-  </form>
-</div>
-<script>
-  if (localStorage.getItem('ds_token')) window.location.replace('/');
 
-  function showError(msg){
-    const errMsg = document.getElementById('errMsg');
-    errMsg.textContent = msg;
-  }
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="login-card">
+      <div class="card-header">
+        <div class="card-logo">M</div>
+        <div class="card-title">Welcome Back</div>
+        <div class="card-sub">Sign in to Massive Dynamics CRM</div>
+      </div>
 
-  function showDeviceCodeForm(username, password){
-    const container = document.querySelector('.card');
-    const existing = document.getElementById('deviceCodeSection');
-    if(existing) existing.remove();
+      <div class="error-box" id="errorBox">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span id="errorMsg"></span>
+      </div>
 
-    const div = document.createElement('div');
-    div.id = 'deviceCodeSection';
-    div.style.cssText = 'margin-top:16px;padding:16px;background:rgba(251,191,36,0.1);border:1.5px solid #FBBF24;border-radius:12px;';
-    div.innerHTML = `
-      <div style="font-size:0.78rem;font-weight:700;color:#FBBF24;margin-bottom:8px;">🔐 First Time Device Registration</div>
-      <div style="font-size:0.7rem;color:#aab4cc;margin-bottom:12px;">Enter the device code provided by your admin to register this device.</div>
-      <input id="deviceCodeInput" type="text" placeholder="XXXX-XXXX" maxlength="9"
-        style="width:100%;padding:10px 14px;border:1.5px solid #FBBF24;border-radius:8px;font-size:1rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;outline:none;background:rgba(251,191,36,0.06);color:#eaf0fb;text-align:center;margin-bottom:10px;">
-      <button onclick="submitDeviceCode('${username}','${password}')"
-        style="width:100%;padding:10px;background:linear-gradient(135deg,#2563EB,#DC2626);color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;">
-        Register This Device
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" id="username" class="form-input" placeholder="Enter your username" autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+        Sign In
       </button>
-    `;
-    container.appendChild(div);
 
-    const input = document.getElementById('deviceCodeInput');
-    input.focus();
-    input.addEventListener('input', function(){
-      let val = this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
-      if(val.length > 4) val = val.slice(0,4) + '-' + val.slice(4,8);
-      this.value = val;
+      <!-- DEVICE CODE SECTION -->
+      <div class="device-section" id="deviceSection">
+        <div class="device-title">🔐 Device Registration Required</div>
+        <div class="device-desc">This is your first login on this device. Enter the device code provided by your administrator to register this device.</div>
+        <input type="text" id="deviceCodeInput" class="device-input" placeholder="XXXX-XXXX" maxlength="9">
+        <button class="device-btn" onclick="submitDeviceCode()">Register This Device →</button>
+      </div>
+
+      <div class="card-footer">
+        Massive Dynamics CRM · Secure Access Portal
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let pendingUsername = '';
+let pendingPassword = '';
+
+function showError(msg){
+  const box = document.getElementById('errorBox');
+  document.getElementById('errorMsg').textContent = msg;
+  box.classList.add('show');
+  document.querySelector('.login-card').classList.add('shake');
+  setTimeout(()=>document.querySelector('.login-card').classList.remove('shake'),400);
+}
+
+function hideError(){
+  document.getElementById('errorBox').classList.remove('show');
+}
+
+document.getElementById('username').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('password').focus(); });
+document.getElementById('password').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+document.getElementById('deviceCodeInput').addEventListener('input', function(){
+  let val = this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+  if(val.length > 4) val = val.slice(0,4)+'-'+val.slice(4,8);
+  this.value = val;
+});
+document.getElementById('deviceCodeInput').addEventListener('keydown', e=>{ if(e.key==='Enter') submitDeviceCode(); });
+
+async function doLogin(){
+  hideError();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if(!username || !password){ showError('Please enter username and password'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg> Signing in...';
+
+  try{
+    const deviceToken = localStorage.getItem('ds_device_token');
+    const body = { username, password };
+    if(deviceToken) body.deviceToken = deviceToken;
+
+    const res = await fetch('/api/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
     });
-  }
+    const data = await res.json();
 
-  async function submitDeviceCode(username, password){
-    const deviceCode = document.getElementById('deviceCodeInput').value.trim();
-    if(!deviceCode || deviceCode.length < 9){
-      showError('Please enter complete device code (XXXX-XXXX)');
+    if(!res.ok){
+      if(data.error === 'DEVICE_NOT_AUTHORIZED'){
+        showError('This device is not authorized. Please use your registered device.');
+      } else if(data.error === 'DEVICE_CODE_REQUIRED'){
+        pendingUsername = username;
+        pendingPassword = password;
+        document.getElementById('deviceSection').classList.add('show');
+        document.getElementById('deviceCodeInput').focus();
+        hideError();
+      } else if(data.error === 'INVALID_DEVICE_CODE'){
+        showError('Invalid device code. Please contact your administrator.');
+      } else {
+        showError(data.error || 'Invalid username or password');
+      }
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg> Sign In';
       return;
     }
-    try{
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, deviceCode })
-      });
-      const data = await res.json();
-      if(!res.ok){
-        showError(data.message || 'Invalid device code');
-        return;
-      }
-      if(data.deviceToken){
-        localStorage.setItem('ds_device_token', data.deviceToken);
-      }
-      localStorage.setItem('ds_token', data.token);
-      localStorage.setItem('ds_user', JSON.stringify(data.user || {}));
-      window.location.href = '/';
-    }catch(e){
-      showError('Connection error. Please try again.');
-    }
-  }
 
-  async function doLogin() {
-    const btn = document.getElementById('loginBtn');
-    const errMsg = document.getElementById('errMsg');
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    btn.disabled = true;
-    errMsg.textContent = '';
-    try {
-      const deviceToken = localStorage.getItem('ds_device_token');
-      const body = { username, password };
-      if(deviceToken) body.deviceToken = deviceToken;
+    if(data.deviceToken) localStorage.setItem('ds_device_token', data.deviceToken);
+    localStorage.setItem('ds_token', data.token);
+    localStorage.setItem('ds_user', JSON.stringify(data.user));
+    window.location.replace('/index.html');
 
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await response.json();
-      if(!response.ok){
-        if(data.error === 'DEVICE_NOT_AUTHORIZED'){
-          showError('This device is not authorized. Use your registered device.');
-          btn.disabled = false; return;
-        }
-        if(data.error === 'DEVICE_CODE_REQUIRED'){
-          btn.disabled = false;
-          showDeviceCodeForm(username, password);
-          return;
-        }
-        if(data.error === 'INVALID_DEVICE_CODE'){
-          showError('Invalid device code. Please contact admin.');
-          btn.disabled = false; return;
-        }
-        showError(data.error || data.message || 'Invalid credentials.');
-        btn.disabled = false; return;
-      }
-      if(data.deviceToken){
-        localStorage.setItem('ds_device_token', data.deviceToken);
-      }
-      localStorage.removeItem('ds_token');
-      localStorage.removeItem('ds_user');
-      localStorage.setItem('ds_token', data.token);
-      localStorage.setItem('ds_user', JSON.stringify(data.user || {}));
-      window.location.href = '/';
-    } catch (err) {
-      errMsg.textContent = 'Could not reach server. Try again.';
-      btn.disabled = false;
-    }
+  }catch(e){
+    showError('Connection error. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg> Sign In';
   }
+}
+
+async function submitDeviceCode(){
+  const deviceCode = document.getElementById('deviceCodeInput').value.trim();
+  if(!deviceCode || deviceCode.replace('-','').length < 8){
+    showError('Please enter complete device code (XXXX-XXXX)');
+    return;
+  }
+  try{
+    const res = await fetch('/api/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ username: pendingUsername, password: pendingPassword, deviceCode })
+    });
+    const data = await res.json();
+    if(!res.ok){
+      showError(data.message || 'Invalid device code. Contact admin.');
+      return;
+    }
+    if(data.deviceToken) localStorage.setItem('ds_device_token', data.deviceToken);
+    localStorage.setItem('ds_token', data.token);
+    localStorage.setItem('ds_user', JSON.stringify(data.user));
+    window.location.replace('/index.html');
+  }catch(e){
+    showError('Connection error. Please try again.');
+  }
+}
 </script>
 </body>
 </html>
