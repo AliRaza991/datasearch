@@ -236,11 +236,11 @@ async function generateDeviceCode(userId){
 }
 
 async function resetDevice(userId){
-  if(!confirm('Reset this user device? They will need a new device code to login again.')) return;
+  if(!confirm('Reset this user device? They will be logged out immediately and will need a new device code.')) return;
   const res = await api(`/api/admin/users/${userId}/reset-device`, { method:'POST' });
   const data = await res.json();
   if(data.success){
-    alert('Device reset! Generate a new device code for this user.');
+    alert(`Device Reset Successful!\n\nNew Device Code:\n${data.deviceCode}\n\nUser has been logged out. Share this new code with them.`);
     load();
   }
 }

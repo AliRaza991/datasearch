@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
   active: { type: Boolean, default: true },
   deviceCode: String,
   registeredDeviceToken: String,
-  deviceRegistered: Boolean
+  deviceRegistered: Boolean,
+  tokenVersion: Number
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
@@ -78,6 +79,10 @@ async function requireAuth(req, res, next) {
   try {
     const user = await User.findById(payload.id);
     if (!user || !user.active) return res.status(401).json({ error: 'Unauthorized' });
+    // Check if device was reset after token was issued
+    if(user.tokenVersion && payload.ts && user.tokenVersion > payload.ts){
+      return res.status(401).json({ error: 'DEVICE_RESET', message: 'Your device has been reset. Please login again.' });
+    }
     req.user = user;
     next();
   } catch(e) {
@@ -166,12 +171,14 @@ app.post('/api/admin/users/:id/device-code', requireAdmin, async (req, res) => {
 
 app.post('/api/admin/users/:id/reset-device', requireAdmin, async (req, res) => {
   try{
+    const newCode = generateDeviceCode();
     await User.findByIdAndUpdate(req.params.id, {
       deviceRegistered: false,
       registeredDeviceToken: null,
-      deviceCode: generateDeviceCode()
+      deviceCode: newCode,
+      tokenVersion: Date.now()
     });
-    res.json({ success: true, message: 'Device reset successfully' });
+    res.json({ success: true, message: 'Device reset successfully', deviceCode: newCode });
   }catch(e){
     res.status(500).json({ error: 'Failed to reset device' });
   }

@@ -569,6 +569,24 @@ html{scroll-behavior:smooth;}
   else document.documentElement.style.visibility='visible';
 })();
 
+async function checkDeviceStatus(){
+  const t = localStorage.getItem('ds_token');
+  if(!t) return;
+  const res = await fetch('/api/me', { headers: { 'authorization': t } });
+  if(res.status === 401){
+    const data = await res.json();
+    if(data.error === 'DEVICE_RESET'){
+      localStorage.removeItem('ds_token');
+      localStorage.removeItem('ds_user');
+      localStorage.removeItem('ds_device_token');
+      alert('Your device has been reset by admin. Please login again with new device code.');
+      window.location.replace('/login.html');
+    }
+  }
+}
+setInterval(checkDeviceStatus, 30000);
+checkDeviceStatus();
+
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec?sheet=Client_History';
 
 // User setup
