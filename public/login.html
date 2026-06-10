@@ -356,7 +356,12 @@ async function doLogin(){
     if(data.deviceToken) localStorage.setItem('ds_device_token', data.deviceToken);
     localStorage.setItem('ds_token', data.token);
     localStorage.setItem('ds_user', JSON.stringify(data.user));
-    window.location.replace('/index.html');
+    // Redirect to first allowed page
+    const pages = data.user.pages || ['datasearch','sod','eod'];
+    if(pages.includes('datasearch')) window.location.replace('/index.html');
+    else if(pages.includes('sod')) window.location.replace('/sod.html');
+    else if(pages.includes('eod')) window.location.replace('/eod.html');
+    else window.location.replace('/no-access.html');
 
   }catch(e){
     showError('Connection error. Please try again.');
@@ -385,7 +390,12 @@ async function submitDeviceCode(){
     if(data.deviceToken) localStorage.setItem('ds_device_token', data.deviceToken);
     localStorage.setItem('ds_token', data.token);
     localStorage.setItem('ds_user', JSON.stringify(data.user));
-    window.location.replace('/index.html');
+    // Redirect to first allowed page
+    const pages = data.user.pages || ['datasearch','sod','eod'];
+    if(pages.includes('datasearch')) window.location.replace('/index.html');
+    else if(pages.includes('sod')) window.location.replace('/sod.html');
+    else if(pages.includes('eod')) window.location.replace('/eod.html');
+    else window.location.replace('/no-access.html');
   }catch(e){
     showError('Connection error. Please try again.');
   }
