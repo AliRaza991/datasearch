@@ -336,7 +336,7 @@ function renderUsers(users){
     const deviceBtns = u.role!=='admin' ? `
       <button type="button" class="action-btn btn-device" onclick="generateDeviceCode('${u._id}')">📱 Code</button>
       <button type="button" class="action-btn btn-reset" onclick="resetDevice('${u._id}')">🔄 Reset</button>
-      <button type="button" class="action-btn" style="background:rgba(124,58,237,0.1);color:#6d28d9;" onclick="openPageAccess('${u._id}','${(u.name||'').replace(/'/g,"\\'")}',${JSON.stringify(u.pages||['datasearch','sod','eod'])})">🗂️ Pages</button>` : '';
+      <button type="button" class="action-btn" style="background:rgba(124,58,237,0.1);color:#6d28d9;" onclick="openPageAccess('${u._id}','${(u.name||'').replace(/'/g,"\\'")}','${(u.pages||['datasearch','sod','eod']).join(',')}')">🗂️ Pages</button>` : '';
     return `<tr>
       <td style="color:#94A3B8;font-family:'DM Mono',monospace;font-size:0.72rem;">${i+1}</td>
       <td><div class="user-cell"><div class="user-avatar-cell">${initial}</div><div class="user-cell-name">${u.name||'—'}</div></div></td>
@@ -441,7 +441,8 @@ async function resetDevice(userId){
 document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
 document.getElementById('pageModal').addEventListener('click',function(e){ if(e.target===this) closePageModal(); });
 
-function openPageAccess(userId, userName, currentPages){
+function openPageAccess(userId, userName, pagesStr){
+  const currentPages = typeof pagesStr === 'string' ? pagesStr.split(',') : pagesStr;
   document.getElementById('pageModalUserId').value = userId;
   document.getElementById('pageModalUserName').textContent = 'User: ' + userName;
   document.getElementById('pageDs').checked = currentPages.includes('datasearch');
