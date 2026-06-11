@@ -1010,6 +1010,8 @@ function renderQualifier(data){
   const q_overall_avg = data[85]?.[2] ?? 0;
   const q_monthly_avg = data[86]?.[2] ?? 0;
   const q_today_avg   = data[87]?.[2] ?? 0;
+  const q_email_avg   = data[88]?.[2] ?? 0;
+  const q_st_avg      = data[89]?.[2] ?? 0;
   const q_cl_total    = data[91]?.[2] ?? 0;
   const q_cl_3months  = data[92]?.[2] ?? 0;
   const q_cl_month    = data[93]?.[2] ?? 0;
@@ -1020,12 +1022,14 @@ function renderQualifier(data){
   const f_overall_avg = data[102]?.[2] ?? 0;
   const f_monthly_avg = data[103]?.[2] ?? 0;
   const f_today_avg   = data[104]?.[2] ?? 0;
+  const f_email_avg   = data[105]?.[2] ?? 0;
+  const f_st_avg      = data[106]?.[2] ?? 0;
   const f_cl_total    = data[108]?.[2] ?? 0;
   const f_cl_3months  = data[109]?.[2] ?? 0;
   const f_cl_month    = data[110]?.[2] ?? 0;
   const f_cl_today    = data[111]?.[2] ?? 0;
 
-  function dCard(name,color,bg,tq,email,st,ov,mn,td,cl_t,cl_3,cl_m,cl_today){
+  function dCard(name,color,bg,tq,email,st,ov,mn,td,email_avg,st_avg,cl_t,cl_3,cl_m,cl_today){
     return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
@@ -1058,6 +1062,7 @@ function renderQualifier(data){
           </div>
           <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
           ${mr('Overall',avg(ov),'blue')} ${mr('Monthly',avg(mn),'blue')} ${mr('Today',avg(td),'blue')}
+          ${mr('Email Avg',avg(email_avg),'cyan')} ${mr('ST Avg',avg(st_avg),'purple')}
         </div>
         <div style="border-right:2px solid #CBD5E1;">
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
@@ -1095,8 +1100,8 @@ function renderQualifier(data){
   }
 
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.55),rgba(124,58,237,0.45))',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.55),rgba(20,184,166,0.45))',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
+    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.55),rgba(124,58,237,0.45))',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_email_avg,q_st_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
+    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.55),rgba(20,184,166,0.45))',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_email_avg,f_st_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
   </div>`;
 }
 
