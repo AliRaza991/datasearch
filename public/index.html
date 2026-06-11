@@ -274,6 +274,8 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .dl-btn.png:hover{background:#2563EB;color:#fff;}
 .dl-btn.jpg{border-color:#DC2626;color:#DC2626;background:#fef2f2;}
 .dl-btn.jpg:hover{background:#DC2626;color:#fff;}
+.dl-btn.csv{border-color:#16A34A;color:#16A34A;background:#f0fdf4;}
+.dl-btn.csv:hover{background:#16A34A;color:#fff;}
 
 .new-search-btn{
   display:flex;align-items:center;gap:6px;
@@ -308,19 +310,13 @@ table{width:100%;border-collapse:collapse;font-size:0.92rem;table-layout:fixed;}
 thead th{
   padding:14px 12px;text-align:center;
   font-size:0.72rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
   word-wrap:break-word;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
   color:#ffffff;
   border-bottom:2px solid #2563EB;
 }
-thead th:first-child{ width:40px !important; padding:14px 6px; }
-  letter-spacing:0.1em;text-transform:uppercase;
-  color:#fff;
-  background:linear-gradient(135deg,#1e3a8a,#1e293b);
-  border-bottom:2px solid #2563EB;
-  white-space:nowrap;
-}
-thead th:first-child{text-align:left;padding-left:20px;}
+thead th:first-child{width:40px !important;padding:14px 6px;}
 tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
 tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
@@ -496,6 +492,10 @@ html{scroll-behavior:smooth;}
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         JPG
       </button>
+      <button class="dl-btn csv" onclick="downloadCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        CSV
+      </button>
     </div>
   </div>
 
@@ -576,19 +576,21 @@ html{scroll-behavior:smooth;}
 })();
 
 async function checkDeviceStatus(){
-  const t = localStorage.getItem('ds_token');
-  if(!t) return;
-  const res = await fetch('/api/me', { headers: { 'authorization': t } });
-  if(res.status === 401){
-    const data = await res.json();
-    if(data.error === 'DEVICE_RESET'){
-      localStorage.removeItem('ds_token');
-      localStorage.removeItem('ds_user');
-      localStorage.removeItem('ds_device_token');
-      alert('Your device has been reset by admin. Please login again with new device code.');
-      window.location.replace('/login.html');
+  try{
+    const t = localStorage.getItem('ds_token');
+    if(!t) return;
+    const res = await fetch('/api/me', { headers: { 'authorization': t } });
+    if(res.status === 401){
+      const data = await res.json();
+      if(data.error === 'DEVICE_RESET'){
+        localStorage.removeItem('ds_token');
+        localStorage.removeItem('ds_user');
+        localStorage.removeItem('ds_device_token');
+        alert('Your device has been reset by admin. Please login again with new device code.');
+        window.location.replace('/login.html');
+      }
     }
-  }
+  }catch(e){ /* offline or server unreachable - skip this check */ }
 }
 setInterval(checkDeviceStatus, 30000);
 checkDeviceStatus();
@@ -635,6 +637,11 @@ function doLogout(){
   window.location.replace('/login.html');
 }
 
+// HTML escape - prevents broken markup / XSS from sheet values & queries
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // Recent searches
 let recentSearches = JSON.parse(localStorage.getItem('md_recent')||'[]');
 function renderRecent(){
@@ -643,9 +650,9 @@ function renderRecent(){
   if(!recentSearches.length){wrap.style.display='none';return;}
   wrap.style.display='flex';
   chips.innerHTML = recentSearches.slice(0,4).map(s=>`
-    <div class="recent-chip" onclick="searchFor('${s}')">
+    <div class="recent-chip" data-q="${esc(s)}" onclick="searchFor(this.dataset.q)">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle></svg>
-      ${maskValue(s)}
+      ${esc(maskValue(s))}
     </div>`).join('');
 }
 function addRecent(q){
@@ -762,11 +769,15 @@ async function getSheetData(forceRefresh = false){
 
 function filterRows(rows, query){
   const q = query.toLowerCase().trim();
+  // Phone mode: digits-only comparison so "+1 (415) 555-0142" matches "4155550142"
+  const qDigits = q.includes('@') ? '' : q.replace(/\D/g,'');
+  const phoneMode = qDigits.length >= 6;
   return rows.filter(row => {
     return Object.values(row).some(val => {
       if(!val || val === '') return false;
       const strVal = String(val).toLowerCase().trim();
       if(strVal.includes(q)) return true;
+      if(phoneMode && strVal.replace(/\D/g,'').includes(qDigits)) return true;
       // Handle // separated values
       if(strVal.includes('//')) {
         return strVal.split('//').some(p => p.trim().includes(q));
@@ -863,8 +874,11 @@ function resetBtnHTML(){
   return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg> Search';
 }
 
+let lastResults = null;
+
 function showResults(rows, headers, query){
   const visibleHeaders = headers.filter(h => h && h.trim() !== '' && !shouldSkip(h));
+  lastResults = { rows, headers: visibleHeaders, query };
 
   document.getElementById('heroSection').style.paddingBottom='0';
   document.getElementById('resultsSection').classList.add('show');
@@ -881,7 +895,7 @@ function showResults(rows, headers, query){
     document.getElementById('resultsBody').innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🔍</div>
-        <div class="empty-text">No records found for "<strong>${query}</strong>"</div>
+        <div class="empty-text">No records found for "<strong>${esc(query)}</strong>"</div>
       </div>`;
     return;
   }
@@ -899,7 +913,7 @@ function showResults(rows, headers, query){
 
   let html = `<table><thead><tr>
     <th style="text-align:center;padding:14px 6px;width:40px;background:linear-gradient(135deg,#0f172a,#1e293b);">#</th>
-    ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${h}</th>`).join('')}
+    ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${esc(h)}</th>`).join('')}
   </tr></thead><tbody>`;
 
   rows.forEach((row, i) => {
@@ -908,7 +922,7 @@ function showResults(rows, headers, query){
       ${visibleHeaders.map(h => {
         const val = row[h]||'';
         const formatted = formatDate(val);
-        return `<td>${formatted||'<span class="zero">—</span>'}</td>`;
+        return `<td>${formatted?esc(formatted):'<span class="zero">—</span>'}</td>`;
       }).join('')}
     </tr>`;
   });
@@ -933,6 +947,32 @@ async function downloadResult(format){
   link.href = canvas.toDataURL(format==='png'?'image/png':'image/jpeg',0.95);
   link.click();
 }
+
+function downloadCSV(){
+  if(!lastResults || !lastResults.rows.length){ alert('No results to export. Run a search first.'); return; }
+  const { rows, headers } = lastResults;
+  const csvCell = s => {
+    const str = String(s==null?'':s);
+    return /[",\n]/.test(str) ? '"' + str.replace(/"/g,'""') + '"' : str;
+  };
+  const lines = [headers.map(csvCell).join(',')];
+  rows.forEach(row => lines.push(headers.map(h => csvCell(formatDate(row[h]||''))).join(',')));
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.download = `datasearch-results-${new Date().toISOString().slice(0,10)}.csv`;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// Press "/" anywhere to jump to the search box
+document.addEventListener('keydown', function(e){
+  if(e.key === '/' && document.activeElement !== inp){
+    e.preventDefault();
+    document.getElementById('heroSection').scrollIntoView({behavior:'smooth'});
+    inp.focus();
+  }
+});
 
 // Prefetch silently on load
 setTimeout(() => {
