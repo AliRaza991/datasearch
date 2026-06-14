@@ -1004,104 +1004,134 @@ function renderMarketing(data){
 }
 
 function renderQualifier(data){
-  const q_today_qual  = data[82]?.[2] ?? 0;
-  const q_email       = data[83]?.[2] ?? 0;
-  const q_st          = data[84]?.[2] ?? 0;
-  const q_overall_avg = data[85]?.[2] ?? 0;
-  const q_monthly_avg = data[86]?.[2] ?? 0;
-  const q_today_avg   = data[87]?.[2] ?? 0;
-  const q_email_avg   = data[88]?.[2] ?? 0;
-  const q_st_avg      = data[89]?.[2] ?? 0;
-  const q_cl_total    = data[91]?.[2] ?? 0;
-  const q_cl_3months  = data[92]?.[2] ?? 0;
-  const q_cl_month    = data[93]?.[2] ?? 0;
-  const q_cl_today    = data[94]?.[2] ?? 0;
-  const f_today_qual  = data[99]?.[2]  ?? 0;
-  const f_email       = data[100]?.[2] ?? 0;
-  const f_st          = data[101]?.[2] ?? 0;
-  const f_overall_avg = data[102]?.[2] ?? 0;
-  const f_monthly_avg = data[103]?.[2] ?? 0;
-  const f_today_avg   = data[104]?.[2] ?? 0;
-  const f_email_avg   = data[105]?.[2] ?? 0;
-  const f_st_avg      = data[106]?.[2] ?? 0;
-  const f_cl_total    = data[108]?.[2] ?? 0;
-  const f_cl_3months  = data[109]?.[2] ?? 0;
-  const f_cl_month    = data[110]?.[2] ?? 0;
-  const f_cl_today    = data[111]?.[2] ?? 0;
+  // Qualifier Department lives in column C (index 2); 4th Floor in column F (index 5).
+  // 6-month totals are in column I (index 8): Qualifier rows I85-I90, 4th Floor rows I93-I98.
+  const qD = {
+    total_qual:  data[84]?.[2] ?? 0,  // C85
+    total_email: data[85]?.[2] ?? 0,  // C86
+    total_st:    data[86]?.[2] ?? 0,  // C87
+    today_qual:  data[87]?.[2] ?? 0,  // C88
+    today_email: data[88]?.[2] ?? 0,  // C89
+    today_st:    data[89]?.[2] ?? 0,  // C90
+    email_avg:   data[90]?.[2] ?? 0,  // C91
+    st_avg:      data[91]?.[2] ?? 0,  // C92
+    overall_avg: data[92]?.[2] ?? 0,  // C93
+    monthly_avg: data[93]?.[2] ?? 0,  // C94
+    today_avg:   data[94]?.[2] ?? 0,  // C95
+    cl_total:    data[98]?.[2] ?? 0,  // C99
+    cl_3months:  data[99]?.[2] ?? 0,  // C100
+    cl_month:    data[100]?.[2] ?? 0, // C101
+    cl_today:    data[101]?.[2] ?? 0, // C102
+    months: [data[84]?.[8], data[85]?.[8], data[86]?.[8], data[87]?.[8], data[88]?.[8], data[89]?.[8]] // I85-I90
+  };
+  const fD = {
+    total_qual:  data[84]?.[5] ?? 0,  // F85
+    total_email: data[85]?.[5] ?? 0,  // F86
+    total_st:    data[86]?.[5] ?? 0,  // F87
+    today_qual:  data[87]?.[5] ?? 0,  // F88
+    today_email: data[88]?.[5] ?? 0,  // F89
+    today_st:    data[89]?.[5] ?? 0,  // F90
+    email_avg:   data[90]?.[5] ?? 0,  // F91
+    st_avg:      data[91]?.[5] ?? 0,  // F92
+    overall_avg: data[92]?.[5] ?? 0,  // F93
+    monthly_avg: data[93]?.[5] ?? 0,  // F94
+    today_avg:   data[94]?.[5] ?? 0,  // F95
+    cl_total:    data[98]?.[5] ?? 0,  // F99
+    cl_3months:  data[99]?.[5] ?? 0,  // F100
+    cl_month:    data[100]?.[5] ?? 0, // F101
+    cl_today:    data[101]?.[5] ?? 0, // F102
+    months: [data[92]?.[8], data[93]?.[8], data[94]?.[8], data[95]?.[8], data[96]?.[8], data[97]?.[8]] // I93-I98
+  };
 
-  function dCard(name,color,bg,tq,email,st,ov,mn,td,email_avg,st_avg,cl_t,cl_3,cl_m,cl_today){
+  const MONTH_LABELS = ['Jan','Feb','Mar','Apr','May','Jun'];
+
+  // Black banner stat box (white text)
+  function bBox(label,val){
+    return `<div style="background:#000000;border:1.5px solid rgba(255,255,255,0.25);border-radius:12px;padding:8px 16px;text-align:center;min-width:78px;">
+      <div style="font-size:0.55rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.65);letter-spacing:0.06em;white-space:nowrap;">${label}</div>
+      <div style="font-size:1.7rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.15;">${val}</div>
+    </div>`;
+  }
+
+  // 6-month vertical comparison bar chart
+  function barChart(months,color){
+    const vals = months.map(m => { const n=parseFloat(m); return isNaN(n)?0:n; });
+    const max = Math.max(...vals, 1);
+    return `
+    <div style="padding:18px 16px 14px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;height:150px;">
+        ${vals.map((val,i)=>{
+          const h = Math.max((val/max)*100, 3);
+          const isMax = val===max && val>0;
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+            <div style="font-size:0.72rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;margin-bottom:6px;">${val}</div>
+            <div title="${MONTH_LABELS[i]} 2026: ${val}" style="width:100%;max-width:34px;height:${h}%;min-height:4px;border-radius:7px 7px 0 0;background:linear-gradient(180deg,${color} 0%,${color}aa 100%);box-shadow:${isMax?`0 4px 14px ${color}66`:'none'};transition:height 0.5s ease;"></div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-top:10px;border-top:1.5px solid #CBD5E1;padding-top:9px;">
+        ${MONTH_LABELS.map(l=>`<div style="flex:1;text-align:center;font-size:0.58rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em;">${l}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  function dCard(name,color,bg,d){
     return `
     <div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">${name.includes('4th')?'🏬':'🎯'}</div>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);width:46px;height:46px;font-size:1.4rem;">${name.includes('4th')?'🏬':'🎯'}</div>
         <div>
-          <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${name}</div>
-          <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Department Performance</div>
+          <div style="font-size:1.85rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${name}</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:500;">Department Performance</div>
         </div>
-        <div style="margin-left:auto;background:#000000;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:8px 18px;text-align:center;">
-          <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.7);letter-spacing:0.08em;">Today Qualified</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.2;">${tq}</div>
+        <div style="margin-left:auto;display:flex;gap:10px;">
+          ${bBox('Total Qualified',d.total_qual)}
+          ${bBox('On Email',d.total_email)}
+          ${bBox('On ST',d.total_st)}
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;">
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1.1fr;gap:0;">
         <div style="border-right:2px solid #CBD5E1;">
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;">Today Breakdown</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1.5px solid #CBD5E1;">
             <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
-              <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Total</div>
-              <div style="font-size:2rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;">${tq}</div>
+              <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Today Qual</div>
+              <div style="font-size:2rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;">${d.today_qual}</div>
             </div>
             <div style="padding:16px 8px;text-align:center;border-right:2px solid #CBD5E1;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">Email</div>
-              <div style="font-size:2rem;font-weight:800;color:#1d4ed8;font-family:'DM Mono',monospace;">${email}</div>
+              <div style="font-size:2rem;font-weight:800;color:#1d4ed8;font-family:'DM Mono',monospace;">${d.today_email}</div>
             </div>
             <div style="padding:16px 8px;text-align:center;">
               <div style="font-size:0.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;">ST</div>
-              <div style="font-size:2rem;font-weight:800;color:#6d28d9;font-family:'DM Mono',monospace;">${st}</div>
+              <div style="font-size:2rem;font-weight:800;color:#6d28d9;font-family:'DM Mono',monospace;">${d.today_st}</div>
             </div>
           </div>
           <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
-          ${mr('Overall',avg(ov),'blue')} ${mr('Monthly',avg(mn),'blue')} ${mr('Today',avg(td),'blue')}
-          ${mr('Email Avg',avg(email_avg),'cyan')} ${mr('ST Avg',avg(st_avg),'purple')}
+          ${mr('Email Avg',avg(d.email_avg),'cyan')}
+          ${mr('ST Avg',avg(d.st_avg),'purple')}
+          ${mr('Overall',avg(d.overall_avg),'blue')}
+          ${mr('Monthly',avg(d.monthly_avg),'blue')}
+          ${mr('Today',avg(d.today_avg),'blue')}
         </div>
         <div style="border-right:2px solid #CBD5E1;">
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
-          ${mr('Total Closed',avg(cl_t),'green')}
-          ${mr('Last 3 Months',avg(cl_3),'blue')}
-          ${mr('Current Month',avg(cl_m),'gold')}
-          ${mr('TODAY Closed',avg(cl_today),'red')}
+          ${mr('Total Closed',avg(d.cl_total),'green')}
+          ${mr('Last 3 Months',avg(d.cl_3months),'blue')}
+          ${mr('Current Month',avg(d.cl_month),'gold')}
+          ${mr('TODAY Closed',avg(d.cl_today),'red')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Summary</div>
-          <div style="padding:16px;">
-            <div style="font-size:0.62rem;color:var(--text3);margin-bottom:8px;font-weight:600;text-transform:uppercase;">Email vs ST</div>
-            <div style="display:flex;gap:3px;align-items:center;margin-bottom:4px;">
-              <div style="flex:${email||1};height:8px;background:#2563EB;border-radius:4px;min-width:4px;opacity:0.8;"></div>
-              <div style="flex:${st||1};height:8px;background:#7C3AED;border-radius:4px;min-width:4px;opacity:0.8;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-              <span style="font-size:0.62rem;color:#2563EB;font-weight:600;">Email ${email}</span>
-              <span style="font-size:0.62rem;color:#7C3AED;font-weight:600;">ST ${st}</span>
-            </div>
-            <div style="border-top:1.5px solid #CBD5E1;padding-top:12px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
-                <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Monthly Avg</span>
-                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${avg(mn)}</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;background:#F8FAFC;padding:8px 10px;border-radius:10px;">
-                <span style="font-size:0.72rem;color:var(--text2);font-weight:500;">Today</span>
-                <span style="font-size:0.95rem;font-weight:700;color:${color};font-family:'DM Mono',monospace;">${avg(tq)}</span>
-              </div>
-            </div>
-          </div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;display:flex;align-items:center;gap:6px;">📊 Last 6 Months — Total Leads</div>
+          ${barChart(d.months,color)}
         </div>
       </div>
     </div>`;
   }
 
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.55),rgba(124,58,237,0.45))',q_today_qual,q_email,q_st,q_overall_avg,q_monthly_avg,q_today_avg,q_email_avg,q_st_avg,q_cl_total,q_cl_3months,q_cl_month,q_cl_today)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.55),rgba(20,184,166,0.45))',f_today_qual,f_email,f_st,f_overall_avg,f_monthly_avg,f_today_avg,f_email_avg,f_st_avg,f_cl_total,f_cl_3months,f_cl_month,f_cl_today)}
+    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD)}
+    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD)}
   </div>`;
 }
 
