@@ -933,6 +933,14 @@ function renderMarketing(data){
      t_recv:tt_t_recv,t_qual:tt_t_qual,t_closed:tt_t_closed,budget:tt_budget,budget_label:'TikTok Budget'},
   ];
 
+  // Format a budget value as currency ($1,234) — keeps "—" for empty cells
+  function money(val){
+    if(val===0||val===''||val===null||val===undefined) return '—';
+    const n = parseFloat(String(val).replace(/[$,\s]/g,''));
+    if(isNaN(n)) return val;
+    return '$' + n.toLocaleString('en-US',{maximumFractionDigits:2});
+  }
+
   // Black banner stat box (white text)
   function pBox(label,val){
     return `<div style="background:#000000;border:1.5px solid rgba(255,255,255,0.25);border-radius:12px;padding:8px 16px;text-align:center;min-width:84px;">
@@ -951,7 +959,7 @@ function renderMarketing(data){
           ${pBox('Total Received',p.t_recv)}
           ${pBox('Total Qualified',p.t_qual)}
           ${pBox('Total Closed',p.t_closed)}
-          ${pBox(p.budget_label,p.budget)}
+          ${pBox(p.budget_label,money(p.budget))}
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1.1fr 1fr 1.2fr 1.2fr;gap:0;">
