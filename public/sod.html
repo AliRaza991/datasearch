@@ -1172,7 +1172,7 @@ function renderRevived(data){
   const khurram_closed = data[159]?.[8] ?? 0;  // I160
   const khurram_avg    = data[159]?.[9] ?? 0;  // J160
   const maheen_members=[data[133],data[134],data[135],data[136],data[137],data[138],data[139],data[140]].filter(r=>r?.[1]&&r[1]!=='');
-  const khurram_members=[data[146],data[147],data[148],data[149],data[150],data[151],data[152]].filter(r=>r?.[1]&&r[1]!=='');
+  const khurram_members=[data[146],data[147],data[148],data[149],data[150],data[151],data[152],data[153]].filter(r=>r?.[1]&&r[1]!=='');
 
   // Black banner stat box (white text)
   function rBox(label,val){
@@ -1204,7 +1204,8 @@ function renderRevived(data){
             <th style="color:#DC2626;">Duplicate</th>
             <th style="color:#D97706;">Existing</th>
             <th style="color:#16A34A;">Email</th>
-            <th style="color:#7C3AED;">RC</th>
+            <th style="color:#7C3AED;">ST</th>
+            <th style="color:#15803D;">WhatsApp</th>
             <th style="color:#2563EB;">Total Revived</th>
             <th style="color:#D97706;">Total Closed</th>
           </tr>
@@ -1218,8 +1219,9 @@ function renderRevived(data){
             <td style="color:#D97706;font-weight:600;">${r[4]||''}</td>
             <td style="color:#16A34A;font-weight:600;">${r[5]||''}</td>
             <td style="color:#7C3AED;font-weight:600;">${r[6]||''}</td>
-            <td style="color:#2563EB;font-weight:700;font-size:0.95rem;">${r[7]||''}</td>
-            <td style="color:#D97706;font-weight:700;font-size:0.95rem;">${r[8]||''}</td>
+            <td style="color:#15803D;font-weight:600;">${r[7]||''}</td>
+            <td style="color:#2563EB;font-weight:700;font-size:0.95rem;">${r[8]||''}</td>
+            <td style="color:#D97706;font-weight:700;font-size:0.95rem;">${r[9]||''}</td>
           </tr>`).join('')}
         </tbody>
       </table>
@@ -1289,31 +1291,31 @@ function renderRevived(data){
 }
 
 function renderClosed(data){
-  const cl_today    = data[97]?.[7] ?? 0;   // H98
-  const cl_email    = data[98]?.[7] ?? 0;   // H99
-  const cl_st       = data[99]?.[7] ?? 0;   // H100
-  const cl_whatsapp = data[100]?.[7] ?? 0;  // H101
-  const cl_avg_overall = data[176]?.[2] ?? 0;
-  const cl_avg_month   = data[177]?.[2] ?? 0;
-  const cl_avg_today   = data[178]?.[2] ?? 0;
-  const cl_email_cm    = data[177]?.[3] ?? 0;  // Current Month breakdown
-  const cl_st_cm       = data[177]?.[4] ?? 0;
-  const cl_wa_cm       = data[177]?.[5] ?? 0;
-  const cl_uniq_cm     = data[177]?.[6] ?? 0;
-  const cl_rev_cm      = data[177]?.[7] ?? 0;
-  const mg_today    = data[97]?.[11] ?? 0;  // L98
-  const mg_email    = data[98]?.[11] ?? 0;  // L99
-  const mg_st       = data[99]?.[11] ?? 0;  // L100
-  const mg_whatsapp = data[100]?.[11] ?? 0; // L101
-  const mg_avg_overall = data[190]?.[2] ?? 0;
-  const mg_avg_month   = data[191]?.[2] ?? 0;
-  const mg_avg_today   = data[192]?.[2] ?? 0;
-  const mg_email_cm    = data[191]?.[3] ?? 0;  // Current Month breakdown
-  const mg_st_cm       = data[191]?.[4] ?? 0;
-  const mg_wa_cm       = data[191]?.[5] ?? 0;
-  const mg_uniq_cm     = data[191]?.[6] ?? 0;
-  const mg_rev_cm      = data[191]?.[7] ?? 0;
-  const maheen_cl = [data[199],data[200],data[201],data[202],data[203],data[204],data[205]].filter(r=>r?.[1]&&r[1]!=='');
+  const cl_today    = data[169]?.[2] ?? 0;  // C170 CLOSED TODAY
+  const cl_email    = data[170]?.[2] ?? 0;  // C171 Closed on Email
+  const cl_st       = data[171]?.[2] ?? 0;  // C172 Closed on ST
+  const cl_whatsapp = data[172]?.[2] ?? 0;  // C173 Closed on Whatsapp
+  const cl_avg_overall = data[176]?.[2] ?? 0;  // C177 OVERALL Avg
+  const cl_avg_month   = data[178]?.[2] ?? 0;  // C179 Current Month Avg
+  const cl_avg_today   = data[179]?.[2] ?? 0;  // C180 TODAY Avg
+  const cl_email_cm    = data[178]?.[3] ?? 0;  // Current Month breakdown (row 179: D-H)
+  const cl_st_cm       = data[178]?.[4] ?? 0;
+  const cl_wa_cm       = data[178]?.[5] ?? 0;
+  const cl_uniq_cm     = data[178]?.[6] ?? 0;
+  const cl_rev_cm      = data[178]?.[7] ?? 0;
+  const mg_today    = data[183]?.[2] ?? 0;  // C184 CLOSED TODAY
+  const mg_email    = data[184]?.[2] ?? 0;  // C185 Closed on Email
+  const mg_st       = data[185]?.[2] ?? 0;  // C186 Closed on ST
+  const mg_whatsapp = data[186]?.[2] ?? 0;  // C187 Closed on Whatsapp
+  const mg_avg_overall = data[190]?.[2] ?? 0;  // C191 OVERALL Avg
+  const mg_avg_month   = data[192]?.[2] ?? 0;  // C193 Current Month Avg
+  const mg_avg_today   = data[193]?.[2] ?? 0;  // C194 TODAY Avg
+  const mg_email_cm    = data[192]?.[3] ?? 0;  // Current Month breakdown (row 193: D-H)
+  const mg_st_cm       = data[192]?.[4] ?? 0;
+  const mg_wa_cm       = data[192]?.[5] ?? 0;
+  const mg_uniq_cm     = data[192]?.[6] ?? 0;
+  const mg_rev_cm      = data[192]?.[7] ?? 0;
+  const maheen_cl = [data[198],data[199],data[200],data[201],data[202],data[203],data[204]].filter(r=>r?.[1]&&r[1]!=='');
   const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219]].filter(r=>r?.[1]&&r[1]!=='');
 
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
