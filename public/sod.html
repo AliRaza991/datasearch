@@ -1155,9 +1155,10 @@ function renderQualifier(data){
 }
 
 function renderRevived(data){
-  const rv_today       = data[121]?.[2] ?? 0;  // C122
-  const rv_email       = data[122]?.[2] ?? 0;  // C123
-  const rv_st          = data[123]?.[2] ?? 0;  // C124
+  const rv_today       = data[120]?.[2] ?? 0;  // C121
+  const rv_email       = data[121]?.[2] ?? 0;  // C122
+  const rv_st          = data[122]?.[2] ?? 0;  // C123
+  const rv_whatsapp    = data[123]?.[2] ?? 0;  // C124
   const rv_duplicate   = data[124]?.[2] ?? 0;  // C125
   const rv_existing    = data[125]?.[2] ?? 0;  // C126
   const rv_overall_avg = data[126]?.[2] ?? 0;  // C127 Overall
@@ -1231,7 +1232,7 @@ function renderRevived(data){
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">🔄</div>
         <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Total Revived Leads Today</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);">
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);">
         <div class="closing-cell">
           <div class="closing-label">Revived Today</div>
           <div class="closing-val" style="color:#16A34A;">${rv_today}</div>
@@ -1243,6 +1244,10 @@ function renderRevived(data){
         <div class="closing-cell">
           <div class="closing-label">ST</div>
           <div class="closing-val" style="color:#7C3AED;">${rv_st}</div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">WhatsApp</div>
+          <div class="closing-val" style="color:#15803D;">${rv_whatsapp}</div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Duplicate</div>
