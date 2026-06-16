@@ -1155,23 +1155,45 @@ function renderQualifier(data){
 }
 
 function renderRevived(data){
-  const rv_today       = data[121]?.[2] ?? 0;
-  const rv_email       = data[122]?.[2] ?? 0;
-  const rv_st          = data[123]?.[2] ?? 0;
-  const rv_duplicate   = data[124]?.[2] ?? 0;
-  const rv_existing    = data[125]?.[2] ?? 0;
-  const rv_overall_avg = data[126]?.[2] ?? 0;
-  const rv_monthly_avg = data[127]?.[2] ?? 0;
-  const rv_today_avg   = data[128]?.[2] ?? 0;
+  const rv_today       = data[121]?.[2] ?? 0;  // C122
+  const rv_email       = data[122]?.[2] ?? 0;  // C123
+  const rv_st          = data[123]?.[2] ?? 0;  // C124
+  const rv_duplicate   = data[124]?.[2] ?? 0;  // C125
+  const rv_existing    = data[125]?.[2] ?? 0;  // C126
+  const rv_overall_avg = data[126]?.[2] ?? 0;  // C127 Overall
+  const rv_3month_avg  = data[127]?.[2] ?? 0;  // C128 Last 3 Month
+  const rv_monthly_avg = data[128]?.[2] ?? 0;  // C129 Current Monthly
+  const rv_today_avg   = data[129]?.[2] ?? 0;  // C130 Today
+  const maheen_revived = data[144]?.[7] ?? 0;  // H145
+  const maheen_closed  = data[144]?.[8] ?? 0;  // I145
+  const maheen_avg     = data[144]?.[9] ?? 0;  // J145
+  const khurram_revived= data[159]?.[7] ?? 0;  // H160
+  const khurram_closed = data[159]?.[8] ?? 0;  // I160
+  const khurram_avg    = data[159]?.[9] ?? 0;  // J160
   const maheen_members=[data[133],data[134],data[135],data[136],data[137],data[138],data[139],data[140]].filter(r=>r?.[1]&&r[1]!=='');
   const khurram_members=[data[146],data[147],data[148],data[149],data[150],data[151],data[152]].filter(r=>r?.[1]&&r[1]!=='');
 
-  function teamTable(title,color,members){
+  // Black banner stat box (white text)
+  function rBox(label,val){
+    return `<div style="background:#000000;border:1.5px solid rgba(255,255,255,0.25);border-radius:12px;padding:7px 16px;text-align:center;min-width:82px;">
+      <div style="font-size:0.54rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.65);letter-spacing:0.05em;white-space:nowrap;">${label}</div>
+      <div style="font-size:1.5rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.15;">${val}</div>
+    </div>`;
+  }
+
+  function teamTable(title,color,members,revived,closed,closingAvg){
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">👥</div>
-        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">${title}</span>
-        <span style="margin-left:auto;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 12px;font-size:0.65rem;color:#ffffff;font-weight:600;">${members.length} members</span>
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);width:44px;height:44px;font-size:1.3rem;">👥</div>
+        <div>
+          <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${title}</div>
+          <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:10px;">
+          ${rBox('Total Revived',revived)}
+          ${rBox('Total Closed',closed)}
+          ${rBox('Closing Avg',avg(closingAvg))}
+        </div>
       </div>
       <table class="team-table">
         <thead>
@@ -1205,9 +1227,9 @@ function renderRevived(data){
 
   return `
     <div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(22,163,74,0.5) 0%,rgba(29,78,216,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(22,163,74,0.4);">
         <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">🔄</div>
-        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Total Revived Leads Summary</span>
+        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Total Revived Leads Today</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);">
         <div class="closing-cell">
@@ -1231,13 +1253,23 @@ function renderRevived(data){
           <div class="closing-val" style="color:#D97706;">${rv_existing}</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid #CBD5E1;">
+    </div>
+    <div class="section-card" style="margin-bottom:16px;">
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(37,99,235,0.5) 0%,rgba(124,58,237,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(37,99,235,0.4);">
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">📊</div>
+        <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Revived Leads AVG</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
         <div class="closing-cell">
           <div class="closing-label">Overall Avg</div>
           <div class="closing-val" style="color:#2563EB;">${avg(rv_overall_avg)}</div>
         </div>
         <div class="closing-cell">
-          <div class="closing-label">Monthly Avg</div>
+          <div class="closing-label">Last 3 Month Avg</div>
+          <div class="closing-val" style="color:#7C3AED;">${avg(rv_3month_avg)}</div>
+        </div>
+        <div class="closing-cell">
+          <div class="closing-label">Current Monthly Avg</div>
           <div class="closing-val" style="color:#D97706;">${avg(rv_monthly_avg)}</div>
         </div>
         <div class="closing-cell">
@@ -1246,8 +1278,8 @@ function renderRevived(data){
         </div>
       </div>
     </div>
-    ${teamTable('Team Maheen','#2563EB',maheen_members)}
-    ${teamTable('Team Khurram','#0891B2',khurram_members)}
+    ${teamTable('Team Maheen','#2563EB',maheen_members,maheen_revived,maheen_closed,maheen_avg)}
+    ${teamTable('Team Khurram','#0891B2',khurram_members,khurram_revived,khurram_closed,khurram_avg)}
   `;
 }
 
