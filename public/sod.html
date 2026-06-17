@@ -644,32 +644,43 @@ function kpiCard(icon,iconBg,label,val,valColor,sub){
 }
 
 function renderOrganic(data){
-  const popup_recv   = data[2]?.[2]  ?? 0;
-  const popup_qual   = data[3]?.[2]  ?? 0;
-  const popup_closed = data[4]?.[2]  ?? 0;
-  const hot_recv     = data[8]?.[2]  ?? 0;
-  const hot_qual     = data[9]?.[2]  ?? 0;
-  const hot_closed   = data[10]?.[2] ?? 0;
-  const popup_recv_overall = data[2]?.[5] ?? 0;
-  const popup_recv_monthly = data[3]?.[5] ?? 0;
-  const popup_recv_today   = data[4]?.[5] ?? 0;
-  const hot_recv_overall   = data[2]?.[8] ?? 0;
-  const hot_recv_monthly   = data[3]?.[8] ?? 0;
-  const hot_recv_today     = data[4]?.[8] ?? 0;
-  const popup_qual_overall = data[8]?.[5]  ?? 0;
-  const popup_qual_monthly = data[9]?.[5]  ?? 0;
-  const popup_qual_today   = data[10]?.[5] ?? 0;
-  const hot_qual_overall   = data[8]?.[8]  ?? 0;
-  const hot_qual_monthly   = data[9]?.[8]  ?? 0;
-  const hot_qual_today     = data[10]?.[8] ?? 0;
-  const total_popup_recv   = data[16]?.[2] ?? 0;
-  const valid_popups       = data[17]?.[2] ?? 0;
-  const repeated           = data[18]?.[2] ?? 0;
-  const invalid            = data[19]?.[2] ?? 0;
-  const total_closed       = data[16]?.[5] ?? 0;
-  const last3months        = data[17]?.[5] ?? 0;
-  const current_month      = data[18]?.[5] ?? 0;
-  const today_closed       = data[19]?.[5] ?? 0;
+  // Today metrics (column C)
+  const popup_recv   = data[2]?.[2]  ?? 0;   // C3
+  const popup_qual   = data[3]?.[2]  ?? 0;   // C4
+  const popup_closed = data[4]?.[2]  ?? 0;   // C5
+  const hot_recv     = data[10]?.[2] ?? 0;   // C11
+  const hot_qual     = data[11]?.[2] ?? 0;   // C12
+  const hot_closed   = data[12]?.[2] ?? 0;   // C13
+  // POP-UP Received AVG (column F, rows 3-6)
+  const popup_recv_overall = data[2]?.[5] ?? 0;  // F3
+  const popup_recv_3month  = data[3]?.[5] ?? 0;  // F4
+  const popup_recv_monthly = data[4]?.[5] ?? 0;  // F5
+  const popup_recv_today   = data[5]?.[5] ?? 0;  // F6
+  // Hot Lead Received AVG (column I, rows 3-6)
+  const hot_recv_overall   = data[2]?.[8] ?? 0;  // I3
+  const hot_recv_3month    = data[3]?.[8] ?? 0;  // I4
+  const hot_recv_monthly   = data[4]?.[8] ?? 0;  // I5
+  const hot_recv_today     = data[5]?.[8] ?? 0;  // I6
+  // POP-UP Qualified AVG (column F, rows 11-14)
+  const popup_qual_overall = data[10]?.[5] ?? 0; // F11
+  const popup_qual_3month  = data[11]?.[5] ?? 0; // F12
+  const popup_qual_monthly = data[12]?.[5] ?? 0; // F13
+  const popup_qual_today   = data[13]?.[5] ?? 0; // F14
+  // Hot Lead Qualified AVG (column I, rows 11-14)
+  const hot_qual_overall   = data[10]?.[8] ?? 0; // I11
+  const hot_qual_3month    = data[11]?.[8] ?? 0; // I12
+  const hot_qual_monthly   = data[12]?.[8] ?? 0; // I13
+  const hot_qual_today     = data[13]?.[8] ?? 0; // I14
+  // Today Received Breakdown (column C, rows 19-22)
+  const total_popup_recv   = data[18]?.[2] ?? 0; // C19
+  const valid_popups       = data[19]?.[2] ?? 0; // C20
+  const repeated           = data[20]?.[2] ?? 0; // C21
+  const invalid            = data[21]?.[2] ?? 0; // C22
+  // Closing AVG (column F, rows 19-22)
+  const cl_overall   = data[18]?.[5] ?? 0;  // F19 Overall Closed Avg
+  const cl_3months   = data[19]?.[5] ?? 0;  // F20 Last 3 Months
+  const cl_month     = data[20]?.[5] ?? 0;  // F21 Current Month
+  const cl_today     = data[21]?.[5] ?? 0;  // F22 TODAY
 
   return `
     <!-- KPI CARDS -->
@@ -758,7 +769,8 @@ function renderOrganic(data){
             </thead>
             <tbody>
               <tr><td>Overall</td><td style="color:#16A34A;">${avg(popup_recv_overall)}</td><td style="color:#2563EB;">${avg(popup_qual_overall)}</td></tr>
-              <tr><td>Monthly</td><td style="color:#16A34A;">${avg(popup_recv_monthly)}</td><td style="color:#2563EB;">${avg(popup_qual_monthly)}</td></tr>
+              <tr><td>Last 3 Months</td><td style="color:#16A34A;">${avg(popup_recv_3month)}</td><td style="color:#2563EB;">${avg(popup_qual_3month)}</td></tr>
+              <tr><td>Current Month</td><td style="color:#16A34A;">${avg(popup_recv_monthly)}</td><td style="color:#2563EB;">${avg(popup_qual_monthly)}</td></tr>
               <tr><td>Today</td><td style="color:#16A34A;">${avg(popup_recv_today)}</td><td style="color:#2563EB;">${avg(popup_qual_today)}</td></tr>
             </tbody>
           </table>
@@ -780,7 +792,8 @@ function renderOrganic(data){
             </thead>
             <tbody>
               <tr><td>Overall</td><td style="color:#DC2626;">${avg(hot_recv_overall)}</td><td style="color:#2563EB;">${avg(hot_qual_overall)}</td></tr>
-              <tr><td>Monthly</td><td style="color:#DC2626;">${avg(hot_recv_monthly)}</td><td style="color:#2563EB;">${avg(hot_qual_monthly)}</td></tr>
+              <tr><td>Last 3 Months</td><td style="color:#DC2626;">${avg(hot_recv_3month)}</td><td style="color:#2563EB;">${avg(hot_qual_3month)}</td></tr>
+              <tr><td>Current Month</td><td style="color:#DC2626;">${avg(hot_recv_monthly)}</td><td style="color:#2563EB;">${avg(hot_qual_monthly)}</td></tr>
               <tr><td>Today</td><td style="color:#DC2626;">${avg(hot_recv_today)}</td><td style="color:#2563EB;">${avg(hot_qual_today)}</td></tr>
             </tbody>
           </table>
@@ -796,29 +809,29 @@ function renderOrganic(data){
       </div>
       <div class="closing-grid">
         <div class="closing-cell">
-          <div class="closing-label">Total Closed</div>
-          <div class="closing-val" style="color:#16A34A;">${avg(total_closed)}</div>
+          <div class="closing-label">Overall</div>
+          <div class="closing-val" style="color:#16A34A;">${avg(cl_overall)}</div>
           <div class="closing-trend" style="color:#16A34A;">
             ${[3,5,4,6,5,7,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Last 3 Months</div>
-          <div class="closing-val" style="color:#2563EB;">${avg(last3months)}</div>
+          <div class="closing-val" style="color:#2563EB;">${avg(cl_3months)}</div>
           <div class="closing-trend" style="color:#2563EB;">
             ${[4,3,5,4,6,5,6].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Current Month</div>
-          <div class="closing-val" style="color:#D97706;">${avg(current_month)}</div>
+          <div class="closing-val" style="color:#D97706;">${avg(cl_month)}</div>
           <div class="closing-trend" style="color:#D97706;">
             ${[5,6,5,7,6,7,8].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
         </div>
         <div class="closing-cell">
           <div class="closing-label">Today Closed</div>
-          <div class="closing-val" style="color:#DC2626;">${avg(today_closed)}</div>
+          <div class="closing-val" style="color:#DC2626;">${avg(cl_today)}</div>
           <div class="closing-trend" style="color:#DC2626;">
             ${[2,4,3,5,4,6,5].map((h,i)=>`<div class="trend-bar${i===6?' active':''}" style="height:${h*4}px;"></div>`).join('')}
           </div>
