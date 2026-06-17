@@ -1178,12 +1178,17 @@ function renderRevived(data){
   const rv_3month_avg  = data[127]?.[2] ?? 0;  // C128 Last 3 Month
   const rv_monthly_avg = data[128]?.[2] ?? 0;  // C129 Current Monthly
   const rv_today_avg   = data[129]?.[2] ?? 0;  // C130 Today
-  const maheen_revived = data[144]?.[7] ?? 0;  // H145
-  const maheen_closed  = data[144]?.[8] ?? 0;  // I145
-  const maheen_avg     = data[144]?.[9] ?? 0;  // J145
-  const khurram_revived= data[159]?.[7] ?? 0;  // H160
-  const khurram_closed = data[159]?.[8] ?? 0;  // I160
-  const khurram_avg    = data[159]?.[9] ?? 0;  // J160
+  // Closing average derived from totals: Total Closed / Total Revived
+  const closingRatio = (closed, revived) => {
+    const c = parseFloat(closed)||0, r = parseFloat(revived)||0;
+    return r > 0 ? (c / r) : 0;
+  };
+  const maheen_revived = data[144]?.[8] ?? 0;  // I145 TOTAL Revived
+  const maheen_closed  = data[144]?.[9] ?? 0;  // J145 TOTAL Closed
+  const maheen_avg     = closingRatio(maheen_closed, maheen_revived);
+  const khurram_revived= data[159]?.[8] ?? 0;  // I160 TOTAL Revived
+  const khurram_closed = data[159]?.[9] ?? 0;  // J160 TOTAL Closed
+  const khurram_avg    = closingRatio(khurram_closed, khurram_revived);
   const maheen_members=[data[133],data[134],data[135],data[136],data[137],data[138],data[139],data[140]].filter(r=>r?.[1]&&r[1]!=='');
   const khurram_members=[data[146],data[147],data[148],data[149],data[150],data[151],data[152],data[153]].filter(r=>r?.[1]&&r[1]!=='');
 
