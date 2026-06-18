@@ -248,14 +248,15 @@ nav{
   pointer-events:none;
 }
 .dept-hdr-icon{
-  font-size:1.8rem;
+  font-size:1.7rem;
   color:#fff;
-  filter:drop-shadow(0 4px 12px rgba(255,255,255,0.3));
   position:relative;z-index:1;
-  background:rgba(255,255,255,0.15);
-  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.3),rgba(255,255,255,0.08));
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 8px 22px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.45);
+  width:64px;height:64px;border-radius:18px;
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
   flex-shrink:0;
 }
 .dept-hdr-info{position:relative;z-index:1;}
@@ -757,7 +758,7 @@ function renderOrganic(data){
     <div class="avg-grid">
       <div class="section-card" style="margin-bottom:0;">
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(37,99,235,0.04));border-bottom:2px solid rgba(37,99,235,0.15);">
-          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.15);"<i class="fa-solid fa-chart-column"></i></div>
+          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.12);color:#2563EB;border-radius:10px;"><i class="fa-solid fa-chart-column"></i></div>
           <span class="section-hdr-title" style="color:#2563EB;font-size:0.82rem;">POP-UP Averages</span>
         </div>
         <div style="padding:8px 0;">
@@ -780,7 +781,7 @@ function renderOrganic(data){
       </div>
       <div class="section-card" style="margin-bottom:0;">
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(220,38,38,0.1),rgba(220,38,38,0.03));border-bottom:2px solid rgba(220,38,38,0.15);">
-          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.15);"<i class="fa-solid fa-fire"></i></div>
+          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.12);color:#DC2626;border-radius:10px;"><i class="fa-solid fa-fire"></i></div>
           <span class="section-hdr-title" style="color:#DC2626;font-size:0.82rem;">Hot Lead Averages</span>
         </div>
         <div style="padding:8px 0;">
@@ -806,7 +807,7 @@ function renderOrganic(data){
     <!-- CLOSING AVERAGE -->
     <div class="section-card">
       <div class="section-hdr" style="background:linear-gradient(90deg,rgba(217,119,6,0.12),rgba(217,119,6,0.04));border-bottom:2px solid rgba(217,119,6,0.2);">
-        <div class="section-hdr-icon" style="background:rgba(217,119,6,0.15);"<i class="fa-solid fa-chart-line"></i></div>
+        <div class="section-hdr-icon" style="background:rgba(217,119,6,0.12);color:#D97706;border-radius:10px;"><i class="fa-solid fa-chart-line"></i></div>
         <span class="section-hdr-title" style="color:#D97706;font-size:0.82rem;">Closing Average</span>
       </div>
       <div class="closing-grid">
@@ -968,7 +969,7 @@ function renderMarketing(data){
     return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:${p.bg};border-bottom:2px solid ${p.color}40;padding:18px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${p.color}50;width:46px;height:46px;font-size:1.4rem;"<i class="fa-solid fa-mobile-screen-button"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,#ffffff,rgba(255,255,255,0.78));border:1px solid ${p.color}40;color:${p.color};width:46px;height:46px;font-size:1.3rem;border-radius:13px;box-shadow:0 5px 14px ${p.color}26,inset 0 1px 0 rgba(255,255,255,0.85);"><i class="fa-solid fa-mobile-screen-button"></i></div>
         <div style="font-size:1.85rem;font-weight:800;color:${p.color};letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${p.label}</div>
         <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
           ${pBox('Total Received',p.t_recv)}
@@ -1012,7 +1013,7 @@ function renderMarketing(data){
       ${platforms.map(p=>platCard(p)).join('')}
       <div class="section-card">
         <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.5) 0%,rgba(220,38,38,0.45) 50%,rgba(255,255,255,0.35) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
-          <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(220,38,38,0.4);width:46px;height:46px;font-size:1.4rem;"<i class="fa-solid fa-chart-line"></i></div>
+          <div class="section-hdr-icon" style="background:linear-gradient(135deg,#ffffff,rgba(255,255,255,0.78));border:1px solid rgba(220,38,38,0.35);color:#DC2626;width:46px;height:46px;font-size:1.3rem;border-radius:13px;box-shadow:0 5px 14px rgba(220,38,38,0.18),inset 0 1px 0 rgba(255,255,255,0.85);"><i class="fa-solid fa-chart-line"></i></div>
           <span style="font-size:1.85rem;font-weight:800;color:#DC2626;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">Closed Leads — Paid Data</span>
         </div>
         <div class="closing-grid">
@@ -1113,7 +1114,7 @@ function renderQualifier(data){
     return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${name.includes('4th')?'fa-building':'fa-bullseye'}"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${name.includes('4th')?'fa-building':'fa-bullseye'}"></i></div>
         <div>
           <div style="font-size:1.85rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${name}</div>
           <div style="font-size:0.72rem;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:500;">Department Performance</div>
@@ -1205,7 +1206,7 @@ function renderRevived(data){
   function teamTable(title,color,members,revived,closed,closingAvg){
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:44px;height:44px;font-size:1.3rem;"<i class="fa-solid fa-users"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:44px;height:44px;font-size:1.3rem;"><i class="fa-solid fa-users"></i></div>
         <div>
           <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${title}</div>
           <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
@@ -1251,7 +1252,7 @@ function renderRevived(data){
   return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(22,163,74,0.5) 0%,rgba(29,78,216,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(22,163,74,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-arrows-rotate"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);"><i class="fa-solid fa-arrows-rotate"></i></div>
         <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Total Revived Leads Today</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(6,1fr);">
@@ -1283,7 +1284,7 @@ function renderRevived(data){
     </div>
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(37,99,235,0.5) 0%,rgba(124,58,237,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(37,99,235,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-chart-column"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);"><i class="fa-solid fa-chart-column"></i></div>
         <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Revived Leads AVG</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);">
@@ -1341,7 +1342,7 @@ function renderClosed(data){
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-circle-check"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);"><i class="fa-solid fa-circle-check"></i></div>
         <div>
           <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${title}</div>
           <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Closing Performance</div>
@@ -1412,7 +1413,7 @@ function renderClosed(data){
     const totalClosed = members.reduce((s,r)=>s+(parseFloat(r[6])||0),0);
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:44px;height:44px;font-size:1.3rem;"<i class="fa-solid fa-users"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:44px;height:44px;font-size:1.3rem;"><i class="fa-solid fa-users"></i></div>
         <div>
           <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${title}</div>
           <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
