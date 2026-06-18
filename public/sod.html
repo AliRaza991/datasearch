@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOD — Start of Day Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{visibility:hidden}
@@ -25,7 +26,7 @@ html{visibility:hidden}
 }
 
 body{
-  font-family:'Inter',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   background:linear-gradient(180deg,#F8FAFC 0%,#F1F5F9 100%);
   color:var(--text);
   min-height:100vh;
@@ -144,7 +145,7 @@ nav{
   width:100%;text-align:left;
   padding:12px 14px;border:1.5px solid transparent;
   background:transparent;border-radius:14px;
-  color:var(--text2);font-family:'Inter',sans-serif;
+  color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;
   font-size:0.82rem;font-weight:500;cursor:pointer;
   transition:all 0.22s;
   display:flex;align-items:center;gap:12px;
@@ -199,7 +200,7 @@ nav{
   margin-bottom:28px;flex-wrap:wrap;gap:16px;
 }
 .page-title{
-  font-family:'Manrope',sans-serif;
+  font-family:'Space Grotesk',sans-serif;
   font-size:2.8rem;font-weight:700;
   color:var(--text);letter-spacing:-0.03em;line-height:1.1;
 }
@@ -247,7 +248,8 @@ nav{
   pointer-events:none;
 }
 .dept-hdr-icon{
-  font-size:2.8rem;
+  font-size:1.8rem;
+  color:#fff;
   filter:drop-shadow(0 4px 12px rgba(255,255,255,0.3));
   position:relative;z-index:1;
   background:rgba(255,255,255,0.15);
@@ -259,7 +261,7 @@ nav{
 .dept-hdr-info{position:relative;z-index:1;}
 .dept-hdr-name{
   font-size:1.5rem;font-weight:800;color:#fff;
-  letter-spacing:-0.02em;font-family:'Manrope',sans-serif;
+  letter-spacing:-0.02em;font-family:'Space Grotesk',sans-serif;
 }
 .dept-hdr-sub{font-size:0.72rem;color:rgba(255,255,255,0.65);margin-top:4px;font-weight:500;}
 .dept-hdr-time{
@@ -307,7 +309,7 @@ nav{
 }
 .kpi-val{
   font-size:2.8rem;font-weight:700;line-height:1;
-  margin-bottom:8px;font-family:'Manrope',sans-serif;
+  margin-bottom:8px;font-family:'Space Grotesk',sans-serif;
   letter-spacing:-0.03em;
 }
 .kpi-sub{font-size:0.65rem;color:var(--text3);font-weight:500;}
@@ -355,7 +357,7 @@ nav{
 }
 .breakdown-val{
   font-size:2.2rem;font-weight:700;
-  font-family:'Manrope',sans-serif;
+  font-family:'Space Grotesk',sans-serif;
   letter-spacing:-0.02em;
 }
 
@@ -394,7 +396,7 @@ nav{
 }
 .closing-val{
   font-size:2.6rem;font-weight:800;
-  font-family:'Manrope',sans-serif;
+  font-family:'Space Grotesk',sans-serif;
   letter-spacing:-0.02em;margin-bottom:8px;
   color:#0f172a;
 }
@@ -522,9 +524,9 @@ checkDeviceStatus();
     </div>
   </div>
   <div class="nav-pills">
-    <a href="/index.html" class="nav-pill">⚡ DataSearch</a>
-    <a href="/sod.html" class="nav-pill active">☀️ SOD</a>
-    <a href="/eod.html" class="nav-pill">🌙 EOD</a>
+    <a href="/index.html" class="nav-pill"><i class="fa-solid fa-bolt"></i> DataSearch</a>
+    <a href="/sod.html" class="nav-pill active"><i class="fa-solid fa-sun"></i> SOD</a>
+    <a href="/eod.html" class="nav-pill"><i class="fa-solid fa-moon"></i> EOD</a>
   </div>
   <div class="nav-user" onclick="toggleMenu()">
     <div class="nav-avatar" id="uAvatar"></div>
@@ -549,20 +551,20 @@ checkDeviceStatus();
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-label">Departments</div>
-  <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','📥','Organic')" id="btn-Organic">
-    <div class="dept-icon">📥</div><div class="dept-name">Organic & Pop-Up</div>
+  <button class="dept-btn active" onclick="loadDept('SOD','Organic & Pop-Up','fa-inbox','Organic')" id="btn-Organic">
+    <div class="dept-icon"><i class="fa-solid fa-inbox"></i></div><div class="dept-name">Organic & Pop-Up</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Marketing','📢','Marketing')" id="btn-Marketing">
-    <div class="dept-icon">📢</div><div class="dept-name">Marketing</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Marketing','fa-bullhorn','Marketing')" id="btn-Marketing">
+    <div class="dept-icon"><i class="fa-solid fa-bullhorn"></i></div><div class="dept-name">Marketing</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','🎯','Qualifier')" id="btn-Qualifier">
-    <div class="dept-icon">🎯</div><div class="dept-name">Qualifier & 4th Floor</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','fa-bullseye','Qualifier')" id="btn-Qualifier">
+    <div class="dept-icon"><i class="fa-solid fa-bullseye"></i></div><div class="dept-name">Qualifier & 4th Floor</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','🔄','Revived')" id="btn-Revived">
-    <div class="dept-icon">🔄</div><div class="dept-name">Revived Leads</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','fa-arrows-rotate','Revived')" id="btn-Revived">
+    <div class="dept-icon"><i class="fa-solid fa-arrows-rotate"></i></div><div class="dept-name">Revived Leads</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','✅','Closed')" id="btn-Closed">
-    <div class="dept-icon">✅</div><div class="dept-name">Closed Leads</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','fa-circle-check','Closed')" id="btn-Closed">
+    <div class="dept-icon"><i class="fa-solid fa-circle-check"></i></div><div class="dept-name">Closed Leads</div>
   </button>
   <div class="sidebar-footer">
     <div class="sidebar-footer-dot"></div>
@@ -755,7 +757,7 @@ function renderOrganic(data){
     <div class="avg-grid">
       <div class="section-card" style="margin-bottom:0;">
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(37,99,235,0.04));border-bottom:2px solid rgba(37,99,235,0.15);">
-          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.15);">📊</div>
+          <div class="section-hdr-icon" style="background:rgba(37,99,235,0.15);"<i class="fa-solid fa-chart-column"></i></div>
           <span class="section-hdr-title" style="color:#2563EB;font-size:0.82rem;">POP-UP Averages</span>
         </div>
         <div style="padding:8px 0;">
@@ -778,7 +780,7 @@ function renderOrganic(data){
       </div>
       <div class="section-card" style="margin-bottom:0;">
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(220,38,38,0.1),rgba(220,38,38,0.03));border-bottom:2px solid rgba(220,38,38,0.15);">
-          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.15);">🔥</div>
+          <div class="section-hdr-icon" style="background:rgba(220,38,38,0.15);"<i class="fa-solid fa-fire"></i></div>
           <span class="section-hdr-title" style="color:#DC2626;font-size:0.82rem;">Hot Lead Averages</span>
         </div>
         <div style="padding:8px 0;">
@@ -804,7 +806,7 @@ function renderOrganic(data){
     <!-- CLOSING AVERAGE -->
     <div class="section-card">
       <div class="section-hdr" style="background:linear-gradient(90deg,rgba(217,119,6,0.12),rgba(217,119,6,0.04));border-bottom:2px solid rgba(217,119,6,0.2);">
-        <div class="section-hdr-icon" style="background:rgba(217,119,6,0.15);">📈</div>
+        <div class="section-hdr-icon" style="background:rgba(217,119,6,0.15);"<i class="fa-solid fa-chart-line"></i></div>
         <span class="section-hdr-title" style="color:#D97706;font-size:0.82rem;">Closing Average</span>
       </div>
       <div class="closing-grid">
@@ -966,8 +968,8 @@ function renderMarketing(data){
     return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:${p.bg};border-bottom:2px solid ${p.color}40;padding:18px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${p.color}50;width:46px;height:46px;font-size:1.4rem;">📱</div>
-        <div style="font-size:1.85rem;font-weight:800;color:${p.color};letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${p.label}</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid ${p.color}50;width:46px;height:46px;font-size:1.4rem;"<i class="fa-solid fa-mobile-screen-button"></i></div>
+        <div style="font-size:1.85rem;font-weight:800;color:${p.color};letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${p.label}</div>
         <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
           ${pBox('Total Received',p.t_recv)}
           ${pBox('Total Qualified',p.t_qual)}
@@ -1010,8 +1012,8 @@ function renderMarketing(data){
       ${platforms.map(p=>platCard(p)).join('')}
       <div class="section-card">
         <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.5) 0%,rgba(220,38,38,0.45) 50%,rgba(255,255,255,0.35) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
-          <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(220,38,38,0.4);width:46px;height:46px;font-size:1.4rem;">📈</div>
-          <span style="font-size:1.85rem;font-weight:800;color:#DC2626;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">Closed Leads — Paid Data</span>
+          <div class="section-hdr-icon" style="background:rgba(255,255,255,0.6);border:1.5px solid rgba(220,38,38,0.4);width:46px;height:46px;font-size:1.4rem;"<i class="fa-solid fa-chart-line"></i></div>
+          <span style="font-size:1.85rem;font-weight:800;color:#DC2626;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">Closed Leads — Paid Data</span>
         </div>
         <div class="closing-grid">
           <div class="closing-cell">
@@ -1111,9 +1113,9 @@ function renderQualifier(data){
     return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);width:46px;height:46px;font-size:1.4rem;">${name.includes('4th')?'🏬':'🎯'}</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${name.includes('4th')?'fa-building':'fa-bullseye'}"></i></div>
         <div>
-          <div style="font-size:1.85rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${name}</div>
+          <div style="font-size:1.85rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${name}</div>
           <div style="font-size:0.72rem;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:500;">Department Performance</div>
         </div>
         <div style="margin-left:auto;display:flex;gap:10px;">
@@ -1154,7 +1156,7 @@ function renderQualifier(data){
           ${mr('TODAY Closed',avg(d.cl_today),'red')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;display:flex;align-items:center;gap:6px;">📊 Last 6 Months — Total Leads</div>
+          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-chart-column"></i> Last 6 Months — Total Leads</div>
           ${barChart(d.months,color)}
         </div>
       </div>
@@ -1203,9 +1205,9 @@ function renderRevived(data){
   function teamTable(title,color,members,revived,closed,closingAvg){
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);width:44px;height:44px;font-size:1.3rem;">👥</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:44px;height:44px;font-size:1.3rem;"<i class="fa-solid fa-users"></i></div>
         <div>
-          <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${title}</div>
+          <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${title}</div>
           <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
         </div>
         <div style="margin-left:auto;display:flex;gap:10px;">
@@ -1249,7 +1251,7 @@ function renderRevived(data){
   return `
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(22,163,74,0.5) 0%,rgba(29,78,216,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(22,163,74,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">🔄</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-arrows-rotate"></i></div>
         <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Total Revived Leads Today</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(6,1fr);">
@@ -1281,7 +1283,7 @@ function renderRevived(data){
     </div>
     <div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(37,99,235,0.5) 0%,rgba(124,58,237,0.4) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(37,99,235,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">📊</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-chart-column"></i></div>
         <span class="section-hdr-title" style="color:#ffffff;font-size:1.1rem;font-weight:800;">Revived Leads AVG</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);">
@@ -1339,7 +1341,7 @@ function renderClosed(data){
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);">✅</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;"<i class="fa-solid fa-circle-check"></i></div>
         <div>
           <div style="font-size:1.2rem;font-weight:800;color:#ffffff;letter-spacing:0.02em;">${title}</div>
           <div style="font-size:0.65rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:500;">Closing Performance</div>
@@ -1410,9 +1412,9 @@ function renderClosed(data){
     const totalClosed = members.reduce((s,r)=>s+(parseFloat(r[6])||0),0);
     return `<div class="section-card" style="margin-bottom:16px;">
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
-        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);width:44px;height:44px;font-size:1.3rem;">👥</div>
+        <div class="section-hdr-icon" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);color:#fff;width:44px;height:44px;font-size:1.3rem;"<i class="fa-solid fa-users"></i></div>
         <div>
-          <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Manrope',sans-serif;">${title}</div>
+          <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${title}</div>
           <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
         </div>
         <div style="margin-left:auto;background:transparent;border:none;border-radius:12px;padding:7px 18px;text-align:center;min-width:90px;">
@@ -1467,7 +1469,7 @@ function renderGeneric(data, deptName, icon){
   return `
     <div class="section-card">
       <div class="section-hdr">
-        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);">${icon}</div>
+        <div class="section-hdr-icon" style="background:rgba(37,99,235,0.1);"><i class="fa-solid ${icon}"></i></div>
         <span class="section-hdr-title" style="color:#2563EB;">${deptName} — Full Detail</span>
       </div>
       ${metrics || '<div style="padding:20px;color:var(--text2);">No detailed data available</div>'}
@@ -1482,7 +1484,7 @@ async function loadDept(sheet, deptName, icon, btnId){
 
   document.getElementById('deptContent').innerHTML=`
     <div class="dept-hdr">
-      <div class="dept-hdr-icon">${icon}</div>
+      <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
       <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
     </div>
     <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading ${deptName}...</div></div>`;
@@ -1509,7 +1511,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       }
 
       if(!json||!json.success){
-        if(!hasRendered) document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>Data load failed</div></div>';
+        if(!hasRendered) document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>Data load failed</div></div>';
         return;
       }
 
@@ -1524,7 +1526,7 @@ async function loadDept(sheet, deptName, icon, btnId){
 
       document.getElementById('deptContent').innerHTML=`
         <div class="dept-hdr">
-          <div class="dept-hdr-icon">${icon}</div>
+          <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
           <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
           <div class="dept-hdr-time">
             <div class="dept-hdr-time-label">LAST UPDATED</div>
@@ -1537,7 +1539,7 @@ async function loadDept(sheet, deptName, icon, btnId){
       console.error(e);
       // Keep the existing dashboard on refresh failures - only show error if nothing rendered yet
       if(!hasRendered){
-        document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon">⚠️</div><div>Connection error — retrying in 30s...</div></div>';
+        document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>Connection error — retrying in 30s...</div></div>';
       }
     }
   }
@@ -1547,7 +1549,7 @@ async function loadDept(sheet, deptName, icon, btnId){
   refreshTimer=setInterval(()=>{ if(!document.hidden) fetch_render(); },30000);
 }
 
-loadDept('SOD','Organic & Pop-Up','📥','Organic');
+loadDept('SOD','Organic & Pop-Up','fa-inbox','Organic');
 </script>
 </body>
 </html>
