@@ -1111,9 +1111,66 @@ function renderQualifier(data){
     </div>`;
   }
 
-  function dCard(name,color,bg,d){
+  // Daily leads trend (Qualifier): N77:N107 dates, O77:O107 leads, P1 cutoff date
+  const trendPoints = (function(){
+    const fmtKey   = dt => dt.toLocaleDateString('en-CA',{timeZone:'Asia/Karachi'});
+    const fmtLabel = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short'});
+    const fmtFull  = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'});
+    let cutoff=null;
+    const praw=data[0]?.[15]; // P1 cutoff date
+    if(praw){ const c=new Date(praw); if(!isNaN(c)) cutoff=c; }
+    if(!cutoff) cutoff=new Date(); // fall back to today if P1 empty
+    const cutKey=fmtKey(cutoff);
+    const pts=[];
+    for(let r=76;r<=106;r++){ // rows 77-107
+      const draw=data[r]?.[13], vraw=data[r]?.[14]; // N, O
+      if(draw===''||draw==null) continue;
+      const dt=new Date(draw); if(isNaN(dt)) continue;
+      if(fmtKey(dt) > cutKey) continue; // only up to cutoff date
+      const val=parseFloat(vraw);
+      pts.push({ value:isNaN(val)?0:val, label:fmtLabel(dt), dateLabel:fmtFull(dt) });
+    }
+    return pts;
+  })();
+
+  // Responsive SVG line chart
+  function lineChart(points,color){
+    if(!points.length) return '<div style="padding:40px 16px;text-align:center;color:var(--text3);font-size:0.78rem;">No trend data available</div>';
+    const W=780,H=250,padL=36,padR=18,padT=18,padB=36;
+    const innerW=W-padL-padR, innerH=H-padT-padB, n=points.length;
+    const rawMax=Math.max(...points.map(p=>p.value),1);
+    const niceMax=Math.max(Math.ceil(rawMax/10)*10,10);
+    const X=i=> padL+(n<=1?innerW/2:(i/(n-1))*innerW);
+    const Y=v=> padT+innerH-(v/niceMax)*innerH;
+    let grid="";
+    for(let t=0;t<=4;t++){ const gv=niceMax*t/4, gy=Y(gv);
+      grid+=`<line x1="${padL}" y1="${gy.toFixed(1)}" x2="${W-padR}" y2="${gy.toFixed(1)}" stroke="#E2E8F0" stroke-width="1"/>`;
+      grid+=`<text x="${padL-7}" y="${(gy+3).toFixed(1)}" text-anchor="end" font-size="9" fill="#94A3B8" font-family="DM Mono,monospace">${Math.round(gv)}</text>`;
+    }
+    const linePts=points.map((p,i)=>`${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ");
+    const area=`M ${X(0).toFixed(1)},${Y(0).toFixed(1)} `+points.map((p,i)=>`L ${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ")+` L ${X(n-1).toFixed(1)},${Y(0).toFixed(1)} Z`;
+    const dots=points.map((p,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="2.5" fill="#fff" stroke="${color}" stroke-width="1.6"><title>${p.dateLabel}: ${p.value}</title></circle>`).join("");
+    const step=Math.max(1,Math.ceil(n/8)); let xl="";
+    points.forEach((p,i)=>{ if(i%step===0||i===n-1) xl+=`<text x="${X(i).toFixed(1)}" y="${H-12}" text-anchor="middle" font-size="8.5" fill="#94A3B8" font-family="DM Mono,monospace">${p.label}</text>`; });
+    const gid="lcg"+color.replace(/[^a-zA-Z0-9]/g,"");
     return `
-    <div class="section-card" style="margin-bottom:16px;">
+    <div style="padding:14px 12px 10px;">
+      <svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">
+        <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity="0.26"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+        </linearGradient></defs>
+        ${grid}
+        <path d="${area}" fill="url(#${gid})"/>
+        <polyline points="${linePts}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        ${dots}
+        ${xl}
+      </svg>
+    </div>`;
+  }
+
+  function dCard(name,color,bg,d,chartData){
+    const header=`
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
         <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${name.includes('4th')?'fa-building':'fa-bullseye'}"></i></div>
         <div>
@@ -1125,8 +1182,8 @@ function renderQualifier(data){
           ${bBox('On Email',d.total_email)}
           ${bBox('On ST',d.total_st)}
         </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1.4fr 1fr 1.1fr;gap:0;">
+      </div>`;
+    const leftCol=`
         <div style="border-right:2px solid #CBD5E1;">
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;">Today Breakdown</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1.5px solid #CBD5E1;">
@@ -1149,25 +1206,46 @@ function renderQualifier(data){
           ${mr('Overall',avg(d.overall_avg),'blue')}
           ${mr('Monthly',avg(d.monthly_avg),'blue')}
           ${mr('Today',avg(d.today_avg),'blue')}
-        </div>
-        <div style="border-right:2px solid #CBD5E1;">
+        </div>`;
+    const closingCol=`
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
           ${mr('Total Closed',avg(d.cl_total),'green')}
           ${mr('Last 3 Months',avg(d.cl_3months),'blue')}
           ${mr('Current Month',avg(d.cl_month),'gold')}
-          ${mr('TODAY Closed',avg(d.cl_today),'red')}
-        </div>
-        <div>
+          ${mr('TODAY Closed',avg(d.cl_today),'red')}`;
+    const last6Col=`
           <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-chart-column"></i> Last 6 Months — Total Leads</div>
-          ${barChart(d.months,color)}
+          ${barChart(d.months,color)}`;
+    let body;
+    if(chartData){
+      body=`
+      <div style="display:grid;grid-template-columns:1.4fr 2.15fr;gap:0;">
+        ${leftCol}
+        <div style="display:flex;flex-direction:column;">
+          <div style="display:grid;grid-template-columns:1fr 1.15fr;border-bottom:1.5px solid #CBD5E1;">
+            <div style="border-right:2px solid #CBD5E1;">${closingCol}</div>
+            <div>${last6Col}</div>
+          </div>
+          <div>
+            <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${color};background:${bg};border-bottom:1.5px solid #CBD5E1;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-chart-line"></i> Daily Leads Trend</div>
+            ${lineChart(chartData,color)}
+          </div>
         </div>
-      </div>
-    </div>`;
+      </div>`;
+    } else {
+      body=`
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1.1fr;gap:0;">
+        ${leftCol}
+        <div style="border-right:2px solid #CBD5E1;">${closingCol}</div>
+        <div>${last6Col}</div>
+      </div>`;
+    }
+    return `<div class="section-card" style="margin-bottom:16px;">${header}${body}</div>`;
   }
 
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD)}
+    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD,trendPoints)}
+    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD,null)}
   </div>`;
 }
 
