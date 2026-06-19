@@ -1117,9 +1117,9 @@ function renderQualifier(data){
     const fmtLabel = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short'});
     const fmtFull  = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'});
     let cutoff=null;
-    const praw=data[0]?.[15]; // P1 cutoff date
+    const praw=data[76]?.[15]; // P77 cutoff date
     if(praw){ const c=new Date(praw); if(!isNaN(c)) cutoff=c; }
-    if(!cutoff) cutoff=new Date(); // fall back to today if P1 empty
+    if(!cutoff) cutoff=new Date(); // fall back to today if P77 empty
     const cutKey=fmtKey(cutoff);
     const pts=[];
     for(let r=76;r<=106;r++){ // rows 77-107
@@ -1150,6 +1150,7 @@ function renderQualifier(data){
     const linePts=points.map((p,i)=>`${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ");
     const area=`M ${X(0).toFixed(1)},${Y(0).toFixed(1)} `+points.map((p,i)=>`L ${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ")+` L ${X(n-1).toFixed(1)},${Y(0).toFixed(1)} Z`;
     const dots=points.map((p,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="2.5" fill="#fff" stroke="${color}" stroke-width="1.6"><title>${p.dateLabel}: ${p.value}</title></circle>`).join("");
+    const valLabels=points.map((p,i)=>`<text x="${X(i).toFixed(1)}" y="${(Y(p.value)-8).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${color}" font-family="DM Mono,monospace">${p.value}</text>`).join("");
     const step=Math.max(1,Math.ceil(n/8)); let xl="";
     points.forEach((p,i)=>{ if(i%step===0||i===n-1) xl+=`<text x="${X(i).toFixed(1)}" y="${H-12}" text-anchor="middle" font-size="8.5" fill="#94A3B8" font-family="DM Mono,monospace">${p.label}</text>`; });
     const gid="lcg"+color.replace(/[^a-zA-Z0-9]/g,"");
@@ -1164,6 +1165,7 @@ function renderQualifier(data){
         <path d="${area}" fill="url(#${gid})"/>
         <polyline points="${linePts}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         ${dots}
+        ${valLabels}
         ${xl}
       </svg>
     </div>`;
