@@ -1111,8 +1111,9 @@ function renderQualifier(data){
     </div>`;
   }
 
-  // Daily leads trend (Qualifier): N77:N107 dates, O77:O107 leads, P1 cutoff date
-  const trendPoints = (function(){
+  // Daily leads trend: dates N77:N107, cutoff date P77, leads from valCol
+  // (Qualifier = col O index 14, 4th Floor = col Q index 16)
+  function buildTrend(valCol){
     const fmtKey   = dt => dt.toLocaleDateString('en-CA',{timeZone:'Asia/Karachi'});
     const fmtLabel = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short'});
     const fmtFull  = dt => dt.toLocaleDateString('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'});
@@ -1123,7 +1124,7 @@ function renderQualifier(data){
     const cutKey=fmtKey(cutoff);
     const pts=[];
     for(let r=76;r<=106;r++){ // rows 77-107
-      const draw=data[r]?.[13], vraw=data[r]?.[14]; // N, O
+      const draw=data[r]?.[13], vraw=data[r]?.[valCol]; // N, valCol
       if(draw===''||draw==null) continue;
       const dt=new Date(draw); if(isNaN(dt)) continue;
       if(fmtKey(dt) > cutKey) continue; // only up to cutoff date
@@ -1131,7 +1132,9 @@ function renderQualifier(data){
       pts.push({ value:isNaN(val)?0:val, label:fmtLabel(dt), dateLabel:fmtFull(dt) });
     }
     return pts;
-  })();
+  }
+  const qTrend = buildTrend(14); // O77:O107
+  const fTrend = buildTrend(16); // Q77:Q107
 
   // Responsive SVG line chart
   function lineChart(points,color){
@@ -1150,7 +1153,7 @@ function renderQualifier(data){
     const linePts=points.map((p,i)=>`${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ");
     const area=`M ${X(0).toFixed(1)},${Y(0).toFixed(1)} `+points.map((p,i)=>`L ${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ")+` L ${X(n-1).toFixed(1)},${Y(0).toFixed(1)} Z`;
     const dots=points.map((p,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="2.5" fill="#fff" stroke="${color}" stroke-width="1.6"><title>${p.dateLabel}: ${p.value}</title></circle>`).join("");
-    const valLabels=points.map((p,i)=>`<text x="${X(i).toFixed(1)}" y="${(Y(p.value)-8).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${color}" font-family="DM Mono,monospace">${p.value}</text>`).join("");
+    const valLabels=points.map((p,i)=>`<text x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}" stroke="#ffffff" stroke-width="2.6" paint-order="stroke" stroke-linejoin="round" font-family="DM Mono,monospace">${p.value}</text>`).join("");
     const step=Math.max(1,Math.ceil(n/8)); let xl="";
     points.forEach((p,i)=>{ if(i%step===0||i===n-1) xl+=`<text x="${X(i).toFixed(1)}" y="${H-12}" text-anchor="middle" font-size="8.5" fill="#94A3B8" font-family="DM Mono,monospace">${p.label}</text>`; });
     const gid="lcg"+color.replace(/[^a-zA-Z0-9]/g,"");
@@ -1246,8 +1249,8 @@ function renderQualifier(data){
   }
 
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD,trendPoints)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD,null)}
+    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD,qTrend)}
+    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD,fTrend)}
   </div>`;
 }
 
