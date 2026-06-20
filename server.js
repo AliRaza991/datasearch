@@ -7,6 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET = process.env.SESSION_SECRET || 'datasearch-secret-key-2026';
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://syedaliraza991_db_user:ADYX5obyb5mb4ohx@datasearch.yjc2tol.mongodb.net/datasearch?appName=datasearch';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'syedaliraza991@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'RazaAliSyed@3491';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,10 +48,27 @@ function generateDeviceToken(){
 mongoose.connect(MONGO_URI)
   .then(async () => {
     console.log('MongoDB connected!');
-    const exists = await User.findOne({ username: 'admin' });
-    if (!exists) {
-      await User.create({ username: 'admin', password: 'admin123', name: 'Admin User', designation: 'Super Admin', role: 'admin', active: true });
-      console.log('Default admin created');
+    // Ensure the built-in admin exists with the configured credentials.
+    let admin = await User.findOne({ username: ADMIN_USERNAME });
+    if (!admin) {
+      // Migrate the old default admin ('admin') if present, else create fresh.
+      const legacy = await User.findOne({ role: 'admin', username: 'admin' });
+      if (legacy) {
+        legacy.username = ADMIN_USERNAME;
+        legacy.password = ADMIN_PASSWORD;
+        legacy.active = true;
+        await legacy.save();
+        console.log('Built-in admin migrated to new credentials');
+      } else {
+        await User.create({ username: ADMIN_USERNAME, password: ADMIN_PASSWORD, name: 'Admin User', designation: 'Super Admin', role: 'admin', active: true });
+        console.log('Default admin created');
+      }
+    } else if (admin.password !== ADMIN_PASSWORD) {
+      // Keep the built-in admin password in sync with config.
+      admin.password = ADMIN_PASSWORD;
+      admin.active = true;
+      await admin.save();
+      console.log('Built-in admin password updated');
     }
   })
   .catch(err => console.log('MongoDB error:', err));
