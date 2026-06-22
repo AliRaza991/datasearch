@@ -846,109 +846,31 @@ function renderOrganic(data){
 }
 
 function renderMarketing(data){
-  const ta_recv   = data[31]?.[2] ?? 0;
-  const ta_qual   = data[32]?.[2] ?? 0;
-  const ta_closed = data[33]?.[2] ?? 0;
-  const ta_a      = data[31]?.[5] ?? 0;
-  const ta_b      = data[32]?.[5] ?? 0;
-  const ta_c      = data[33]?.[5] ?? 0;
-  const ta_uncat  = data[34]?.[5] ?? 0;
-  const ta_recv_overall = data[31]?.[8] ?? 0;
-  const ta_recv_monthly = data[32]?.[8] ?? 0;
-  const ta_recv_today   = data[33]?.[8] ?? 0;
-  const ta_qual_overall = data[31]?.[11] ?? 0;
-  const ta_qual_monthly = data[32]?.[11] ?? 0;
-  const ta_qual_today   = data[33]?.[11] ?? 0;
-  const mtc_recv   = data[38]?.[2] ?? 0;
-  const mtc_qual   = data[39]?.[2] ?? 0;
-  const mtc_closed = data[40]?.[2] ?? 0;
-  const mtc_a      = data[38]?.[5] ?? 0;
-  const mtc_b      = data[39]?.[5] ?? 0;
-  const mtc_c      = data[40]?.[5] ?? 0;
-  const mtc_uncat  = data[41]?.[5] ?? 0;
-  const mtc_recv_overall = data[38]?.[8] ?? 0;
-  const mtc_recv_monthly = data[39]?.[8] ?? 0;
-  const mtc_recv_today   = data[40]?.[8] ?? 0;
-  const mtc_qual_overall = data[38]?.[11] ?? 0;
-  const mtc_qual_monthly = data[39]?.[11] ?? 0;
-  const mtc_qual_today   = data[40]?.[11] ?? 0;
-  const wa_recv   = data[46]?.[2] ?? 0;
-  const wa_qual   = data[47]?.[2] ?? 0;
-  const wa_closed = data[48]?.[2] ?? 0;
-  const wa_a      = data[46]?.[5] ?? 0;
-  const wa_b      = data[47]?.[5] ?? 0;
-  const wa_c      = data[48]?.[5] ?? 0;
-  const wa_uncat  = data[49]?.[5] ?? 0;
-  const wa_recv_overall = data[46]?.[8] ?? 0;
-  const wa_recv_monthly = data[47]?.[8] ?? 0;
-  const wa_recv_today   = data[48]?.[8] ?? 0;
-  const wa_qual_overall = data[46]?.[11] ?? 0;
-  const wa_qual_monthly = data[47]?.[11] ?? 0;
-  const wa_qual_today   = data[48]?.[11] ?? 0;
-  const pre_recv   = data[53]?.[2] ?? 0;
-  const pre_qual   = data[54]?.[2] ?? 0;
-  const pre_closed = data[55]?.[2] ?? 0;
-  const pre_a      = data[53]?.[5] ?? 0;
-  const pre_b      = data[54]?.[5] ?? 0;
-  const pre_c      = data[55]?.[5] ?? 0;
-  const pre_uncat  = data[56]?.[5] ?? 0;
-  const pre_recv_overall = data[53]?.[8] ?? 0;
-  const pre_recv_monthly = data[54]?.[8] ?? 0;
-  const pre_recv_today   = data[55]?.[8] ?? 0;
-  const pre_qual_overall = data[53]?.[11] ?? 0;
-  const pre_qual_monthly = data[54]?.[11] ?? 0;
-  const pre_qual_today   = data[55]?.[11] ?? 0;
-  const tt_recv   = data[60]?.[2] ?? 0;
-  const tt_qual   = data[61]?.[2] ?? 0;
-  const tt_closed = data[62]?.[2] ?? 0;
-  const tt_a      = data[60]?.[5] ?? 0;
-  const tt_b      = data[61]?.[5] ?? 0;
-  const tt_c      = data[62]?.[5] ?? 0;
-  const tt_uncat  = data[63]?.[5] ?? 0;
-  const tt_recv_overall = data[60]?.[8] ?? 0;
-  const tt_recv_monthly = data[61]?.[8] ?? 0;
-  const tt_recv_today   = data[62]?.[8] ?? 0;
-  const tt_qual_overall = data[60]?.[11] ?? 0;
-  const tt_qual_monthly = data[61]?.[11] ?? 0;
-  const tt_qual_today   = data[62]?.[11] ?? 0;
-  // Banner totals + budget live in column O (index 14)
-  const ta_t_recv   = data[30]?.[14] ?? 0; const ta_t_qual = data[31]?.[14] ?? 0; const ta_t_closed = data[32]?.[14] ?? 0; const ta_budget = data[33]?.[14] ?? 0;   // O31-O34
-  const mtc_t_recv  = data[37]?.[14] ?? 0; const mtc_t_qual = data[38]?.[14] ?? 0; const mtc_t_closed = data[39]?.[14] ?? 0; const mtc_budget = data[40]?.[14] ?? 0; // O38-O41
-  const wa_t_recv   = data[45]?.[14] ?? 0; const wa_t_qual = data[46]?.[14] ?? 0; const wa_t_closed = data[47]?.[14] ?? 0; const wa_budget = data[48]?.[14] ?? 0;   // O46-O49
-  const pre_t_recv  = data[52]?.[14] ?? 0; const pre_t_qual = data[53]?.[14] ?? 0; const pre_t_closed = data[54]?.[14] ?? 0; const pre_budget = data[55]?.[14] ?? 0; // O53-O56
-  const tt_t_recv   = data[59]?.[14] ?? 0; const tt_t_qual = data[60]?.[14] ?? 0; const tt_t_closed = data[61]?.[14] ?? 0; const tt_budget = data[62]?.[14] ?? 0;   // O60-O63
-  const cl_total   = data[68]?.[2] ?? 0;
-  const cl_3months = data[69]?.[2] ?? 0;
-  const cl_month   = data[70]?.[2] ?? 0;
-  const cl_today   = data[71]?.[2] ?? 0;
-
+  const num = (r,c) => data[r]?.[c] ?? 0;
+  // Build a platform from its sheet header row R (1-indexed). Each block:
+  //   R   header (TOTAL RECEIVED in O)   R+1 Today RECEIVED / TOTAL QUALIFIED(O)
+  //   R+2 Today QUALIFIED / TOTAL CLOSED(O)   R+3 Today CLOSED / BUDGET(O)   R+4 un-cat
+  function plat(name,label,color,bg,R,budget_label){
+    const h=R-1; // data index of header row
+    return { name,label,color,bg,budget_label,
+      recv:num(h+1,2), qual:num(h+2,2), closed:num(h+3,2),
+      a:num(h+1,5), b:num(h+2,5), c:num(h+3,5), uncat:num(h+4,5),
+      recv_ov:num(h+1,8), recv_mn:num(h+2,8), recv_td:num(h+3,8),
+      qual_ov:num(h+1,11), qual_mn:num(h+2,11), qual_td:num(h+3,11),
+      t_recv:num(h,14), t_qual:num(h+1,14), t_closed:num(h+2,14), budget:num(h+3,14) };
+  }
   const platforms=[
-    {name:'TA',label:'TA Class Ads',color:'#1D4ED8',bg:'linear-gradient(135deg,rgba(29,78,216,0.5) 0%,rgba(220,38,38,0.4) 60%,rgba(255,255,255,0.3) 100%)',
-     recv:ta_recv,qual:ta_qual,closed:ta_closed,a:ta_a,b:ta_b,c:ta_c,uncat:ta_uncat,
-     recv_ov:ta_recv_overall,recv_mn:ta_recv_monthly,recv_td:ta_recv_today,
-     qual_ov:ta_qual_overall,qual_mn:ta_qual_monthly,qual_td:ta_qual_today,
-     t_recv:ta_t_recv,t_qual:ta_t_qual,t_closed:ta_t_closed,budget:ta_budget,budget_label:'TA Budget'},
-    {name:'MTC',label:'MTC Class Ads',color:'#DC2626',bg:'linear-gradient(135deg,rgba(220,38,38,0.5) 0%,rgba(29,78,216,0.4) 60%,rgba(255,255,255,0.3) 100%)',
-     recv:mtc_recv,qual:mtc_qual,closed:mtc_closed,a:mtc_a,b:mtc_b,c:mtc_c,uncat:mtc_uncat,
-     recv_ov:mtc_recv_overall,recv_mn:mtc_recv_monthly,recv_td:mtc_recv_today,
-     qual_ov:mtc_qual_overall,qual_mn:mtc_qual_monthly,qual_td:mtc_qual_today,
-     t_recv:mtc_t_recv,t_qual:mtc_t_qual,t_closed:mtc_t_closed,budget:mtc_budget,budget_label:'MTC Budget'},
-    {name:'WhatsApp',label:'WhatsApp Ads',color:'#1D4ED8',bg:'linear-gradient(90deg,rgba(29,78,216,0.5) 0%,rgba(220,38,38,0.35) 50%,rgba(255,255,255,0.4) 100%)',
-     recv:wa_recv,qual:wa_qual,closed:wa_closed,a:wa_a,b:wa_b,c:wa_c,uncat:wa_uncat,
-     recv_ov:wa_recv_overall,recv_mn:wa_recv_monthly,recv_td:wa_recv_today,
-     qual_ov:wa_qual_overall,qual_mn:wa_qual_monthly,qual_td:wa_qual_today,
-     t_recv:wa_t_recv,t_qual:wa_t_qual,t_closed:wa_t_closed,budget:wa_budget,budget_label:'WhatsApp Budget'},
-    {name:'Preceptor',label:'Preceptor Ads',color:'#DC2626',bg:'linear-gradient(90deg,rgba(220,38,38,0.5) 0%,rgba(29,78,216,0.35) 50%,rgba(255,255,255,0.4) 100%)',
-     recv:pre_recv,qual:pre_qual,closed:pre_closed,a:pre_a,b:pre_b,c:pre_c,uncat:pre_uncat,
-     recv_ov:pre_recv_overall,recv_mn:pre_recv_monthly,recv_td:pre_recv_today,
-     qual_ov:pre_qual_overall,qual_mn:pre_qual_monthly,qual_td:pre_qual_today,
-     t_recv:pre_t_recv,t_qual:pre_t_qual,t_closed:pre_t_closed,budget:pre_budget,budget_label:'PH Budget'},
-    {name:'TikTok',label:'TikTok Ads',color:'#1D4ED8',bg:'linear-gradient(135deg,rgba(29,78,216,0.45) 0%,rgba(220,38,38,0.45) 50%,rgba(255,255,255,0.35) 100%)',
-     recv:tt_recv,qual:tt_qual,closed:tt_closed,a:tt_a,b:tt_b,c:tt_c,uncat:tt_uncat,
-     recv_ov:tt_recv_overall,recv_mn:tt_recv_monthly,recv_td:tt_recv_today,
-     qual_ov:tt_qual_overall,qual_mn:tt_qual_monthly,qual_td:tt_qual_today,
-     t_recv:tt_t_recv,t_qual:tt_t_qual,t_closed:tt_t_closed,budget:tt_budget,budget_label:'TikTok Budget'},
+    plat('TA','TA Class Ads','#1D4ED8','linear-gradient(135deg,#1D4ED826,#1D4ED80a)',31,'TA Budget'),
+    plat('Preceptor','Preceptor Ads','#DC2626','linear-gradient(135deg,#DC262626,#DC26260a)',37,'PH Budget'),
+    plat('WhatsApp','WhatsApp Ads','#16A34A','linear-gradient(135deg,#16A34A26,#16A34A0a)',43,'WhatsApp Budget'),
+    plat('FPX','FPX Ads','#7C3AED','linear-gradient(135deg,#7C3AED26,#7C3AED0a)',49,'FPX Budget'),
+    plat('MTC','MTC Ads','#EA580C','linear-gradient(135deg,#EA580C26,#EA580C0a)',55,'MTC Budget'),
+    plat('TikTok','TikTok Ads','#0891B2','linear-gradient(135deg,#0891B226,#0891B20a)',61,'TikTok Budget'),
   ];
+  const cl_total   = num(68,2); // C69
+  const cl_3months = num(69,2); // C70
+  const cl_month   = num(70,2); // C71
+  const cl_today   = num(71,2); // C72
 
   // Format a budget value as currency ($1,234) — keeps "—" for empty cells
   function money(val){
