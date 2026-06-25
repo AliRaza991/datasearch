@@ -680,6 +680,11 @@ function renderOrganic(data){
   const valid_popups       = data[19]?.[2] ?? 0; // C20
   const repeated           = data[20]?.[2] ?? 0; // C21
   const invalid            = data[21]?.[2] ?? 0; // C22
+  // Current-month totals shown in the averages banner headers
+  const total_popup_recv_cm = data[6]?.[5]  ?? 0; // F7  Total pop-up Received
+  const total_popup_qual_cm = data[14]?.[5] ?? 0; // F15 Total pop-up Qualified
+  const total_hot_recv_cm   = data[6]?.[8]  ?? 0; // I7  Total Hot Lead Received
+  const total_hot_qual_cm   = data[14]?.[8] ?? 0; // I15 Total Hot Lead Qualified
   // Closing AVG (column F, rows 19-22)
   const cl_overall   = data[18]?.[5] ?? 0;  // F19 Overall Closed Avg
   const cl_3months   = data[19]?.[5] ?? 0;  // F20 Last 3 Months
@@ -761,6 +766,10 @@ function renderOrganic(data){
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(37,99,235,0.04));border-bottom:2px solid rgba(37,99,235,0.15);">
           <div class="section-hdr-icon" style="background:rgba(37,99,235,0.12);color:#2563EB;border-radius:10px;"><i class="fa-solid fa-chart-column"></i></div>
           <span class="section-hdr-title" style="color:#2563EB;font-size:0.82rem;">POP-UP Averages</span>
+          <div style="margin-left:auto;display:flex;gap:14px;align-items:center;">
+            <div style="text-align:center;min-width:64px;"><div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(0,0,0,0.55);">Total Received</div><div style="font-size:1.05rem;font-weight:800;color:#16A34A;font-family:'DM Mono',monospace;">${v(total_popup_recv_cm)}</div></div>
+            <div style="text-align:center;min-width:64px;"><div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(0,0,0,0.55);">Total Qualified</div><div style="font-size:1.05rem;font-weight:800;color:#2563EB;font-family:'DM Mono',monospace;">${v(total_popup_qual_cm)}</div></div>
+          </div>
         </div>
         <div style="padding:8px 0;">
           <table class="avg-table">
@@ -784,6 +793,10 @@ function renderOrganic(data){
         <div class="section-hdr" style="background:linear-gradient(90deg,rgba(220,38,38,0.1),rgba(220,38,38,0.03));border-bottom:2px solid rgba(220,38,38,0.15);">
           <div class="section-hdr-icon" style="background:rgba(220,38,38,0.12);color:#DC2626;border-radius:10px;"><i class="fa-solid fa-fire"></i></div>
           <span class="section-hdr-title" style="color:#DC2626;font-size:0.82rem;">Hot Lead Averages</span>
+          <div style="margin-left:auto;display:flex;gap:14px;align-items:center;">
+            <div style="text-align:center;min-width:64px;"><div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(0,0,0,0.55);">Total Received</div><div style="font-size:1.05rem;font-weight:800;color:#DC2626;font-family:'DM Mono',monospace;">${v(total_hot_recv_cm)}</div></div>
+            <div style="text-align:center;min-width:64px;"><div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(0,0,0,0.55);">Total Qualified</div><div style="font-size:1.05rem;font-weight:800;color:#2563EB;font-family:'DM Mono',monospace;">${v(total_hot_qual_cm)}</div></div>
+          </div>
         </div>
         <div style="padding:8px 0;">
           <table class="avg-table">
