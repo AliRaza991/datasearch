@@ -1,3 +1,8 @@
+// Use public DNS resolvers so the mongodb+srv SRV lookup works even when the
+// local/ISP resolver refuses SRV queries (fixes "querySrv ECONNREFUSED").
+const dns = require('dns');
+try { dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']); } catch (e) {}
+
 const mongoose = require('mongoose');
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://syedaliraza991_db_user:ADYX5obyb5mb4ohx@datasearch.yjc2tol.mongodb.net/datasearch?appName=datasearch';
@@ -21,7 +26,10 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 (async () => {
-  await mongoose.connect(MONGO_URI);
+  console.log('Connecting to MongoDB...');
+  await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 20000 });
+  console.log('Connected.');
+
   let admin = await User.findOne({ username: ADMIN_USERNAME });
   if (admin) {
     admin.password = ADMIN_PASSWORD;
@@ -31,7 +39,7 @@ const User = mongoose.model('User', userSchema);
     admin.deviceRegistered = false;
     admin.registeredDeviceToken = null;
     await admin.save();
-    console.log('RESULT: admin already existed -> updated/restored');
+    console.log('RESULT: admin already existed -> password reset / restored');
   } else {
     await User.create({
       username: ADMIN_USERNAME, password: ADMIN_PASSWORD, name: 'Admin User',
@@ -40,7 +48,10 @@ const User = mongoose.model('User', userSchema);
     });
     console.log('RESULT: admin recreated');
   }
+
   const count = await User.countDocuments({ role: 'admin' });
   console.log('Total admin users now:', count);
+  console.log('Login with -> username:', ADMIN_USERNAME, '| password:', ADMIN_PASSWORD);
   await mongoose.disconnect();
+  console.log('Done. You can log in now.');
 })().catch(e => { console.error('FAILED:', e.message); process.exit(1); });
