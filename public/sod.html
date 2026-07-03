@@ -1140,7 +1140,7 @@ function renderQualifier(data){
               <div style="font-size:2rem;font-weight:800;color:#6d28d9;font-family:'DM Mono',monospace;">${d.today_st}</div>
             </div>
           </div>
-          <div style="padding:7px 14px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
+          <div style="padding:7px 18px;font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;">Qualified Averages</div>
           ${mr('Email Avg',avg(d.email_avg),'cyan')}
           ${mr('ST Avg',avg(d.st_avg),'purple')}
           ${mr('Overall',avg(d.overall_avg),'blue')}
@@ -1148,7 +1148,7 @@ function renderQualifier(data){
           ${mr('Today',avg(d.today_avg),'blue')}
         </div>`;
     const closingCol=`
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
+          <div style="padding:8px 18px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#DC2626;background:rgba(220,38,38,0.04);border-bottom:1.5px solid #CBD5E1;">Closing Average</div>
           ${mr('Total Closed',avg(d.cl_total),'green')}
           ${mr('Last 3 Months',avg(d.cl_3months),'blue')}
           ${mr('Current Month',avg(d.cl_month),'gold')}
