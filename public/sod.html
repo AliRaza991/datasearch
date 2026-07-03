@@ -794,8 +794,8 @@ function renderOrganic(data){
           <div class="section-hdr-icon" style="background:rgba(220,38,38,0.12);color:#DC2626;border-radius:10px;"><i class="fa-solid fa-fire"></i></div>
           <span class="section-hdr-title" style="color:#DC2626;font-size:0.82rem;">Hot Lead Averages</span>
           <div style="margin-left:auto;display:flex;gap:12px;align-items:center;flex-shrink:0;">
-            <div style="text-align:center;min-width:52px;"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:rgba(0,0,0,0.55);">Total Received</div><div style="font-size:1rem;font-weight:800;color:#DC2626;font-family:'DM Mono',monospace;">${v(total_hot_recv_cm)}</div></div>
-            <div style="text-align:center;min-width:52px;"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:rgba(0,0,0,0.55);">Total Qualified</div><div style="font-size:1rem;font-weight:800;color:#2563EB;font-family:'DM Mono',monospace;">${v(total_hot_qual_cm)}</div></div>
+            <div style="text-align:center;min-width:52px;"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:rgba(0,0,0,0.55);">Total Received</div><div style="font-size:1.5rem;font-weight:800;color:#DC2626;font-family:'DM Mono',monospace;">${v(total_hot_recv_cm)}</div></div>
+            <div style="text-align:center;min-width:52px;"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:rgba(0,0,0,0.55);">Total Qualified</div><div style="font-size:1.5rem;font-weight:800;color:#2563EB;font-family:'DM Mono',monospace;">${v(total_hot_qual_cm)}</div></div>
           </div>
         </div>
         <div style="padding:8px 0;">
@@ -916,26 +916,26 @@ function renderMarketing(data){
       </div>
       <div style="display:grid;grid-template-columns:1.1fr 1fr 1.2fr 1.2fr;gap:0;">
         <div style="border-right:2px solid #CBD5E1;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:${p.color};background:${p.bg};border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">${p.name} Today</div>
+          <div style="padding:8px 16px;font-size:1rem;font-weight:700;text-transform:uppercase;color:${p.color};background:${p.bg};border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">${p.name} Today</div>
           ${mr('Received',p.recv,'blue')}
           ${mr('Qualified',p.qual,'blue')}
           ${mr('Closed',p.closed,'red')}
         </div>
         <div style="border-right:2px solid #CBD5E1;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:var(--text2);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Categories</div>
+          <div style="padding:8px 16px;font-size:1rem;font-weight:700;text-transform:uppercase;color:var(--text2);background:#fafbfc;border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Categories</div>
           ${mr('A',p.a,'green')}
           ${mr('B',p.b,'gold')}
           ${mr('C',p.c,'red')}
           ${mr('Un-cat',p.uncat,'dim')}
         </div>
         <div style="border-right:2px solid #CBD5E1;">
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#16A34A;background:rgba(22,163,74,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Recv Avg</div>
+          <div style="padding:8px 16px;font-size:1rem;font-weight:700;text-transform:uppercase;color:#16A34A;background:rgba(22,163,74,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Recv Avg</div>
           ${mr('Overall',p.recv_ov,'green')}
           ${mr('Monthly',p.recv_mn,'green')}
           ${mr('Today',p.recv_td,'green')}
         </div>
         <div>
-          <div style="padding:8px 16px;font-size:0.62rem;font-weight:700;text-transform:uppercase;color:#7C3AED;background:rgba(124,58,237,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Qual Avg</div>
+          <div style="padding:8px 16px;font-size:1rem;font-weight:700;text-transform:uppercase;color:#7C3AED;background:rgba(124,58,237,0.04);border-bottom:1.5px solid #CBD5E1;letter-spacing:0.08em;">Qual Avg</div>
           ${mr('Overall',p.qual_ov,'purple')}
           ${mr('Monthly',p.qual_mn,'purple')}
           ${mr('Today',p.qual_td,'purple')}
