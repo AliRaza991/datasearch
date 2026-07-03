@@ -434,8 +434,8 @@ nav{
 }
 .mrow:last-child{border-bottom:none;}
 .mrow:hover{background:#fafbfc;}
-.mrow-label{font-size:0.78rem;color:var(--text2);font-weight:500;}
-.mrow-val{font-size:1rem;font-weight:700;font-family:'DM Mono',monospace;}
+.mrow-label{font-size:0.9rem;color:var(--text2);font-weight:500;}
+.mrow-val{font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;}
 .mrow-val.blue{color:#1d4ed8;}
 .mrow-val.red{color:#b91c1c;}
 .mrow-val.green{color:#15803d;}
@@ -896,7 +896,7 @@ function renderMarketing(data){
   // Banner stat box (transparent bg, black text)
   function pBox(label,val){
     return `<div style="background:transparent;border:none;border-radius:12px;padding:8px 16px;text-align:center;min-width:84px;">
-      <div style="font-size:0.54rem;font-weight:700;text-transform:uppercase;color:rgba(0,0,0,0.6);letter-spacing:0.05em;white-space:nowrap;">${label}</div>
+      <div style="font-size:0.8rem;font-weight:700;text-transform:uppercase;color:rgba(0,0,0,0.6);letter-spacing:0.05em;white-space:nowrap;">${label}</div>
       <div style="font-size:1.55rem;font-weight:800;color:#000000;font-family:'DM Mono',monospace;line-height:1.15;">${val}</div>
     </div>`;
   }
