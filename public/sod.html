@@ -1360,7 +1360,7 @@ function renderClosed(data){
   const mg_uniq_cm     = data[192]?.[6] ?? 0;
   const mg_rev_cm      = data[192]?.[7] ?? 0;
   const maheen_cl = [data[198],data[199],data[200],data[201],data[202],data[203],data[204]].filter(r=>r?.[1]&&r[1]!=='');
-  const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219],data[221],data[222],data[223]].filter(r=>r?.[1]&&r[1]!=='');
+  const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219],data[220],data[221],data[222],data[223]].filter(r=>r?.[1]&&r[1]!=='');
 
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
     return `<div class="section-card" style="margin-bottom:16px;">
