@@ -600,62 +600,77 @@ function showLoadError(){
   document.getElementById('khurramBody').innerHTML = errHtml;
 }
 
-async function loadData(){
+function renderEOD(d){
+  // Maheen: rows 4-14 (0-indexed), Total at row 15
+  // Khurram: rows 19-29 (0-indexed), Total at row 30
+  const mRows = d.slice(4,15).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
+  const mTotal = d[15]||null;
+  const kRows = d.slice(19,30).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
+  const kTotal = d[30]||null;
+  const ov = d[31]||null;
+
+  const mMembers = mRows;
+  const kMembers = kRows;
+
+  document.getElementById('maheenBody').innerHTML=
+    mMembers.map(r=>makeRow(r)).join('')+(mTotal?makeRow(mTotal,true):'');
+  document.getElementById('khurramBody').innerHTML=
+    kMembers.map(r=>makeRow(r)).join('')+(kTotal?makeRow(kTotal,true):'');
+  eodLoaded = true;
+
+  if(mTotal){
+    const mr=parseFloat(mTotal[13])||0;
+    document.getElementById('mTotal').textContent=mTotal[7]||0;
+    document.getElementById('mClosed').textContent=mTotal[12]||0;
+    document.getElementById('mRatio').textContent=Math.round(mr*100)+'%';
+    document.getElementById('mQToday').textContent=mTotal[25]||0;
+    document.getElementById('mClosedCard').textContent=mTotal[12]||0;
+    document.getElementById('mRatioCard').textContent='Closing: '+Math.round(mr*100)+'%';
+  }
+  if(kTotal){
+    const kr=parseFloat(kTotal[13])||0;
+    document.getElementById('kTotal').textContent=kTotal[7]||0;
+    document.getElementById('kClosed').textContent=kTotal[12]||0;
+    document.getElementById('kRatio').textContent=Math.round(kr*100)+'%';
+    document.getElementById('kQToday').textContent=kTotal[25]||0;
+    document.getElementById('kClosedCard').textContent=kTotal[12]||0;
+    document.getElementById('kRatioCard').textContent='Closing: '+Math.round(kr*100)+'%';
+  }
+  if(ov){
+    const or=parseFloat(ov[13])||0;
+    document.getElementById('ovQ').textContent=ov[7]||0;
+    document.getElementById('ovC').textContent=ov[12]||0;
+    document.getElementById('ovRatio').textContent=Math.round(or*100)+'%';
+  }
+
+  document.getElementById('lastUpdated').textContent=
+    new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+async function loadData(attempt=0){
+  // Instant (stale) paint from persisted storage so the slow endpoint never blocks the view.
+  if(!eodLoaded){
+    try{
+      const saved=JSON.parse(localStorage.getItem('eod_cache')||'null');
+      if(saved&&Array.isArray(saved.data)) renderEOD(saved.data);
+    }catch(e){}
+  }
+
   const controller=new AbortController();
-  const timeoutId=setTimeout(()=>controller.abort(),15000);
+  const timeoutId=setTimeout(()=>controller.abort(),30000);
   try{
     const res=await fetch(SCRIPT_URL+'?t='+Date.now(),{cache:'no-store',signal:controller.signal});
     const json=await res.json();
-    if(!json.success){ showLoadError(); return; }
-    const d=json.data;
-
-    // Maheen: rows 4-14 (0-indexed), Total at row 15
-    // Khurram: rows 19-29 (0-indexed), Total at row 30
-    const mRows = d.slice(4,15).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
-    const mTotal = d[15]||null;
-    const kRows = d.slice(19,30).filter(r=>r[0]&&String(r[0]).trim()!==''&&String(r[0]).trim()!=='-');
-    const kTotal = d[30]||null;
-    const ov = d[31]||null;
-
-    const mMembers = mRows;
-    const kMembers = kRows;
-
-    document.getElementById('maheenBody').innerHTML=
-      mMembers.map(r=>makeRow(r)).join('')+(mTotal?makeRow(mTotal,true):'');
-    document.getElementById('khurramBody').innerHTML=
-      kMembers.map(r=>makeRow(r)).join('')+(kTotal?makeRow(kTotal,true):'');
-    eodLoaded = true;
-
-    if(mTotal){
-      const mr=parseFloat(mTotal[13])||0;
-      document.getElementById('mTotal').textContent=mTotal[7]||0;
-      document.getElementById('mClosed').textContent=mTotal[12]||0;
-      document.getElementById('mRatio').textContent=Math.round(mr*100)+'%';
-      document.getElementById('mQToday').textContent=mTotal[25]||0;
-      document.getElementById('mClosedCard').textContent=mTotal[12]||0;
-      document.getElementById('mRatioCard').textContent='Closing: '+Math.round(mr*100)+'%';
+    if(!json.success){
+      if(attempt<3){ setTimeout(()=>loadData(attempt+1),2500); return; }
+      showLoadError(); return;
     }
-    if(kTotal){
-      const kr=parseFloat(kTotal[13])||0;
-      document.getElementById('kTotal').textContent=kTotal[7]||0;
-      document.getElementById('kClosed').textContent=kTotal[12]||0;
-      document.getElementById('kRatio').textContent=Math.round(kr*100)+'%';
-      document.getElementById('kQToday').textContent=kTotal[25]||0;
-      document.getElementById('kClosedCard').textContent=kTotal[12]||0;
-      document.getElementById('kRatioCard').textContent='Closing: '+Math.round(kr*100)+'%';
-    }
-    if(ov){
-      const or=parseFloat(ov[13])||0;
-      document.getElementById('ovQ').textContent=ov[7]||0;
-      document.getElementById('ovC').textContent=ov[12]||0;
-      document.getElementById('ovRatio').textContent=Math.round(or*100)+'%';
-    }
-
-    document.getElementById('lastUpdated').textContent=
-      new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-
+    try{ localStorage.setItem('eod_cache',JSON.stringify({data:json.data})); }catch(e){}
+    renderEOD(json.data);
   }catch(e){
     console.error('EOD error:',e);
+    // Transient 404/timeout — retry quickly instead of waiting the full 30s cycle.
+    if(attempt<3){ setTimeout(()=>loadData(attempt+1),2500); return; }
     showLoadError();
   }finally{
     clearTimeout(timeoutId);

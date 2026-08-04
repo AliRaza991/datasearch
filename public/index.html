@@ -731,31 +731,39 @@ async function fetchFromSheet(){
           else reject(new Error('Fetch failed'));
         }
       }, 100);
-      setTimeout(() => { clearInterval(check); reject(new Error('Timeout waiting')); }, 15000);
+      setTimeout(() => { clearInterval(check); reject(new Error('Timeout waiting')); }, 100000);
     });
   }
 
   isFetching = true;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 12000);
-
   try{
-    const res = await fetch(SHEET_URL + '&t=' + Date.now(), {
-      cache: 'no-store',
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    const parsed = parseSheetResponse(json);
-    cachedData = parsed;
-    lastFetch = Date.now();
+    // The Client_History endpoint is ~4MB and slow (12-15s), and intermittently
+    // returns a transient 404. Use a generous timeout and retry a few times.
+    let lastErr;
+    for(let attempt=0; attempt<3; attempt++){
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      try{
+        const res = await fetch(SHEET_URL + '&t=' + Date.now(), {
+          cache: 'no-store',
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        const parsed = parseSheetResponse(json);
+        cachedData = parsed;
+        lastFetch = Date.now();
+        return parsed;
+      } catch(err){
+        clearTimeout(timeoutId);
+        lastErr = err;
+        if(attempt < 2) await new Promise(r => setTimeout(r, 2500));
+      }
+    }
+    throw lastErr || new Error('Fetch failed');
+  } finally {
     isFetching = false;
-    return parsed;
-  } catch(err){
-    clearTimeout(timeoutId);
-    isFetching = false;
-    throw err;
   }
 }
 

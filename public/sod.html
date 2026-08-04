@@ -1524,55 +1524,72 @@ async function loadDept(sheet, deptName, icon, btnId){
   if(refreshTimer) clearInterval(refreshTimer);
   let hasRendered = false;
 
-  async function fetch_render(){
+  // Seed the in-memory cache from persisted storage so we can paint instantly
+  // (stale-while-revalidate) instead of blocking on the slow endpoint.
+  if(!dataCache[sheet]){
     try{
-      const cacheKey=sheet;
-      const now=Date.now();
-      let json;
+      const saved=JSON.parse(localStorage.getItem('sod_cache_'+sheet)||'null');
+      if(saved&&saved.data&&saved.data.success) dataCache[sheet]=saved;
+    }catch(e){}
+  }
 
-      if(dataCache[cacheKey]&&(now-dataCache[cacheKey].ts)<CACHE_TTL){
-        json=dataCache[cacheKey].data;
-      } else {
-        const controller=new AbortController();
-        const timeoutId=setTimeout(()=>controller.abort(),15000);
-        try{
-          const res=await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet)+'&t='+now,{cache:'no-store',signal:controller.signal});
-          json=await res.json();
-        }finally{ clearTimeout(timeoutId); }
-        if(json.success) dataCache[cacheKey]={data:json,ts:now};
-      }
+  function paint(json, ts, isFresh){
+    const t=ts?new Date(ts).toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
+    let content='';
+    if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
+    else if(deptName==='Marketing') content=renderMarketing(json.data);
+    else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
+    else if(deptName==='Revived Leads') content=renderRevived(json.data);
+    else if(deptName==='Closed Leads') content=renderClosed(json.data);
+    else content=renderGeneric(json.data,deptName,icon);
+    document.getElementById('deptContent').innerHTML=`
+      <div class="dept-hdr">
+        <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
+        <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">${isFresh?'Live data · 30s auto-refresh':'Cached · updating…'}</div></div>
+        <div class="dept-hdr-time">
+          <div class="dept-hdr-time-label">LAST UPDATED</div>
+          <div class="dept-hdr-time-val">${t}</div>
+        </div>
+      </div>
+      ${content}`;
+    hasRendered=true;
+  }
+
+  function showErr(msg){
+    if(!hasRendered) document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>'+msg+'</div></div>';
+  }
+
+  async function fetch_render(attempt=0){
+    const cacheKey=sheet;
+    const now=Date.now();
+    const cached=dataCache[cacheKey];
+
+    // Instant paint from any cached data (fresh or stale) so the user never stares at a spinner.
+    if(cached&&cached.data&&cached.data.success&&!hasRendered) paint(cached.data, cached.ts, false);
+    // Cache is still fresh — no network call needed (fast dept switching).
+    if(cached&&(now-cached.ts)<CACHE_TTL) return;
+
+    try{
+      const controller=new AbortController();
+      const timeoutId=setTimeout(()=>controller.abort(),30000);
+      let json;
+      try{
+        const res=await fetch(SCRIPT_URL+'?sheet='+encodeURIComponent(sheet)+'&t='+now,{cache:'no-store',signal:controller.signal});
+        json=await res.json();
+      }finally{ clearTimeout(timeoutId); }
 
       if(!json||!json.success){
-        if(!hasRendered) document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>Data load failed</div></div>';
-        return;
+        // Endpoint returns transient 404/empty — retry quickly instead of waiting 30s.
+        if(attempt<3){ setTimeout(()=>fetch_render(attempt+1),2500); return; }
+        showErr('Data load failed'); return;
       }
-
-      const now2=new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      let content='';
-      if(deptName==='Organic & Pop-Up') content=renderOrganic(json.data);
-      else if(deptName==='Marketing') content=renderMarketing(json.data);
-      else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
-      else if(deptName==='Revived Leads') content=renderRevived(json.data);
-      else if(deptName==='Closed Leads') content=renderClosed(json.data);
-      else content=renderGeneric(json.data,deptName,icon);
-
-      document.getElementById('deptContent').innerHTML=`
-        <div class="dept-hdr">
-          <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
-          <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Live data · 30s auto-refresh</div></div>
-          <div class="dept-hdr-time">
-            <div class="dept-hdr-time-label">LAST UPDATED</div>
-            <div class="dept-hdr-time-val">${now2}</div>
-          </div>
-        </div>
-        ${content}`;
-      hasRendered = true;
+      dataCache[cacheKey]={data:json,ts:now};
+      try{ localStorage.setItem('sod_cache_'+cacheKey,JSON.stringify({data:json,ts:now})); }catch(e){}
+      paint(json, now, true);
     }catch(e){
       console.error(e);
-      // Keep the existing dashboard on refresh failures - only show error if nothing rendered yet
-      if(!hasRendered){
-        document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>Connection error — retrying in 30s...</div></div>';
-      }
+      if(attempt<3){ setTimeout(()=>fetch_render(attempt+1),2500); return; }
+      showErr('Connection error — retrying in 30s…');
     }
   }
 
