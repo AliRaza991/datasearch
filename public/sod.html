@@ -559,9 +559,33 @@ checkDeviceStatus();
   <button class="dept-btn" onclick="loadDept('SOD','Pop-Up','fa-bolt','Popup')" id="btn-Popup">
     <div class="dept-icon"><i class="fa-solid fa-bolt"></i></div><div class="dept-name">Pop-Up</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Marketing','fa-bullhorn','Marketing')" id="btn-Marketing">
+  <button class="dept-btn" onclick="toggleMarketing()" id="btn-Marketing">
     <div class="dept-icon"><i class="fa-solid fa-bullhorn"></i></div><div class="dept-name">Marketing</div>
+    <i class="fa-solid fa-chevron-down" id="mkt-chevron" style="margin-left:auto;font-size:0.7rem;opacity:0.65;transition:transform 0.2s;"></i>
   </button>
+  <div id="mkt-submenu" style="display:none;flex-direction:column;gap:4px;padding-left:14px;margin:4px 0;">
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','TA Class Ads','fa-graduation-cap','mkt-TA')" id="btn-mkt-TA">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-graduation-cap"></i></div><div class="dept-name" style="font-size:0.82rem;">TA Class Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','Preceptor Ads','fa-user-doctor','mkt-Preceptor')" id="btn-mkt-Preceptor">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-user-doctor"></i></div><div class="dept-name" style="font-size:0.82rem;">Preceptor Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','FPX Ads','fa-bolt','mkt-FPX')" id="btn-mkt-FPX">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-bolt"></i></div><div class="dept-name" style="font-size:0.82rem;">FPX Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','WhatsApp Ads','fa-comment-dots','mkt-WhatsApp')" id="btn-mkt-WhatsApp">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-comment-dots"></i></div><div class="dept-name" style="font-size:0.82rem;">WhatsApp Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','MTC Ads','fa-tower-cell','mkt-MTC')" id="btn-mkt-MTC">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-tower-cell"></i></div><div class="dept-name" style="font-size:0.82rem;">MTC Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','TikTok Ads','fa-music','mkt-TikTok')" id="btn-mkt-TikTok">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-music"></i></div><div class="dept-name" style="font-size:0.82rem;">TikTok Ads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','Closed Paid Leads Avg','fa-chart-line','mkt-Closed')" id="btn-mkt-Closed">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-chart-line"></i></div><div class="dept-name" style="font-size:0.82rem;">Closed Paid Leads Avg</div>
+    </button>
+  </div>
   <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','fa-bullseye','Qualifier')" id="btn-Qualifier">
     <div class="dept-icon"><i class="fa-solid fa-bullseye"></i></div><div class="dept-name">Qualifier & 4th Floor</div>
   </button>
@@ -972,7 +996,7 @@ function renderPopupDept(data){
   `;
 }
 
-function renderMarketing(data){
+function renderMarketing(data, which){
   const num = (r,c) => data[r]?.[c] ?? 0;
   // Build a platform from its sheet header row R (1-indexed). Each block:
   //   R   header (TOTAL RECEIVED in O)   R+1 Today RECEIVED / TOTAL QUALIFIED(O)
@@ -1058,9 +1082,7 @@ function renderMarketing(data){
     </div>`;
   }
 
-  return `
-    <div style="display:flex;flex-direction:column;gap:0;">
-      ${platforms.map(p=>platCard(p)).join('')}
+  const closedSection = `
       <div class="section-card">
         <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.5) 0%,rgba(220,38,38,0.45) 50%,rgba(255,255,255,0.35) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
           <div class="section-hdr-icon" style="background:linear-gradient(135deg,#ffffff,rgba(255,255,255,0.78));border:1px solid rgba(220,38,38,0.35);color:#DC2626;width:46px;height:46px;font-size:1.3rem;border-radius:13px;box-shadow:0 5px 14px rgba(220,38,38,0.18),inset 0 1px 0 rgba(255,255,255,0.85);"><i class="fa-solid fa-chart-line"></i></div>
@@ -1084,8 +1106,14 @@ function renderMarketing(data){
             <div class="closing-val" style="color:#DC2626;">${cl_today}</div>
           </div>
         </div>
-      </div>
-    </div>`;
+      </div>`;
+
+  // Single sub-page: a specific platform, or the Closed Paid Leads averages.
+  if(which==='closed'){
+    return `<div style="display:flex;flex-direction:column;gap:0;">${closedSection}</div>`;
+  }
+  const p = platforms.find(x=>x.name===which) || platforms[0];
+  return `<div style="display:flex;flex-direction:column;gap:0;">${platCard(p)}</div>`;
 }
 
 function renderQualifier(data){
@@ -1623,6 +1651,15 @@ function renderGeneric(data, deptName, icon){
   `;
 }
 
+// Expand/collapse the Marketing sub-menu in the sidebar.
+function toggleMarketing(){
+  const sm=document.getElementById('mkt-submenu');
+  const ch=document.getElementById('mkt-chevron');
+  const open=sm.style.display==='flex';
+  sm.style.display=open?'none':'flex';
+  if(ch) ch.style.transform=open?'rotate(0deg)':'rotate(180deg)';
+}
+
 async function loadDept(sheet, deptName, icon, btnId){
   document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('btn-'+btnId);
@@ -1650,9 +1687,10 @@ async function loadDept(sheet, deptName, icon, btnId){
   function paint(json, ts, isFresh){
     const t=ts?new Date(ts).toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
     let content='';
+    const MKT_PAGES={'TA Class Ads':'TA','Preceptor Ads':'Preceptor','FPX Ads':'FPX','WhatsApp Ads':'WhatsApp','MTC Ads':'MTC','TikTok Ads':'TikTok','Closed Paid Leads Avg':'closed'};
     if(deptName==='Organic') content=renderOrganicDept(json.data);
-      else if(deptName==='Pop-Up') content=renderPopupDept(json.data);
-    else if(deptName==='Marketing') content=renderMarketing(json.data);
+    else if(deptName==='Pop-Up') content=renderPopupDept(json.data);
+    else if(MKT_PAGES[deptName]) content=renderMarketing(json.data, MKT_PAGES[deptName]);
     else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
     else if(deptName==='Revived Leads') content=renderRevived(json.data);
     else if(deptName==='Closed Leads') content=renderClosed(json.data);
