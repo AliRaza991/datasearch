@@ -586,15 +586,24 @@ checkDeviceStatus();
       <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-chart-line"></i></div><div class="dept-name" style="font-size:0.82rem;">Closed Paid Leads Avg</div>
     </button>
   </div>
-  <button class="dept-btn" onclick="loadDept('SOD','Qualifier & 4th Floor','fa-bullseye','Qualifier')" id="btn-Qualifier">
-    <div class="dept-icon"><i class="fa-solid fa-bullseye"></i></div><div class="dept-name">Qualifier & 4th Floor</div>
+  <button class="dept-btn" onclick="loadDept('SOD','Lead Qualification','fa-bullseye','LeadQual')" id="btn-LeadQual">
+    <div class="dept-icon"><i class="fa-solid fa-bullseye"></i></div><div class="dept-name">Lead Qualification</div>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Revived Leads','fa-arrows-rotate','Revived')" id="btn-Revived">
-    <div class="dept-icon"><i class="fa-solid fa-arrows-rotate"></i></div><div class="dept-name">Revived Leads</div>
+  <button class="dept-btn" onclick="toggleClosing()" id="btn-Closing">
+    <div class="dept-icon"><i class="fa-solid fa-flag-checkered"></i></div><div class="dept-name">Closing</div>
+    <i class="fa-solid fa-chevron-down" id="cl-chevron" style="margin-left:auto;font-size:0.7rem;opacity:0.65;transition:transform 0.2s;"></i>
   </button>
-  <button class="dept-btn" onclick="loadDept('SOD','Closed Leads','fa-circle-check','Closed')" id="btn-Closed">
-    <div class="dept-icon"><i class="fa-solid fa-circle-check"></i></div><div class="dept-name">Closed Leads</div>
-  </button>
+  <div id="cl-submenu" style="display:none;flex-direction:column;gap:4px;padding-left:14px;margin:4px 0;">
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','New Leads','fa-building','cl-NewLeads')" id="btn-cl-NewLeads">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-building"></i></div><div class="dept-name" style="font-size:0.82rem;">New Leads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','Revived Leads','fa-arrows-rotate','cl-Revived')" id="btn-cl-Revived">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-arrows-rotate"></i></div><div class="dept-name" style="font-size:0.82rem;">Revived Leads</div>
+    </button>
+    <button class="dept-btn" style="padding:9px 12px;" onclick="loadDept('SOD','Closed Lead','fa-circle-check','cl-Closed')" id="btn-cl-Closed">
+      <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-circle-check"></i></div><div class="dept-name" style="font-size:0.82rem;">Closed Lead</div>
+    </button>
+  </div>
   <div class="sidebar-footer">
     <div class="sidebar-footer-dot"></div>
     <div class="sidebar-footer-text">Auto refresh every 30 seconds</div>
@@ -1116,7 +1125,7 @@ function renderMarketing(data, which){
   return `<div style="display:flex;flex-direction:column;gap:0;">${platCard(p)}</div>`;
 }
 
-function renderQualifier(data){
+function renderQualifier(data, which){
   // Qualifier Department lives in column C (index 2); 4th Floor in column F (index 5).
   // 6-month totals are in column I (index 8): Qualifier rows I85-I90, 4th Floor rows I93-I98.
   const qD = {
@@ -1254,7 +1263,7 @@ function renderQualifier(data){
   function dCard(name,color,bg,d,chartData){
     const header=`
       <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:18px 24px;">
-        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${name.includes('4th')?'fa-building':'fa-bullseye'}"></i></div>
+        <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:46px;height:46px;font-size:1.4rem;"><i class="fa-solid ${(name.includes('4th')||name.includes('New Leads'))?'fa-building':'fa-bullseye'}"></i></div>
         <div>
           <div style="font-size:1.85rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${name}</div>
           <div style="font-size:0.72rem;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:500;">Department Performance</div>
@@ -1325,9 +1334,13 @@ function renderQualifier(data){
     return `<div class="section-card" style="margin-bottom:16px;">${header}${body}</div>`;
   }
 
+  if(which==='newleads'){
+    return `<div>
+      ${dCard('New Leads','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD,fTrend)}
+    </div>`;
+  }
   return `<div>
-    ${dCard('Qualifier Department','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD,qTrend)}
-    ${dCard('4th Floor','#0F766E','linear-gradient(135deg,rgba(15,118,110,0.12),rgba(20,184,166,0.06))',fD,fTrend)}
+    ${dCard('Lead Qualification','#1D4ED8','linear-gradient(135deg,rgba(29,78,216,0.12),rgba(124,58,237,0.06))',qD,qTrend)}
   </div>`;
 }
 
@@ -1660,6 +1673,15 @@ function toggleMarketing(){
   if(ch) ch.style.transform=open?'rotate(0deg)':'rotate(180deg)';
 }
 
+// Expand/collapse the Closing sub-menu in the sidebar.
+function toggleClosing(){
+  const sm=document.getElementById('cl-submenu');
+  const ch=document.getElementById('cl-chevron');
+  const open=sm.style.display==='flex';
+  sm.style.display=open?'none':'flex';
+  if(ch) ch.style.transform=open?'rotate(0deg)':'rotate(180deg)';
+}
+
 async function loadDept(sheet, deptName, icon, btnId){
   document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('btn-'+btnId);
@@ -1691,9 +1713,10 @@ async function loadDept(sheet, deptName, icon, btnId){
     if(deptName==='Organic') content=renderOrganicDept(json.data);
     else if(deptName==='Pop-Up') content=renderPopupDept(json.data);
     else if(MKT_PAGES[deptName]) content=renderMarketing(json.data, MKT_PAGES[deptName]);
-    else if(deptName==='Qualifier & 4th Floor') content=renderQualifier(json.data);
+    else if(deptName==='Lead Qualification') content=renderQualifier(json.data,'qualifier');
+    else if(deptName==='New Leads') content=renderQualifier(json.data,'newleads');
     else if(deptName==='Revived Leads') content=renderRevived(json.data);
-    else if(deptName==='Closed Leads') content=renderClosed(json.data);
+    else if(deptName==='Closed Lead') content=renderClosed(json.data);
     else content=renderGeneric(json.data,deptName,icon);
     document.getElementById('deptContent').innerHTML=`
       <div class="dept-hdr">
