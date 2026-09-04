@@ -133,9 +133,11 @@ nav{
   background:#fff;
   border-right:1px solid var(--border);
   z-index:100;padding:28px 16px;
-  overflow-y:auto;
+  display:flex;flex-direction:column;
+  overflow:hidden;
   box-shadow:4px 0 20px rgba(0,0,0,0.03);
 }
+.sidebar-scroll{flex:1 1 auto;overflow-y:auto;min-height:0;margin:0 -4px;padding:0 4px;}
 .sidebar-label{
   font-size:0.62rem;font-weight:700;letter-spacing:0.16em;
   text-transform:uppercase;color:var(--text3);
@@ -173,7 +175,7 @@ nav{
 .dept-name{font-size:0.82rem;}
 
 .sidebar-footer{
-  position:absolute;bottom:16px;left:16px;right:16px;
+  flex-shrink:0;margin-top:12px;
   background:rgba(37,99,235,0.04);
   border:1px solid rgba(37,99,235,0.1);
   border-radius:12px;padding:12px 14px;
@@ -552,6 +554,7 @@ checkDeviceStatus();
 
 <!-- SIDEBAR -->
 <div class="sidebar">
+  <div class="sidebar-scroll">
   <div class="sidebar-label">Departments</div>
   <button class="dept-btn active" onclick="loadDept('SOD','Organic','fa-seedling','Organic')" id="btn-Organic">
     <div class="dept-icon"><i class="fa-solid fa-seedling"></i></div><div class="dept-name">Organic</div>
@@ -604,6 +607,7 @@ checkDeviceStatus();
       <div class="dept-icon" style="width:26px;height:26px;font-size:0.72rem;"><i class="fa-solid fa-circle-check"></i></div><div class="dept-name" style="font-size:0.82rem;">Closed Lead</div>
     </button>
   </div>
+  </div>
   <div class="sidebar-footer">
     <div class="sidebar-footer-dot"></div>
     <div class="sidebar-footer-text">Auto refresh every 30 seconds</div>
@@ -651,6 +655,7 @@ document.addEventListener('click',function(e){const p=document.querySelector('.n
 function doLogout(){const t=localStorage.getItem('ds_token');fetch('/api/logout',{method:'POST',headers:{'authorization':t}});localStorage.removeItem('ds_token');localStorage.removeItem('ds_user');window.location.replace('/login.html');}
 
 let refreshTimer=null;
+let loadSeq=0;          // bumps on every dept switch; stale async paints are ignored
 const dataCache={};
 const CACHE_TTL=30000;
 
@@ -1695,16 +1700,10 @@ function toggleClosing(){
 }
 
 async function loadDept(sheet, deptName, icon, btnId){
+  const mySeq=++loadSeq;   // invalidate any in-flight paint from a previously opened page
   document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('btn-'+btnId);
   if(btn) btn.classList.add('active');
-
-  document.getElementById('deptContent').innerHTML=`
-    <div class="dept-hdr">
-      <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
-      <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
-    </div>
-    <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading ${deptName}...</div></div>`;
 
   if(refreshTimer) clearInterval(refreshTimer);
   let hasRendered = false;
@@ -1718,7 +1717,20 @@ async function loadDept(sheet, deptName, icon, btnId){
     }catch(e){}
   }
 
+  // Only show the spinner when nothing is cached to paint instantly, so
+  // switching between already-loaded pages is immediate (no loading flash).
+  const seeded=dataCache[sheet];
+  if(!(seeded&&seeded.data&&seeded.data.success)){
+    document.getElementById('deptContent').innerHTML=`
+      <div class="dept-hdr">
+        <div class="dept-hdr-icon"><i class="fa-solid ${icon}"></i></div>
+        <div class="dept-hdr-info"><div class="dept-hdr-name">${deptName}</div><div class="dept-hdr-sub">Fetching live data...</div></div>
+      </div>
+      <div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Loading ${deptName}...</div></div>`;
+  }
+
   function paint(json, ts, isFresh){
+    if(mySeq!==loadSeq) return;   // a newer page was opened — don't paint stale content
     const t=ts?new Date(ts).toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
     let content='';
     const MKT_PAGES={'TA Class Ads':'TA','Preceptor Ads':'Preceptor','FPX Ads':'FPX','WhatsApp Ads':'WhatsApp','MTC Ads':'MTC','TikTok Ads':'TikTok','Closed Paid Leads Avg':'closed'};
@@ -1744,10 +1756,12 @@ async function loadDept(sheet, deptName, icon, btnId){
   }
 
   function showErr(msg){
+    if(mySeq!==loadSeq) return;
     if(!hasRendered) document.getElementById('deptContent').innerHTML='<div class="empty-wrap"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div>'+msg+'</div></div>';
   }
 
   async function fetch_render(attempt=0){
+    if(mySeq!==loadSeq) return;   // stop stale retries/refreshes from a previous page
     const cacheKey=sheet;
     const now=Date.now();
     const cached=dataCache[cacheKey];
