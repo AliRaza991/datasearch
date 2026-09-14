@@ -1131,32 +1131,25 @@ async function applyCloserFilter(){
       // Per-data-type table (sorted by total sale, highest first).
       const types = Object.keys(byType).map(k => ({ k, ...byType[k], total: byType[k].cs + byType[k].up }))
                           .sort((a,b) => b.total - a.total);
-      const th = 'text-align:right;padding:9px 12px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;font-weight:700;';
       const rowsHtml = types.map(t => `<tr style="border-top:1px solid #f1f5f9;">
-        <td style="text-align:left;padding:7px 12px;font-weight:600;color:#1e293b;">${esc(t.k)}</td>
-        <td style="text-align:center;padding:7px 8px;color:#475569;font-family:'DM Mono',monospace;">${t.count}</td>
-        <td style="text-align:right;padding:7px 12px;color:#16A34A;font-family:'DM Mono',monospace;">${fmt(t.cs)}</td>
-        <td style="text-align:right;padding:7px 12px;color:#7C3AED;font-family:'DM Mono',monospace;">${fmt(t.up)}</td>
-        <td style="text-align:right;padding:7px 12px;color:#0f172a;font-weight:700;font-family:'DM Mono',monospace;">${fmt(t.total)}</td>
+        <td style="text-align:left;padding:5px 10px;font-weight:600;color:#1e293b;">${esc(t.k)}</td>
+        <td style="text-align:center;padding:5px 8px;color:#475569;font-family:'DM Mono',monospace;">${t.count}</td>
+        <td style="text-align:right;padding:5px 10px;color:#0f172a;font-weight:700;font-family:'DM Mono',monospace;">${fmt(t.total)}</td>
       </tr>`).join('');
-      const dtTable = `<div style="padding:8px 16px 16px;">
-        <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:4px 0 8px;">Sales by Data Type</div>
-        <div style="max-height:300px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:12px;">
-          <table style="width:100%;border-collapse:collapse;font-size:0.76rem;">
+      const dtTable = `<div style="padding:4px 16px 16px;">
+        <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 6px;">Sales by Data Type</div>
+        <div style="max-width:400px;max-height:230px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.7rem;">
             <thead><tr style="background:#f1f5f9;position:sticky;top:0;">
-              <th style="text-align:left;padding:9px 12px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;font-weight:700;">Data Type</th>
-              <th style="text-align:center;padding:9px 8px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;font-weight:700;">Leads</th>
-              <th style="${th}">Closed Sale</th>
-              <th style="${th}">Upsale</th>
-              <th style="${th}">Total Sale</th>
+              <th style="text-align:left;padding:6px 10px;font-size:0.54rem;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;font-weight:700;">Data Type</th>
+              <th style="text-align:center;padding:6px 8px;font-size:0.54rem;text-transform:uppercase;color:#64748b;font-weight:700;">Leads</th>
+              <th style="text-align:right;padding:6px 10px;font-size:0.54rem;text-transform:uppercase;color:#64748b;font-weight:700;">Total Sale</th>
             </tr></thead>
             <tbody>${rowsHtml}</tbody>
             <tfoot><tr style="border-top:2px solid #cbd5e1;background:#f8fafc;">
-              <td style="text-align:left;padding:9px 12px;font-weight:800;color:#0f172a;">Total</td>
-              <td style="text-align:center;padding:9px 8px;font-weight:800;color:#0f172a;font-family:'DM Mono',monospace;">${filtered.length}</td>
-              <td style="text-align:right;padding:9px 12px;font-weight:800;color:#16A34A;font-family:'DM Mono',monospace;">${fmt(totSale)}</td>
-              <td style="text-align:right;padding:9px 12px;font-weight:800;color:#7C3AED;font-family:'DM Mono',monospace;">${fmt(totUp)}</td>
-              <td style="text-align:right;padding:9px 12px;font-weight:800;color:#0f172a;font-family:'DM Mono',monospace;">${fmt(totSale+totUp)}</td>
+              <td style="text-align:left;padding:6px 10px;font-weight:800;color:#0f172a;">Total</td>
+              <td style="text-align:center;padding:6px 8px;font-weight:800;color:#0f172a;font-family:'DM Mono',monospace;">${filtered.length}</td>
+              <td style="text-align:right;padding:6px 10px;font-weight:800;color:#0f172a;font-family:'DM Mono',monospace;">${fmt(totSale+totUp)}</td>
             </tr></tfoot>
           </table>
         </div>
