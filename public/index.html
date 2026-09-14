@@ -1072,6 +1072,27 @@ function toMoneyNum(val){
   const n = parseFloat(String(val==null?'':val).replace(/[$,\s]/g,''));
   return isNaN(n) ? 0 : n;
 }
+// Group the many messy Data Type spellings into clean categories, e.g.
+// "New Data" + "Revived New Data" + "New Data Email" all become "New Data".
+function canonicalDataType(raw){
+  const s = String(raw==null?'':raw).toLowerCase().trim();
+  if(!s || s === '-') return 'Other';
+  if(s.includes('pop')) return 'Pop-Up';
+  if(s.includes('hot')) return 'Hot Lead';
+  if(s.includes('paid')) return 'Paid Lead';
+  if(s.includes('facebook')) return 'Facebook';
+  if(/refer|reffer|reffer|raffer/.test(s)) return 'Referral';
+  if(s.includes('tawk') || s.includes('talk to')) return 'Tawk To';
+  if(s.includes('chat')) return 'Web Live Chat';
+  if(s.includes('whatsapp')) return 'WhatsApp';
+  if(s.includes('inbound')) return 'Inbound Lead';
+  if(s.includes('new')) return 'New Data';
+  if(s.includes('old')) return 'Old Data';
+  if(s.includes('email') || s.includes('mail')) return 'Email Lead';
+  if(s.includes('gv')) return 'New Data';
+  if(s.includes('existing')) return 'Existing Client';
+  return raw.trim();
+}
 function toggleFilterPanel(){
   const p = document.getElementById('filterPanel');
   const btn = document.getElementById('filterToggle');
@@ -1130,7 +1151,7 @@ async function applyCloserFilter(){
         const cs = toMoneyNum(r['Closed Sale']);
         const up = toMoneyNum(r['Upsale']);
         totSale += cs; totUp += up;
-        const dt = String(r['Data Type']||'').trim() || '(blank)';
+        const dt = canonicalDataType(r['Data Type']);
         const b = byType[dt] || (byType[dt] = {count:0, cs:0, up:0});
         b.count++; b.cs += cs; b.up += up;
       });
