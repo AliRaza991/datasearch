@@ -463,6 +463,38 @@ html{scroll-behavior:smooth;}
       </button>
     </div>
 
+    <!-- Closer Filter -->
+    <div style="max-width:820px;margin:16px auto 0;text-align:left;">
+      <button type="button" id="filterToggle" onclick="toggleFilterPanel()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.28);border-radius:12px;font-size:0.8rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);font-family:'Plus Jakarta Sans',sans-serif;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+        Filter Closed Leads by Closer
+        <span id="filterChevron" style="transition:transform 0.2s;display:inline-block;">▾</span>
+      </button>
+      <div id="filterPanel" style="display:none;margin-top:12px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;box-shadow:0 12px 34px rgba(0,0,0,0.16);">
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:12px;align-items:end;">
+          <div>
+            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closer Name</label>
+            <select id="filterCloser" style="width:100%;padding:11px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;cursor:pointer;">
+              <option value="">All Closers</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closed Date — From</label>
+            <input type="date" id="filterFrom" style="width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closed Date — To</label>
+            <input type="date" id="filterTo" style="width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" id="filterApplyBtn" onclick="applyCloserFilter()" style="padding:11px 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;white-space:nowrap;">Apply</button>
+            <button type="button" onclick="clearCloserFilter()" style="padding:11px 16px;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;">Clear</button>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:0.72rem;color:#94a3b8;">Shows only leads with <strong style="color:#64748b;">Status = Closed</strong>. Leave a field empty to ignore it.</div>
+      </div>
+    </div>
+
     <!-- Recent Searches -->
     <div class="recent-wrap" id="recentWrap">
       <span class="recent-label">🕐 Recent</span>
@@ -993,6 +1025,107 @@ function downloadCSV(){
   link.href = URL.createObjectURL(blob);
   link.click();
   URL.revokeObjectURL(link.href);
+}
+
+// ═══ Closer filter (closed leads by closer + Closed Date range) ═══
+let closerDropdownLoaded = false;
+
+// Local YYYY-MM-DD key for a stored date, matching what the table displays.
+function dateKey(val){
+  const s = String(val||'').trim();
+  if(!s || s === '-') return '';
+  const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(s) ? s + 'T00:00:00' : s);
+  return isNaN(d) ? '' : d.toLocaleDateString('en-CA');
+}
+function toMoneyNum(val){
+  const n = parseFloat(String(val==null?'':val).replace(/[$,\s]/g,''));
+  return isNaN(n) ? 0 : n;
+}
+function toggleFilterPanel(){
+  const p = document.getElementById('filterPanel');
+  const open = p.style.display === 'block';
+  p.style.display = open ? 'none' : 'block';
+  const ch = document.getElementById('filterChevron');
+  if(ch) ch.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if(!open) populateCloserDropdown();
+}
+async function populateCloserDropdown(){
+  if(closerDropdownLoaded) return;
+  try{
+    const { rows } = await getSheetData();
+    const set = new Set();
+    rows.forEach(r => {
+      if(String(r['Status']||'').trim().toLowerCase() === 'closed'){
+        const c = String(r['Closer Name']||'').trim();
+        if(c && c !== '-') set.add(c);
+      }
+    });
+    const sel = document.getElementById('filterCloser');
+    [...set].sort((a,b)=>a.localeCompare(b)).forEach(c => {
+      const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o);
+    });
+    closerDropdownLoaded = true;
+  }catch(e){ console.log('Closer list load failed:', e.message); }
+}
+function clearCloserFilter(){
+  document.getElementById('filterCloser').value = '';
+  document.getElementById('filterFrom').value = '';
+  document.getElementById('filterTo').value = '';
+}
+function statChip(label,val,color){
+  return `<div style="flex:1;min-width:150px;background:${color}0d;border:1px solid ${color}33;border-radius:12px;padding:12px 16px;">
+    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;">${label}</div>
+    <div style="font-size:1.5rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;margin-top:2px;">${val}</div>
+  </div>`;
+}
+async function applyCloserFilter(){
+  const closer = document.getElementById('filterCloser').value.trim();
+  const from = document.getElementById('filterFrom').value; // '' or YYYY-MM-DD
+  const to   = document.getElementById('filterTo').value;
+  const btn = document.getElementById('filterApplyBtn');
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Filtering...';
+  try{
+    const { headers, rows } = await getSheetData();
+    // A filter run owns the results — stop the text-search auto-refresh clobbering it.
+    if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+    currentQuery = '';
+    const closerLc = closer.toLowerCase();
+    const filtered = rows.filter(r => {
+      if(String(r['Status']||'').trim().toLowerCase() !== 'closed') return false;
+      if(closer && String(r['Closer Name']||'').trim().toLowerCase() !== closerLc) return false;
+      if(from || to){
+        const k = dateKey(r['Closed Date']);
+        if(!k) return false;
+        if(from && k < from) return false;
+        if(to && k > to) return false;
+      }
+      return true;
+    });
+    showResults(filtered, headers, closer || 'All Closers');
+    // Replace the masked meta line with the active filter criteria.
+    const bits = [closer ? esc(closer) : 'All Closers'];
+    if(from || to) bits.push('Closed ' + (from || '…') + ' → ' + (to || '…'));
+    document.getElementById('resultsMeta').innerHTML =
+      `<span style="font-size:0.78rem;color:#475569;font-weight:600;">Filter · ${bits.join('  ·  ')}</span>`;
+    // Stats banner (count + money totals) above the table.
+    if(filtered.length){
+      let totSale = 0, totUp = 0;
+      filtered.forEach(r => { totSale += toMoneyNum(r['Closed Sale']); totUp += toMoneyNum(r['Upsale']); });
+      const fmt = n => '$' + n.toLocaleString('en-US',{maximumFractionDigits:2});
+      const stats = `<div style="display:flex;gap:12px;flex-wrap:wrap;padding:14px 16px 2px;">
+        ${statChip('Closed Leads', filtered.length, '#2563EB')}
+        ${statChip('Total Closed Sale', fmt(totSale), '#16A34A')}
+        ${statChip('Total Upsale', fmt(totUp), '#7C3AED')}
+      </div>`;
+      document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', stats);
+    }
+  }catch(e){
+    console.error('Filter error:', e.message);
+    document.getElementById('resultsSection').classList.add('show');
+    document.getElementById('resultsBody').innerHTML =
+      `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load data. Please try again.</div></div>`;
+  }
+  btn.disabled = false; btn.textContent = orig;
 }
 
 // Press "/" anywhere to jump to the search box
