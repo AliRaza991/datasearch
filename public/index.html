@@ -609,8 +609,8 @@ const DISPLAY_COLS = [
   {key:'Qualified Date', label:'Qualified Date', width:'9%'},
   {key:'Closer Name',    label:'Closer Name',    width:'11%'},
   {key:'Closed Date',    label:'Closed Date',    width:'9%'},
-  {key:'Closed Sale',    label:'Closed Sale',    width:'8%'},
-  {key:'Upsale',         label:'Upsale',         width:'8%'},
+  {key:'Closed Sale',    label:'Closed Sale',    width:'8%', money:true},
+  {key:'Upsale',         label:'Upsale',         width:'8%', money:true},
 ];
 
 // User setup
@@ -818,6 +818,16 @@ function filterRows(rows, query){
   });
 }
 
+// Money formatter for Closed Sale / Upsale — keeps the DB value, adds a $ sign.
+function money(val){
+  if(val === null || val === undefined) return '';
+  const str = String(val).trim();
+  if(str === '' || str === '-' || str === '—') return str;   // leave blanks/dashes as-is
+  const n = parseFloat(str.replace(/[$,\s]/g,''));
+  if(isNaN(n)) return str;                                    // non-numeric — show as-is
+  return '$' + n.toLocaleString('en-US',{maximumFractionDigits:2});
+}
+
 function formatDate(val){
   if(!val || val === '—') return val;
   const str = String(val).trim();
@@ -940,7 +950,8 @@ function showResults(rows, headers, query){
     html += `<tr>
       <td class="row-num" style="text-align:center;padding:10px 4px;width:34px;background:linear-gradient(135deg,#1e3a8a,#2563EB);color:#fff;font-weight:700;">${i+1}</td>
       ${visibleCols.map(c => {
-        const formatted = formatDate(row[c.key]||'');
+        const raw = row[c.key]||'';
+        const formatted = c.money ? money(raw) : formatDate(raw);
         return `<td>${formatted?esc(formatted):'<span class="zero">—</span>'}</td>`;
       }).join('')}
     </tr>`;
@@ -975,7 +986,7 @@ function downloadCSV(){
     return /[",\n]/.test(str) ? '"' + str.replace(/"/g,'""') + '"' : str;
   };
   const lines = [cols.map(c => csvCell(c.label)).join(',')];
-  rows.forEach(row => lines.push(cols.map(c => csvCell(formatDate(row[c.key]||''))).join(',')));
+  rows.forEach(row => lines.push(cols.map(c => csvCell(c.money ? money(row[c.key]||'') : formatDate(row[c.key]||''))).join(',')));
   const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.download = `datasearch-results-${new Date().toISOString().slice(0,10)}.csv`;
