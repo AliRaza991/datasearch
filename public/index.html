@@ -305,23 +305,23 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
   content:'⚡';font-style:normal;
 }
 
-.table-wrap{overflow-x:hidden;width:100%;}
-table{width:100%;border-collapse:collapse;font-size:0.92rem;table-layout:fixed;}
+.table-wrap{overflow-x:auto;width:100%;}
+table{width:100%;border-collapse:collapse;font-size:0.86rem;table-layout:fixed;}
 thead th{
-  padding:14px 12px;text-align:center;
-  font-size:0.72rem;font-weight:700;
-  letter-spacing:0.1em;text-transform:uppercase;
+  padding:10px 8px;text-align:center;
+  font-size:0.62rem;font-weight:700;
+  letter-spacing:0.04em;text-transform:uppercase;
   word-wrap:break-word;
   background:linear-gradient(135deg,#1e3a8a,#1e293b);
   color:#ffffff;
   border-bottom:2px solid #2563EB;
 }
-thead th:first-child{width:40px !important;padding:14px 6px;}
+thead th:first-child{width:34px !important;padding:10px 4px;}
 tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
 tbody tr:hover{background:#eff6ff;}
 tbody tr.total-row{background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(220,38,38,0.04));font-weight:700;border-top:2px solid #2563EB;}
-tbody td{padding:13px 12px;text-align:center;color:#1e293b;font-size:0.9rem;font-weight:600;word-wrap:break-word;line-height:1.4;}
-tbody td:first-child{text-align:left;padding-left:20px;color:#1e293b;font-weight:700;}
+tbody td{padding:9px 8px;text-align:center;color:#1e293b;font-size:0.8rem;font-weight:600;word-wrap:break-word;line-height:1.35;}
+tbody td:first-child{text-align:left;padding-left:12px;color:#1e293b;font-weight:700;}
 .row-num{color:#fff;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;}
 
 /* Loading */
@@ -597,7 +597,21 @@ checkDeviceStatus();
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz7DeRgHyuJNzQjFIZGbK0cA0h50RAP7wi_JPmbL2dMLDBC39Rry2tO_A0O8OBefA4o/exec?sheet=Client_History';
 const SKIP_COLS = ['email','phone','e-mail','phone number','mobile','contact','db_user','syedaliraza','_id','__v','password','token'];
-const CACHE_TTL = 60000; // 60 seconds
+const CACHE_TTL = 300000; // 5 minutes — keep the big sheet warm so repeat searches stay instant
+// Only these columns are shown in the results table, in this exact order.
+// `key` is the exact sheet header (note the sheet spells it "Qualifed ON").
+const DISPLAY_COLS = [
+  {key:'Client Name',    label:'Client Name',    width:'15%'},
+  {key:'Qualifed ON',    label:'Qualified ON',   width:'9%'},
+  {key:'Data Type',      label:'Data Type',      width:'11%'},
+  {key:'Status',         label:'Status',         width:'8%'},
+  {key:'Lead Qualifier', label:'Lead Qualifier', width:'12%'},
+  {key:'Qualified Date', label:'Qualified Date', width:'9%'},
+  {key:'Closer Name',    label:'Closer Name',    width:'11%'},
+  {key:'Closed Date',    label:'Closed Date',    width:'9%'},
+  {key:'Closed Sale',    label:'Closed Sale',    width:'8%'},
+  {key:'Upsale',         label:'Upsale',         width:'8%'},
+];
 
 // User setup
 const u = JSON.parse(localStorage.getItem('ds_user')||'{}');
@@ -713,7 +727,17 @@ function parseSheetResponse(json){
     const rowData = data[i];
     if(!rowData || !rowData.some(c => c !== '' && c !== null && c !== undefined)) continue;
     const row = {};
-    headers.forEach((h, idx) => { row[h] = String(rowData[idx]||'').trim(); });
+    const parts = [];
+    headers.forEach((h, idx) => {
+      const val = String(rowData[idx]||'').trim();
+      // First occurrence wins — the sheet has a duplicate "Closer Name" header,
+      // and the primary one (col 8) must not be clobbered by the later stray column.
+      if(h && !(h in row)) row[h] = val;
+      if(val) parts.push(val.toLowerCase());
+    });
+    // Pre-built lowercase search index so filtering doesn't re-scan every cell each time.
+    row._search = parts.join(' // ');
+    row._digits = row._search.replace(/\D/g, '');
     rows.push(row);
   }
   return { headers, rows };
@@ -781,17 +805,16 @@ function filterRows(rows, query){
   const qDigits = q.includes('@') ? '' : q.replace(/\D/g,'');
   const phoneMode = qDigits.length >= 6;
   return rows.filter(row => {
-    return Object.values(row).some(val => {
-      if(!val || val === '') return false;
-      const strVal = String(val).toLowerCase().trim();
-      if(strVal.includes(q)) return true;
-      if(phoneMode && strVal.replace(/\D/g,'').includes(qDigits)) return true;
-      // Handle // separated values
-      if(strVal.includes('//')) {
-        return strVal.split('//').some(p => p.trim().includes(q));
-      }
+    // Use the pre-built lowercase index (one includes() per row instead of
+    // re-scanning and lowercasing every cell on every search).
+    const s = row._search;
+    if(s){
+      if(s.includes(q)) return true;
+      if(phoneMode && row._digits && row._digits.includes(qDigits)) return true;
       return false;
-    });
+    }
+    // Fallback for any row without a pre-built index.
+    return Object.values(row).some(val => val && String(val).toLowerCase().includes(q));
   });
 }
 
@@ -885,8 +908,8 @@ function resetBtnHTML(){
 let lastResults = null;
 
 function showResults(rows, headers, query){
-  const visibleHeaders = headers.filter(h => h && h.trim() !== '' && !shouldSkip(h));
-  lastResults = { rows, headers: visibleHeaders, query };
+  const visibleCols = DISPLAY_COLS.filter(c => headers.includes(c.key));
+  lastResults = { rows, cols: visibleCols, query };
 
   document.getElementById('heroSection').style.paddingBottom='0';
   document.getElementById('resultsSection').classList.add('show');
@@ -908,28 +931,16 @@ function showResults(rows, headers, query){
     return;
   }
 
-  function getColWidth(h){
-    const hh = h.toLowerCase();
-    if(hh.includes('client') && hh.includes('name')) return 'width:200px;';
-    if(hh.includes('data') && hh.includes('type')) return 'width:160px;';
-    if(hh.includes('lead') && hh.includes('qualifier')) return 'width:180px;';
-    if(hh.includes('closer')) return 'width:160px;';
-    if(hh.includes('date')) return 'width:130px;';
-    if(hh.includes('status')) return 'width:100px;';
-    return 'width:120px;';
-  }
-
   let html = `<table><thead><tr>
-    <th style="text-align:center;padding:14px 6px;width:40px;background:linear-gradient(135deg,#0f172a,#1e293b);">#</th>
-    ${visibleHeaders.map(h=>`<th style="${getColWidth(h)}">${esc(h)}</th>`).join('')}
+    <th style="text-align:center;padding:11px 4px;width:34px;background:linear-gradient(135deg,#0f172a,#1e293b);">#</th>
+    ${visibleCols.map(c=>`<th style="width:${c.width};">${esc(c.label)}</th>`).join('')}
   </tr></thead><tbody>`;
 
   rows.forEach((row, i) => {
     html += `<tr>
-      <td class="row-num" style="text-align:center;padding:13px 6px;width:40px;background:linear-gradient(135deg,#1e3a8a,#2563EB);color:#fff;font-weight:700;">${i+1}</td>
-      ${visibleHeaders.map(h => {
-        const val = row[h]||'';
-        const formatted = formatDate(val);
+      <td class="row-num" style="text-align:center;padding:10px 4px;width:34px;background:linear-gradient(135deg,#1e3a8a,#2563EB);color:#fff;font-weight:700;">${i+1}</td>
+      ${visibleCols.map(c => {
+        const formatted = formatDate(row[c.key]||'');
         return `<td>${formatted?esc(formatted):'<span class="zero">—</span>'}</td>`;
       }).join('')}
     </tr>`;
@@ -958,13 +969,13 @@ async function downloadResult(format){
 
 function downloadCSV(){
   if(!lastResults || !lastResults.rows.length){ alert('No results to export. Run a search first.'); return; }
-  const { rows, headers } = lastResults;
+  const { rows, cols } = lastResults;
   const csvCell = s => {
     const str = String(s==null?'':s);
     return /[",\n]/.test(str) ? '"' + str.replace(/"/g,'""') + '"' : str;
   };
-  const lines = [headers.map(csvCell).join(',')];
-  rows.forEach(row => lines.push(headers.map(h => csvCell(formatDate(row[h]||''))).join(',')));
+  const lines = [cols.map(c => csvCell(c.label)).join(',')];
+  rows.forEach(row => lines.push(cols.map(c => csvCell(formatDate(row[c.key]||''))).join(',')));
   const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.download = `datasearch-results-${new Date().toISOString().slice(0,10)}.csv`;
