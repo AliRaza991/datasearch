@@ -310,7 +310,7 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .filter-toggle-btn.open .filter-chevron{transform:rotate(180deg);}
 
 /* Compact "Sales by Data Type" list (div rows so it never inherits the results-table CSS) */
-.dt-mini-wrap{max-width:420px;max-height:240px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px;font-size:0.74rem;}
+.dt-mini-wrap{width:100%;max-height:260px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px;font-size:0.74rem;}
 .dt-mini-head,.dt-mini-row,.dt-mini-total{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:6px 12px;}
 .dt-mini-head{position:sticky;top:0;background:#f1f5f9;font-size:0.56rem;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;font-weight:700;}
 .dt-mini-row{border-top:1px solid #f1f5f9;}
@@ -1161,19 +1161,37 @@ async function applyCloserFilter(){
         ${statChip('Total Closed Sale', fmt(totSale), '#16A34A')}
         ${statChip('Total Upsale', fmt(totUp), '#7C3AED')}
       </div>`;
-      // Per-data-type table (sorted by total sale, highest first).
-      const types = Object.keys(byType).map(k => ({ k, ...byType[k], total: byType[k].cs + byType[k].up }))
-                          .sort((a,b) => b.total - a.total);
-      const rowsHtml = types.map(t => `<div class="dt-mini-row"><span>${esc(t.k)}</span><span>${fmt(t.total)}</span></div>`).join('');
-      const dtTable = `<div style="padding:4px 16px 16px;">
-        <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 0;">Sales by Data Type</div>
-        <div class="dt-mini-wrap">
-          <div class="dt-mini-head"><span>Data Type</span><span>Sale</span></div>
-          ${rowsHtml}
-          <div class="dt-mini-total"><span>Total</span><span>${fmt(totSale+totUp)}</span></div>
-        </div>
+      // Data-type entries.
+      const typeEntries = Object.keys(byType).map(k => ({ label:k, total: byType[k].cs + byType[k].up }));
+      // Team sales by closer (match names loosely: case + spaces ignored).
+      const MAHEEN = ['Maheen Noor','Aqeel Ahmad','Sami Sardar','Huzaifa Ibrar','Irfan Khan','Muhammad Ali','Faisal Humayun'];
+      const KHURRAM = ['Khurram Gulzar','Ahmed Raza','Ismat Ullah','Jalal Khan','Musharaf Ghouri','Syed Junaid','Sharjeel Anjum','Hussain Muhammed'];
+      const normName = s => String(s||'').toLowerCase().replace(/\s+/g,'').trim();
+      const closerTot = {};
+      filtered.forEach(r => {
+        const k = normName(r['Closer Name']);
+        if(k) closerTot[k] = (closerTot[k]||0) + toMoneyNum(r['Closed Sale']) + toMoneyNum(r['Upsale']);
+      });
+      const teamEntries = roster => roster.map(name => ({ label:name, total: closerTot[normName(name)] || 0 }));
+      function miniTable(title, headLabel, entries){
+        const total = entries.reduce((s,e)=>s+e.total, 0);
+        const rows = entries.slice().sort((a,b)=>b.total-a.total)
+          .map(e => `<div class="dt-mini-row"><span>${esc(e.label)}</span><span>${fmt(e.total)}</span></div>`).join('');
+        return `<div style="flex:1 1 240px;max-width:460px;">
+          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 0;">${title}</div>
+          <div class="dt-mini-wrap">
+            <div class="dt-mini-head"><span>${headLabel}</span><span>Sale</span></div>
+            ${rows}
+            <div class="dt-mini-total"><span>Total</span><span>${fmt(total)}</span></div>
+          </div>
+        </div>`;
+      }
+      const tablesRow = `<div style="display:flex;gap:16px;flex-wrap:wrap;padding:4px 16px 16px;">
+        ${miniTable('Sales by Data Type','Data Type', typeEntries)}
+        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN))}
+        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM))}
       </div>`;
-      document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', chips + dtTable);
+      document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', chips + tablesRow);
     }
   }catch(e){
     console.error('Filter error:', e.message);
