@@ -1112,13 +1112,20 @@ async function applyCloserFilter(){
       `<span style="font-size:0.78rem;color:#475569;font-weight:600;">Filter · ${bits.join('  ·  ')}</span>`;
     // Stats banner (count + money totals) above the table.
     if(filtered.length){
-      let totSale = 0, totUp = 0;
-      filtered.forEach(r => { totSale += toMoneyNum(r['Closed Sale']); totUp += toMoneyNum(r['Upsale']); });
+      let totSale = 0, totUp = 0, newSale = 0, newCount = 0;
+      filtered.forEach(r => {
+        const cs = toMoneyNum(r['Closed Sale']);
+        const up = toMoneyNum(r['Upsale']);
+        totSale += cs; totUp += up;
+        // "New Data" family total sale = Closed Sale + Upsale.
+        if(/^new data/i.test(String(r['Data Type']||'').trim())){ newSale += cs + up; newCount++; }
+      });
       const fmt = n => '$' + n.toLocaleString('en-US',{maximumFractionDigits:2});
       const stats = `<div style="display:flex;gap:12px;flex-wrap:wrap;padding:14px 16px 2px;">
         ${statChip('Closed Leads', filtered.length, '#2563EB')}
         ${statChip('Total Closed Sale', fmt(totSale), '#16A34A')}
         ${statChip('Total Upsale', fmt(totUp), '#7C3AED')}
+        ${statChip('New Data Sale ('+newCount+')', fmt(newSale), '#EA580C')}
       </div>`;
       document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', stats);
     }
