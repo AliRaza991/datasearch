@@ -309,6 +309,18 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .filter-toggle-btn .filter-chevron{transition:transform .2s ease;display:inline-block;font-size:0.7rem;}
 .filter-toggle-btn.open .filter-chevron{transform:rotate(180deg);}
 
+/* Compact "Sales by Data Type" list (div rows so it never inherits the results-table CSS) */
+.dt-mini-wrap{max-width:420px;max-height:240px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px;font-size:0.74rem;}
+.dt-mini-head,.dt-mini-row,.dt-mini-total{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:6px 12px;}
+.dt-mini-head{position:sticky;top:0;background:#f1f5f9;font-size:0.56rem;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;font-weight:700;}
+.dt-mini-row{border-top:1px solid #f1f5f9;}
+.dt-mini-row:hover{background:#f8fafc;}
+.dt-mini-head span:first-child,.dt-mini-row span:first-child,.dt-mini-total span:first-child{text-align:left;color:#1e293b;font-weight:600;line-height:1.3;}
+.dt-mini-row span:last-child,.dt-mini-total span:last-child,.dt-mini-head span:last-child{text-align:right;white-space:nowrap;font-family:'DM Mono',monospace;font-weight:700;color:#0f172a;}
+.dt-mini-head span:last-child{font-family:inherit;color:#64748b;font-weight:700;}
+.dt-mini-total{position:sticky;bottom:0;border-top:2px solid #cbd5e1;background:#f8fafc;font-weight:800;}
+.dt-mini-total span:first-child{font-weight:800;}
+
 /* Results Table */
 .results-card{
   max-width:100%;margin:0 auto;
@@ -1131,24 +1143,13 @@ async function applyCloserFilter(){
       // Per-data-type table (sorted by total sale, highest first).
       const types = Object.keys(byType).map(k => ({ k, ...byType[k], total: byType[k].cs + byType[k].up }))
                           .sort((a,b) => b.total - a.total);
-      const rowsHtml = types.map(t => `<tr style="border-top:1px solid #f1f5f9;">
-        <td style="text-align:left;padding:5px 10px;font-weight:600;color:#1e293b;">${esc(t.k)}</td>
-        <td style="text-align:right;padding:5px 10px;color:#0f172a;font-weight:700;font-family:'DM Mono',monospace;">${fmt(t.total)}</td>
-      </tr>`).join('');
+      const rowsHtml = types.map(t => `<div class="dt-mini-row"><span>${esc(t.k)}</span><span>${fmt(t.total)}</span></div>`).join('');
       const dtTable = `<div style="padding:4px 16px 16px;">
-        <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 6px;">Sales by Data Type</div>
-        <div style="max-width:320px;max-height:230px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;">
-          <table style="width:100%;border-collapse:collapse;font-size:0.7rem;">
-            <thead><tr style="background:#f1f5f9;position:sticky;top:0;">
-              <th style="text-align:left;padding:6px 10px;font-size:0.54rem;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;font-weight:700;">Data Type</th>
-              <th style="text-align:right;padding:6px 10px;font-size:0.54rem;text-transform:uppercase;color:#64748b;font-weight:700;">Sale</th>
-            </tr></thead>
-            <tbody>${rowsHtml}</tbody>
-            <tfoot><tr style="border-top:2px solid #cbd5e1;background:#f8fafc;">
-              <td style="text-align:left;padding:6px 10px;font-weight:800;color:#0f172a;">Total</td>
-              <td style="text-align:right;padding:6px 10px;font-weight:800;color:#0f172a;font-family:'DM Mono',monospace;">${fmt(totSale+totUp)}</td>
-            </tr></tfoot>
-          </table>
+        <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 0;">Sales by Data Type</div>
+        <div class="dt-mini-wrap">
+          <div class="dt-mini-head"><span>Data Type</span><span>Sale</span></div>
+          ${rowsHtml}
+          <div class="dt-mini-total"><span>Total</span><span>${fmt(totSale+totUp)}</span></div>
         </div>
       </div>`;
       document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', chips + dtTable);
