@@ -1299,7 +1299,7 @@ renderRecent();
   </div>
   <div class="graph-grid">
     <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap" style="height:340px;"><div id="chartType" style="width:100%;height:100%;"></div></div></div>
-    <div class="graph-card"><div class="graph-card-title">Top Closers by Sale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
+    <div class="graph-card"><div class="graph-card-title">Closers by Upsale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
     <div class="graph-card" style="grid-column:1/-1;"><div class="graph-card-title">Sales Over Time — Total Sale by Month</div><div class="graph-canvas-wrap" style="height:340px;"><canvas id="chartMonth"></canvas></div></div>
   </div>
 </div>
@@ -1318,16 +1318,17 @@ function fmtMonthLabel(ym){
 }
 function buildGraphData(){
   const rows = (lastResults && lastResults.rows) || [];
-  const byType = {}, byCloser = {}, byMonth = {};
+  const byType = {}, byCloser = {}, byCloserUp = {}, byMonth = {};
   let totClosed = 0, totUp = 0;
   rows.forEach(r => {
     const cs = toMoneyNum(r['Closed Sale']), up = toMoneyNum(r['Upsale']);
     totClosed += cs; totUp += up;
     const dt = canonicalDataType(r['Data Type']); byType[dt] = (byType[dt]||0) + cs + up;
-    const cl = String(r['Closer Name']||'').trim(); if(cl && cl !== '-') byCloser[cl] = (byCloser[cl]||0) + cs + up;
+    const cl = String(r['Closer Name']||'').trim();
+    if(cl && cl !== '-'){ byCloser[cl] = (byCloser[cl]||0) + cs + up; byCloserUp[cl] = (byCloserUp[cl]||0) + up; }
     const k = dateKey(r['Closed Date']); if(k){ const m = k.slice(0,7); byMonth[m] = (byMonth[m]||0) + cs + up; }
   });
-  return { byType, byCloser, byMonth, totClosed, totUp };
+  return { byType, byCloser, byCloserUp, byMonth, totClosed, totUp };
 }
 function openGraph(){
   if(typeof Chart === 'undefined'){ alert('Charts are still loading — please try again in a moment.'); return; }
@@ -1360,8 +1361,8 @@ function openGraph(){
     });
   }
 
-  // 2) Top closers by sale (horizontal bar, top 10, multi-colour, adaptive labels)
-  const ce = Object.entries(g.byCloser).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  // 2) Closers by Upsale (all closers with upsale, multi-colour, adaptive labels)
+  const ce = Object.entries(g.byCloserUp).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
   const barLen = ctx => { const x=ctx.chart.scales.x, v=ctx.dataset.data[ctx.dataIndex]; return x.getPixelForValue(v)-x.getPixelForValue(0); };
   graphCharts.push(new Chart(document.getElementById('chartCloser'), {
     type:'bar',
