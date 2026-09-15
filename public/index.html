@@ -1296,9 +1296,8 @@ renderRecent();
   </div>
   <div class="graph-grid">
     <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap"><canvas id="chartType"></canvas></div></div>
-    <div class="graph-card"><div class="graph-card-title">Closed Sale vs Upsale</div><div class="graph-canvas-wrap"><canvas id="chartCU"></canvas></div></div>
     <div class="graph-card"><div class="graph-card-title">Top Closers by Sale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
-    <div class="graph-card"><div class="graph-card-title">Sales Over Time (by month)</div><div class="graph-canvas-wrap"><canvas id="chartMonth"></canvas></div></div>
+    <div class="graph-card" style="grid-column:1/-1;"><div class="graph-card-title">Sales Over Time — Total Sale by Month</div><div class="graph-canvas-wrap" style="height:340px;"><canvas id="chartMonth"></canvas></div></div>
   </div>
 </div>
 
@@ -1331,7 +1330,7 @@ function openGraph(){
   const money = v => '$' + Number(v||0).toLocaleString('en-US',{maximumFractionDigits:2});
   const pieOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, tooltip:{ callbacks:{ label:c => ' ' + c.label + ': ' + money(c.parsed) } } } };
   const barOpts = { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } } }, scales:{ x:{ ticks:{ callback:v => '$'+v } } } };
-  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.y) } } }, scales:{ y:{ ticks:{ callback:v => '$'+v } } } };
+  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' Total Sale: ' + money(c.parsed.y) } } }, scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } } };
 
   document.getElementById('graphModalMeta').textContent =
     (lastResults.query ? lastResults.query + '  ·  ' : '') + lastResults.rows.length + ' records';
@@ -1346,16 +1345,13 @@ function openGraph(){
   const tData = top.map(x=>x[1]).concat(rest>0?[rest]:[]);
   graphCharts.push(new Chart(document.getElementById('chartType'), { type:'pie', data:{ labels:tLabels, datasets:[{ data:tData, backgroundColor:PAL, borderColor:'#fff', borderWidth:1.5 }] }, options:pieOpts }));
 
-  // 2) Closed Sale vs Upsale (doughnut)
-  graphCharts.push(new Chart(document.getElementById('chartCU'), { type:'doughnut', data:{ labels:['Closed Sale','Upsale'], datasets:[{ data:[g.totClosed, g.totUp], backgroundColor:['#16A34A','#DC2626'], borderColor:'#fff', borderWidth:1.5 }] }, options:pieOpts }));
-
-  // 3) Top closers by sale (horizontal bar, top 10)
+  // 2) Top closers by sale (horizontal bar, top 10, multi-colour)
   const ce = Object.entries(g.byCloser).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  graphCharts.push(new Chart(document.getElementById('chartCloser'), { type:'bar', data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:'#2563EB', borderRadius:4 }] }, options:barOpts }));
+  graphCharts.push(new Chart(document.getElementById('chartCloser'), { type:'bar', data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:ce.map((_,i)=>PAL[i%PAL.length]), borderRadius:4 }] }, options:barOpts }));
 
-  // 4) Sales over time (line, by month)
+  // 3) Sales over time — total sale (closed + upsale) per month
   const me = Object.entries(g.byMonth).sort((a,b)=> a[0] < b[0] ? -1 : 1);
-  graphCharts.push(new Chart(document.getElementById('chartMonth'), { type:'line', data:{ labels:me.map(x=>fmtMonthLabel(x[0])), datasets:[{ label:'Sale', data:me.map(x=>x[1]), borderColor:'#DC2626', backgroundColor:'rgba(220,38,38,0.12)', fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:'#DC2626' }] }, options:lineOpts }));
+  graphCharts.push(new Chart(document.getElementById('chartMonth'), { type:'line', data:{ labels:me.map(x=>fmtMonthLabel(x[0])), datasets:[{ label:'Total Sale', data:me.map(x=>x[1]), borderColor:'#2563EB', backgroundColor:'rgba(37,99,235,0.10)', borderWidth:2.5, fill:true, tension:0.35, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#DC2626', pointBorderColor:'#fff', pointBorderWidth:1.5 }] }, options:lineOpts }));
 }
 function closeGraph(){
   document.getElementById('graphModal').style.display = 'none';
