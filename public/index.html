@@ -691,6 +691,8 @@ html{scroll-behavior:smooth;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts-3d.js"></script>
 <script>
 // Auth check
 (function(){
@@ -1296,7 +1298,7 @@ renderRecent();
     </button>
   </div>
   <div class="graph-grid">
-    <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap"><canvas id="chartType"></canvas></div></div>
+    <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap" style="height:340px;"><div id="chartType" style="width:100%;height:100%;"></div></div></div>
     <div class="graph-card"><div class="graph-card-title">Top Closers by Sale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
     <div class="graph-card" style="grid-column:1/-1;"><div class="graph-card-title">Sales Over Time — Total Sale by Month</div><div class="graph-canvas-wrap" style="height:340px;"><canvas id="chartMonth"></canvas></div></div>
   </div>
@@ -1304,7 +1306,11 @@ renderRecent();
 
 <script>
 let graphCharts = [];
-function destroyGraphs(){ graphCharts.forEach(c => { try{ c.destroy(); }catch(e){} }); graphCharts = []; }
+let hcPie = null;
+function destroyGraphs(){
+  graphCharts.forEach(c => { try{ c.destroy(); }catch(e){} }); graphCharts = [];
+  if(hcPie){ try{ hcPie.destroy(); }catch(e){} hcPie = null; }
+}
 function fmtMonthLabel(ym){
   const [y,m] = ym.split('-');
   const d = new Date(Number(y), Number(m)-1, 1);
@@ -1330,10 +1336,6 @@ function openGraph(){
   const g = buildGraphData();
   const PAL = ['#4F46E5','#DC2626','#16A34A','#F59E0B','#0891B2','#7C3AED','#DB2777','#EA580C','#0F766E','#2563EB','#65A30D','#9333EA'];
   const money = v => '$' + Number(v||0).toLocaleString('en-US',{maximumFractionDigits:2});
-  const pct = (v,ctx) => { const arr = ctx.chart.data.datasets[0].data; const sum = arr.reduce((a,b)=>a+(Number(b)||0),0); const p = sum ? v/sum*100 : 0; return p>=4 ? p.toFixed(1)+'%' : ''; };
-  const pieOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, tooltip:{ callbacks:{ label:c => ' ' + c.label + ': ' + money(c.parsed) } }, datalabels:{ color:'#fff', font:{ weight:'700', size:12 }, formatter:pct } } };
-  const barOpts = { responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:8 } }, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } }, datalabels:{ anchor:'end', align:'start', color:'#fff', font:{ weight:'700', size:11 }, formatter:v => money(v) } }, scales:{ x:{ grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } }, y:{ grid:{ display:false } } } };
-  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, datalabels:{ display:false }, tooltip:{ callbacks:{ label:c => ' Total Sale: ' + money(c.parsed.y) } } }, scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } } };
 
   document.getElementById('graphModalMeta').textContent =
     (lastResults.query ? lastResults.query + '  ·  ' : '') + lastResults.rows.length + ' records';
@@ -1341,20 +1343,52 @@ function openGraph(){
   document.body.style.overflow = 'hidden';
   destroyGraphs();
 
-  // 1) Sales by Data Type (pie, top 8 + Others)
+  // 1) Sales by Data Type — 3D exploded pie (Highcharts)
   const te = Object.entries(g.byType).sort((a,b)=>b[1]-a[1]);
-  const top = te.slice(0,8), rest = te.slice(8).reduce((s,x)=>s+x[1],0);
-  const tLabels = top.map(x=>x[0]).concat(rest>0?['Others']:[]);
-  const tData = top.map(x=>x[1]).concat(rest>0?[rest]:[]);
-  graphCharts.push(new Chart(document.getElementById('chartType'), { type:'pie', data:{ labels:tLabels, datasets:[{ data:tData, backgroundColor:PAL, borderColor:'#fff', borderWidth:1.5 }] }, options:pieOpts }));
+  const top = te.slice(0,10), rest = te.slice(10).reduce((s,x)=>s+x[1],0);
+  const pieData = top.map((x,i)=>({ name:x[0], y:x[1], color:PAL[i%PAL.length], sliced:true }))
+                     .concat(rest>0 ? [{ name:'Others', y:rest, color:'#94a3b8', sliced:true }] : []);
+  if(window.Highcharts){
+    hcPie = Highcharts.chart('chartType', {
+      chart:{ type:'pie', backgroundColor:'transparent', options3d:{ enabled:true, alpha:52, beta:0 } },
+      title:{ text:null }, credits:{ enabled:false },
+      tooltip:{ pointFormatter:function(){ return '<b>'+money(this.y)+'</b> ('+this.percentage.toFixed(1)+'%)'; } },
+      plotOptions:{ pie:{ depth:42, slicedOffset:9,
+        dataLabels:{ enabled:true, format:'{point.name}<br>{point.percentage:.1f}%', distance:12,
+          style:{ fontSize:'11px', fontWeight:'600', textOutline:'none', color:'#334155' } } } },
+      series:[{ name:'Sale', data:pieData }]
+    });
+  }
 
-  // 2) Top closers by sale (horizontal bar, top 10, multi-colour)
+  // 2) Top closers by sale (horizontal bar, top 10, multi-colour, adaptive labels)
   const ce = Object.entries(g.byCloser).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  graphCharts.push(new Chart(document.getElementById('chartCloser'), { type:'bar', data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:ce.map((_,i)=>PAL[i%PAL.length]), borderRadius:4 }] }, options:barOpts }));
+  const barLen = ctx => { const x=ctx.chart.scales.x, v=ctx.dataset.data[ctx.dataIndex]; return x.getPixelForValue(v)-x.getPixelForValue(0); };
+  graphCharts.push(new Chart(document.getElementById('chartCloser'), {
+    type:'bar',
+    data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:ce.map((_,i)=>PAL[i%PAL.length]), borderRadius:4, categoryPercentage:0.86, barPercentage:0.94 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:64 } },
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } },
+        datalabels:{ anchor:'end',
+          align: ctx => barLen(ctx) > 66 ? 'start' : 'end',
+          color: ctx => barLen(ctx) > 66 ? '#fff' : '#334155',
+          font:{ weight:'400', size:11 }, formatter:v => money(v), clamp:true, clip:false } },
+      scales:{ x:{ grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } }, y:{ grid:{ display:false } } }
+    }
+  }));
 
-  // 3) Sales over time — total sale (closed + upsale) per month
+  // 3) Sales over time — blue trend line + vertical month bars (total = Closed + Upsale)
   const me = Object.entries(g.byMonth).sort((a,b)=> a[0] < b[0] ? -1 : 1);
-  graphCharts.push(new Chart(document.getElementById('chartMonth'), { type:'line', data:{ labels:me.map(x=>fmtMonthLabel(x[0])), datasets:[{ label:'Total Sale', data:me.map(x=>x[1]), borderColor:'#2563EB', backgroundColor:'rgba(37,99,235,0.10)', borderWidth:2.5, fill:true, tension:0.35, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#DC2626', pointBorderColor:'#fff', pointBorderWidth:1.5 }] }, options:lineOpts }));
+  graphCharts.push(new Chart(document.getElementById('chartMonth'), {
+    data:{ labels:me.map(x=>fmtMonthLabel(x[0])),
+      datasets:[
+        { type:'bar', label:'Monthly Sale', data:me.map(x=>x[1]), backgroundColor:'rgba(37,99,235,0.22)', borderColor:'rgba(37,99,235,0.4)', borderWidth:1, borderRadius:3, order:2 },
+        { type:'line', label:'Trend', data:me.map(x=>x[1]), borderColor:'#2563EB', borderWidth:3, tension:0.35, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#2563EB', pointBorderColor:'#fff', pointBorderWidth:1.5, fill:false, order:1 }
+      ] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:true, position:'top', labels:{ boxWidth:12, font:{size:11} } }, datalabels:{ display:false }, tooltip:{ callbacks:{ label:c => ' ' + c.dataset.label + ': ' + money(c.parsed.y) } } },
+      scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } }
+    }
+  }));
 }
 function closeGraph(){
   document.getElementById('graphModal').style.display = 'none';
