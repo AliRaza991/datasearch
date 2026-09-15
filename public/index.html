@@ -316,7 +316,9 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .dt-mini-row{border-top:1px solid #f1f5f9;}
 .dt-mini-row:hover{background:#f8fafc;}
 .dt-mini-head span:first-child,.dt-mini-row span:first-child,.dt-mini-total span:first-child{text-align:left;color:#1e293b;font-weight:600;line-height:1.3;}
-.dt-mini-row span:last-child,.dt-mini-total span:last-child,.dt-mini-head span:last-child{text-align:right;white-space:nowrap;font-family:'DM Mono',monospace;font-weight:700;color:#0f172a;}
+.dt-mini-row span:last-child,.dt-mini-total span:last-child,.dt-mini-head span:last-child{text-align:right;white-space:nowrap;font-family:'DM Mono',monospace;}
+.dt-mini-row span:last-child{color:#16A34A;font-weight:400;font-size:0.86rem;}
+.dt-mini-total span:last-child{color:#16A34A;font-weight:600;font-size:0.9rem;}
 .dt-mini-head span:last-child{font-family:inherit;color:#64748b;font-weight:700;}
 .dt-mini-total{position:sticky;bottom:0;border-top:2px solid #cbd5e1;background:#f8fafc;font-weight:800;}
 .dt-mini-total span:first-child{font-weight:800;}
@@ -1219,8 +1221,8 @@ async function applyCloserFilter(){
       }
       const tablesRow = `<div style="display:flex;gap:16px;flex-wrap:wrap;padding:4px 16px 16px;">
         ${miniTable('Sales by Data Type','Data Type', typeEntries)}
-        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN))}
-        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM))}
+        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN).filter(e=>e.total>0))}
+        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM).filter(e=>e.total>0))}
       </div>`;
       document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', chips + tablesRow);
     }
