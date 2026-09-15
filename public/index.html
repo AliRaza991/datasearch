@@ -425,6 +425,33 @@ tbody td:first-child{text-align:left;padding-left:12px;color:#1e293b;font-weight
 /* Scroll to results */
 html{scroll-behavior:smooth;}
 
+/* Graphical overview */
+.graph-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:10px;
+  font-size:0.76rem;font-weight:700;cursor:pointer;
+  color:#fff;border:none;
+  background:linear-gradient(135deg,#2563EB,#DC2626);
+  box-shadow:0 4px 14px rgba(37,99,235,0.3);
+  transition:filter .15s, transform .15s;
+}
+.graph-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.graph-modal{position:fixed;inset:0;z-index:3000;background:#0b1220;overflow-y:auto;}
+.graph-modal-head{position:sticky;top:0;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 24px;background:#0b1220;border-bottom:1px solid rgba(255,255,255,0.1);z-index:1;}
+.graph-modal-title{font-size:1.2rem;font-weight:800;color:#fff;}
+.graph-modal-meta{font-size:0.8rem;color:#94a3b8;font-weight:600;}
+.graph-close{margin-left:auto;display:flex;align-items:center;gap:6px;padding:9px 18px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.82rem;}
+.graph-close:hover{background:#b91c1c;}
+.graph-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:22px 24px 48px;max-width:1400px;margin:0 auto;}
+.graph-card{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 8px 30px rgba(0,0,0,0.35);}
+.graph-card-title{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#334155;margin-bottom:12px;}
+.graph-canvas-wrap{position:relative;height:300px;}
+@media (max-width:768px){
+  .graph-grid{grid-template-columns:1fr;padding:16px 14px 40px;}
+  .graph-canvas-wrap{height:270px;}
+  .graph-modal-head{padding:14px 16px;}
+}
+
 /* ═══ Mobile / responsive ═══ */
 @media (max-width:768px){
   .navbar{padding:0 12px;height:58px;gap:6px;}
@@ -577,6 +604,10 @@ html{scroll-behavior:smooth;}
       <div style="margin-top:4px;" id="resultsMeta"></div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="graph-btn" onclick="openGraph()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+        Graphical Overview
+      </button>
       <button class="new-search-btn" onclick="newSearch()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         New Search
@@ -658,6 +689,7 @@ html{scroll-behavior:smooth;}
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 // Auth check
 (function(){
@@ -1250,6 +1282,87 @@ setTimeout(() => {
 }, 1000);
 
 renderRecent();
+</script>
+
+<!-- GRAPHICAL OVERVIEW (full-screen) -->
+<div id="graphModal" class="graph-modal" style="display:none;">
+  <div class="graph-modal-head">
+    <div class="graph-modal-title">📊 Graphical Overview</div>
+    <div class="graph-modal-meta" id="graphModalMeta"></div>
+    <button type="button" class="graph-close" onclick="closeGraph()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      Close
+    </button>
+  </div>
+  <div class="graph-grid">
+    <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap"><canvas id="chartType"></canvas></div></div>
+    <div class="graph-card"><div class="graph-card-title">Closed Sale vs Upsale</div><div class="graph-canvas-wrap"><canvas id="chartCU"></canvas></div></div>
+    <div class="graph-card"><div class="graph-card-title">Top Closers by Sale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
+    <div class="graph-card"><div class="graph-card-title">Sales Over Time (by month)</div><div class="graph-canvas-wrap"><canvas id="chartMonth"></canvas></div></div>
+  </div>
+</div>
+
+<script>
+let graphCharts = [];
+function destroyGraphs(){ graphCharts.forEach(c => { try{ c.destroy(); }catch(e){} }); graphCharts = []; }
+function fmtMonthLabel(ym){
+  const [y,m] = ym.split('-');
+  const d = new Date(Number(y), Number(m)-1, 1);
+  return isNaN(d) ? ym : d.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+}
+function buildGraphData(){
+  const rows = (lastResults && lastResults.rows) || [];
+  const byType = {}, byCloser = {}, byMonth = {};
+  let totClosed = 0, totUp = 0;
+  rows.forEach(r => {
+    const cs = toMoneyNum(r['Closed Sale']), up = toMoneyNum(r['Upsale']);
+    totClosed += cs; totUp += up;
+    const dt = canonicalDataType(r['Data Type']); byType[dt] = (byType[dt]||0) + cs + up;
+    const cl = String(r['Closer Name']||'').trim(); if(cl && cl !== '-') byCloser[cl] = (byCloser[cl]||0) + cs + up;
+    const k = dateKey(r['Closed Date']); if(k){ const m = k.slice(0,7); byMonth[m] = (byMonth[m]||0) + cs + up; }
+  });
+  return { byType, byCloser, byMonth, totClosed, totUp };
+}
+function openGraph(){
+  if(typeof Chart === 'undefined'){ alert('Charts are still loading — please try again in a moment.'); return; }
+  if(!lastResults || !lastResults.rows || !lastResults.rows.length){ alert('Run a search or filter first, then open the graphs.'); return; }
+  const g = buildGraphData();
+  const PAL = ['#2563EB','#DC2626','#16A34A','#7C3AED','#EA580C','#0891B2','#DB2777','#CA8A04','#0F766E','#4F46E5','#65A30D','#9333EA'];
+  const money = v => '$' + Number(v||0).toLocaleString('en-US',{maximumFractionDigits:2});
+  const pieOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, tooltip:{ callbacks:{ label:c => ' ' + c.label + ': ' + money(c.parsed) } } } };
+  const barOpts = { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } } }, scales:{ x:{ ticks:{ callback:v => '$'+v } } } };
+  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.y) } } }, scales:{ y:{ ticks:{ callback:v => '$'+v } } } };
+
+  document.getElementById('graphModalMeta').textContent =
+    (lastResults.query ? lastResults.query + '  ·  ' : '') + lastResults.rows.length + ' records';
+  document.getElementById('graphModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  destroyGraphs();
+
+  // 1) Sales by Data Type (pie, top 8 + Others)
+  const te = Object.entries(g.byType).sort((a,b)=>b[1]-a[1]);
+  const top = te.slice(0,8), rest = te.slice(8).reduce((s,x)=>s+x[1],0);
+  const tLabels = top.map(x=>x[0]).concat(rest>0?['Others']:[]);
+  const tData = top.map(x=>x[1]).concat(rest>0?[rest]:[]);
+  graphCharts.push(new Chart(document.getElementById('chartType'), { type:'pie', data:{ labels:tLabels, datasets:[{ data:tData, backgroundColor:PAL, borderColor:'#fff', borderWidth:1.5 }] }, options:pieOpts }));
+
+  // 2) Closed Sale vs Upsale (doughnut)
+  graphCharts.push(new Chart(document.getElementById('chartCU'), { type:'doughnut', data:{ labels:['Closed Sale','Upsale'], datasets:[{ data:[g.totClosed, g.totUp], backgroundColor:['#16A34A','#DC2626'], borderColor:'#fff', borderWidth:1.5 }] }, options:pieOpts }));
+
+  // 3) Top closers by sale (horizontal bar, top 10)
+  const ce = Object.entries(g.byCloser).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  graphCharts.push(new Chart(document.getElementById('chartCloser'), { type:'bar', data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:'#2563EB', borderRadius:4 }] }, options:barOpts }));
+
+  // 4) Sales over time (line, by month)
+  const me = Object.entries(g.byMonth).sort((a,b)=> a[0] < b[0] ? -1 : 1);
+  graphCharts.push(new Chart(document.getElementById('chartMonth'), { type:'line', data:{ labels:me.map(x=>fmtMonthLabel(x[0])), datasets:[{ label:'Sale', data:me.map(x=>x[1]), borderColor:'#DC2626', backgroundColor:'rgba(220,38,38,0.12)', fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:'#DC2626' }] }, options:lineOpts }));
+}
+function closeGraph(){
+  document.getElementById('graphModal').style.display = 'none';
+  document.body.style.overflow = '';
+  destroyGraphs();
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeGraph(); });
 </script>
 </body>
 </html>
