@@ -690,6 +690,7 @@ html{scroll-behavior:smooth;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <script>
 // Auth check
 (function(){
@@ -1325,12 +1326,14 @@ function buildGraphData(){
 function openGraph(){
   if(typeof Chart === 'undefined'){ alert('Charts are still loading — please try again in a moment.'); return; }
   if(!lastResults || !lastResults.rows || !lastResults.rows.length){ alert('Run a search or filter first, then open the graphs.'); return; }
+  if(window.ChartDataLabels && !Chart._dlRegistered){ Chart.register(window.ChartDataLabels); Chart._dlRegistered = true; }
   const g = buildGraphData();
-  const PAL = ['#2563EB','#DC2626','#16A34A','#7C3AED','#EA580C','#0891B2','#DB2777','#CA8A04','#0F766E','#4F46E5','#65A30D','#9333EA'];
+  const PAL = ['#4F46E5','#DC2626','#16A34A','#F59E0B','#0891B2','#7C3AED','#DB2777','#EA580C','#0F766E','#2563EB','#65A30D','#9333EA'];
   const money = v => '$' + Number(v||0).toLocaleString('en-US',{maximumFractionDigits:2});
-  const pieOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, tooltip:{ callbacks:{ label:c => ' ' + c.label + ': ' + money(c.parsed) } } } };
-  const barOpts = { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } } }, scales:{ x:{ ticks:{ callback:v => '$'+v } } } };
-  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' Total Sale: ' + money(c.parsed.y) } } }, scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } } };
+  const pct = (v,ctx) => { const arr = ctx.chart.data.datasets[0].data; const sum = arr.reduce((a,b)=>a+(Number(b)||0),0); const p = sum ? v/sum*100 : 0; return p>=4 ? p.toFixed(1)+'%' : ''; };
+  const pieOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, tooltip:{ callbacks:{ label:c => ' ' + c.label + ': ' + money(c.parsed) } }, datalabels:{ color:'#fff', font:{ weight:'700', size:12 }, formatter:pct } } };
+  const barOpts = { responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:8 } }, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } }, datalabels:{ anchor:'end', align:'start', color:'#fff', font:{ weight:'700', size:11 }, formatter:v => money(v) } }, scales:{ x:{ grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } }, y:{ grid:{ display:false } } } };
+  const lineOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, datalabels:{ display:false }, tooltip:{ callbacks:{ label:c => ' Total Sale: ' + money(c.parsed.y) } } }, scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } } };
 
   document.getElementById('graphModalMeta').textContent =
     (lastResults.query ? lastResults.query + '  ·  ' : '') + lastResults.rows.length + ' records';
