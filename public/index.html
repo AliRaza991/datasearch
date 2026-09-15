@@ -1192,7 +1192,7 @@ async function applyCloserFilter(){
       const chips = `<div style="display:flex;gap:12px;flex-wrap:wrap;padding:14px 16px 2px;">
         ${statChip('Closed Leads', filtered.length, '#2563EB')}
         ${statChip('Total Closed Sale', fmt(totSale), '#16A34A')}
-        ${statChip('Total Upsale', fmt(totUp), '#7C3AED')}
+        ${statChip('Total Upsale', fmt(totUp), '#DC2626')}
       </div>`;
       // Data-type entries.
       const typeEntries = Object.keys(byType).map(k => ({ label:k, total: byType[k].cs + byType[k].up }));
@@ -1206,13 +1206,13 @@ async function applyCloserFilter(){
         if(k) closerTot[k] = (closerTot[k]||0) + toMoneyNum(r['Closed Sale']) + toMoneyNum(r['Upsale']);
       });
       const teamEntries = roster => roster.map(name => ({ label:name, total: closerTot[normName(name)] || 0 }));
-      function miniTable(title, headLabel, entries){
+      function miniTable(title, headLabel, entries, accent){
         const total = entries.reduce((s,e)=>s+e.total, 0);
         const rows = entries.slice().sort((a,b)=>b.total-a.total)
           .map(e => `<div class="dt-mini-row"><span>${esc(e.label)}</span><span>${fmt(e.total)}</span></div>`).join('');
         return `<div style="flex:1 1 240px;max-width:460px;">
-          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:2px 0 0;">${title}</div>
-          <div class="dt-mini-wrap">
+          <div style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:${accent};margin:2px 0 0;">${title}</div>
+          <div class="dt-mini-wrap" style="border-top:2.5px solid ${accent};">
             <div class="dt-mini-head"><span>${headLabel}</span><span>Sale</span></div>
             ${rows}
             <div class="dt-mini-total"><span>Total</span><span>${fmt(total)}</span></div>
@@ -1220,9 +1220,9 @@ async function applyCloserFilter(){
         </div>`;
       }
       const tablesRow = `<div style="display:flex;gap:16px;flex-wrap:wrap;padding:4px 16px 16px;">
-        ${miniTable('Sales by Data Type','Data Type', typeEntries)}
-        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN).filter(e=>e.total>0))}
-        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM).filter(e=>e.total>0))}
+        ${miniTable('Sales by Data Type','Data Type', typeEntries, '#475569')}
+        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN).filter(e=>e.total>0), '#2563EB')}
+        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM).filter(e=>e.total>0), '#DC2626')}
       </div>`;
       document.getElementById('resultsBody').insertAdjacentHTML('afterbegin', chips + tablesRow);
     }
