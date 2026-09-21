@@ -1354,8 +1354,9 @@ function openGraph(){
       chart:{ type:'pie', backgroundColor:'transparent', options3d:{ enabled:true, alpha:52, beta:0 } },
       title:{ text:null }, credits:{ enabled:false },
       tooltip:{ pointFormatter:function(){ return '<b>'+money(this.y)+'</b> ('+this.percentage.toFixed(1)+'%)'; } },
-      plotOptions:{ pie:{ depth:42, slicedOffset:9,
-        dataLabels:{ enabled:true, format:'{point.name}<br>{point.percentage:.1f}%', distance:12,
+      plotOptions:{ pie:{ depth:42, slicedOffset:9, size:'62%', minSize:120,
+        dataLabels:{ enabled:true, format:'{point.name}<br>{point.percentage:.1f}%', distance:26,
+          connectorWidth:1.5, connectorColor:'#cbd5e1', softConnector:true, padding:6,
           style:{ fontSize:'11px', fontWeight:'600', textOutline:'none', color:'#334155' } } } },
       series:[{ name:'Sale', data:pieData }]
     });
