@@ -1531,7 +1531,7 @@ function renderClosed(data){
   const mg_wa_cm       = data[192]?.[5] ?? 0;
   const mg_uniq_cm     = data[192]?.[6] ?? 0;
   const mg_rev_cm      = data[192]?.[7] ?? 0;
-  const maheen_cl = [data[198],data[199],data[200],data[201],data[202],data[203],data[204]].filter(r=>r?.[1]&&r[1]!=='');
+  const maheen_cl = [data[198],data[199],data[200],data[201],data[202],data[203],data[204],data[205]].filter(r=>r?.[1]&&r[1]!=='');
   const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219],data[220],data[221],data[222],data[223]].filter(r=>r?.[1]&&r[1]!==''&&String(r[1]).trim()!=='Malik Sarim');
   // Team monthly target / days / avg — D169 shared, Maheen E170/E171, Khurram F170/F171
   const total_days     = data[168]?.[3] ?? 0;  // D169
