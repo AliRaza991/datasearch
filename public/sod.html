@@ -1613,9 +1613,9 @@ function renderClosed(data){
   function teamTable(title,hex,members,info){
     const sumCol = c => members.reduce((s,r)=>s+(parseFloat(r[c])||0),0);
     const todayClosed=sumCol(6), inbound=sumCol(2), outbound=sumCol(3), facebook=sumCol(4), referral=sumCol(5);
-    const cBox=(l,v)=>`<div style="text-align:center;min-width:60px;">
-      <div style="font-size:0.5rem;font-weight:700;text-transform:uppercase;color:rgba(0,0,0,0.55);letter-spacing:0.03em;white-space:nowrap;">${l}</div>
-      <div style="font-size:1.35rem;font-weight:800;color:#000000;font-family:'DM Mono',monospace;line-height:1.15;">${v}</div>
+    const cBox=(l,v,big)=>`<div style="text-align:center;min-width:${big?'86px':'60px'};">
+      <div style="font-size:${big?'0.62rem':'0.5rem'};font-weight:700;text-transform:uppercase;color:rgba(0,0,0,0.55);letter-spacing:0.03em;white-space:nowrap;">${l}</div>
+      <div style="font-size:${big?'2rem':'1.35rem'};font-weight:800;color:#000000;font-family:'DM Mono',monospace;line-height:1.15;">${v}</div>
     </div>`;
     const iBox=(l,v)=>`<div style="text-align:center;">
       <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.82);letter-spacing:0.04em;white-space:nowrap;">${l}</div>
@@ -1635,7 +1635,7 @@ function renderClosed(data){
         </div>
         ${infoGroup}
         <div style="margin-left:auto;display:flex;gap:14px;align-items:center;">
-          ${cBox('Today Closed',todayClosed)}
+          ${cBox('Total Closed',todayClosed,true)}
           ${cBox('In-bound',inbound)}
           ${cBox('Out-bound',outbound)}
           ${cBox('Facebook',facebook)}
