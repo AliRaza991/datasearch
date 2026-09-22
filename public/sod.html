@@ -1670,7 +1670,6 @@ function renderClosed(data){
 
   return `<div style="display:flex;flex-direction:column;gap:0;">
     ${sCard('Closed Lead (Closers)','#6D28D9','linear-gradient(135deg,rgba(109,40,217,0.6),rgba(79,70,229,0.5))',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_cm,cl_st_cm,cl_wa_cm,cl_uniq_cm,cl_rev_cm)}
-    ${sCard('Closed Lead (Managers)','#B45309','linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_cm,mg_st_cm,mg_wa_cm,mg_uniq_cm,mg_rev_cm)}
     ${teamTable('Team Maheen','#7C3AED',maheen_cl,{target:maheen_target,days:total_days,avg:maheen_mavg})}
     ${teamTable('Team Khurram','#EAB308',khurram_cl,{target:khurram_target,days:total_days,avg:khurram_mavg})}
   </div>`;
