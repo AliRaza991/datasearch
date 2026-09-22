@@ -1533,6 +1533,12 @@ function renderClosed(data){
   const mg_rev_cm      = data[192]?.[7] ?? 0;
   const maheen_cl = [data[198],data[199],data[200],data[201],data[202],data[203],data[204]].filter(r=>r?.[1]&&r[1]!=='');
   const khurram_cl = [data[214],data[215],data[216],data[217],data[218],data[219],data[220],data[221],data[222],data[223]].filter(r=>r?.[1]&&r[1]!==''&&String(r[1]).trim()!=='Malik Sarim');
+  // Team monthly target / days / avg — D169 shared, Maheen E170/E171, Khurram F170/F171
+  const total_days     = data[168]?.[3] ?? 0;  // D169
+  const maheen_target  = data[169]?.[4] ?? 0;  // E170
+  const maheen_mavg    = data[170]?.[4] ?? 0;  // E171
+  const khurram_target = data[169]?.[5] ?? 0;  // F170
+  const khurram_mavg   = data[170]?.[5] ?? 0;  // F171
 
   function sCard(title,hex,bg,today,email,st,whatsapp,avg_overall,avg_month,avg_today,email_ov,st_ov,wa_ov,uniq_ov,rev_ov){
     return `<div class="section-card" style="margin-bottom:16px;">
@@ -1604,20 +1610,30 @@ function renderClosed(data){
     </div>`;
   }
 
-  function teamTable(title,hex,members){
+  function teamTable(title,hex,members,info){
     const sumCol = c => members.reduce((s,r)=>s+(parseFloat(r[c])||0),0);
     const todayClosed=sumCol(6), inbound=sumCol(2), outbound=sumCol(3), facebook=sumCol(4), referral=sumCol(5);
     const cBox=(l,v)=>`<div style="text-align:center;min-width:60px;">
       <div style="font-size:0.5rem;font-weight:700;text-transform:uppercase;color:rgba(0,0,0,0.55);letter-spacing:0.03em;white-space:nowrap;">${l}</div>
       <div style="font-size:1.35rem;font-weight:800;color:#000000;font-family:'DM Mono',monospace;line-height:1.15;">${v}</div>
     </div>`;
+    const iBox=(l,v)=>`<div style="text-align:center;">
+      <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.82);letter-spacing:0.04em;white-space:nowrap;">${l}</div>
+      <div style="font-size:1.85rem;font-weight:800;color:#ffffff;font-family:'DM Mono',monospace;line-height:1.1;">${v}</div>
+    </div>`;
+    const infoGroup = info ? `<div style="display:flex;gap:26px;align-items:center;margin-left:26px;padding-left:26px;border-left:2px solid rgba(255,255,255,0.28);">
+      ${iBox('Monthly Target',info.target||'—')}
+      ${iBox('Total Days',info.days||'—')}
+      ${iBox('Monthly Avg',avg(info.avg))}
+    </div>` : '';
     return `<div class="section-card" style="margin-bottom:16px;">
-      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;">
+      <div class="section-hdr" style="background:linear-gradient(135deg,rgba(29,78,216,0.55) 0%,rgba(220,38,38,0.45) 55%,rgba(255,255,255,0.3) 100%);border-bottom:2px solid rgba(29,78,216,0.4);padding:16px 24px;flex-wrap:wrap;row-gap:12px;">
         <div class="section-hdr-icon" style="background:linear-gradient(135deg,rgba(255,255,255,0.34),rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.45);color:#fff;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(10px);width:44px;height:44px;font-size:1.3rem;"><i class="fa-solid fa-users"></i></div>
         <div>
           <div style="font-size:1.5rem;font-weight:800;color:#ffffff;letter-spacing:-0.01em;line-height:1.1;font-family:'Space Grotesk',sans-serif;">${title}</div>
           <div style="font-size:0.62rem;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600;">${members.length} members</div>
         </div>
+        ${infoGroup}
         <div style="margin-left:auto;display:flex;gap:14px;align-items:center;">
           ${cBox('Today Closed',todayClosed)}
           ${cBox('In-bound',inbound)}
@@ -1655,8 +1671,8 @@ function renderClosed(data){
   return `<div style="display:flex;flex-direction:column;gap:0;">
     ${sCard('Closed Lead (Closers)','#6D28D9','linear-gradient(135deg,rgba(109,40,217,0.6),rgba(79,70,229,0.5))',cl_today,cl_email,cl_st,cl_whatsapp,cl_avg_overall,cl_avg_month,cl_avg_today,cl_email_cm,cl_st_cm,cl_wa_cm,cl_uniq_cm,cl_rev_cm)}
     ${sCard('Closed Lead (Managers)','#B45309','linear-gradient(135deg,rgba(180,83,9,0.6),rgba(217,119,6,0.5))',mg_today,mg_email,mg_st,mg_whatsapp,mg_avg_overall,mg_avg_month,mg_avg_today,mg_email_cm,mg_st_cm,mg_wa_cm,mg_uniq_cm,mg_rev_cm)}
-    ${teamTable('Team Maheen','#7C3AED',maheen_cl)}
-    ${teamTable('Team Khurram','#EAB308',khurram_cl)}
+    ${teamTable('Team Maheen','#7C3AED',maheen_cl,{target:maheen_target,days:total_days,avg:maheen_mavg})}
+    ${teamTable('Team Khurram','#EAB308',khurram_cl,{target:khurram_target,days:total_days,avg:khurram_mavg})}
   </div>`;
 }
 
