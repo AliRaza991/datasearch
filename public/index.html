@@ -309,6 +309,20 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .filter-toggle-btn .filter-chevron{transition:transform .2s ease;display:inline-block;font-size:0.7rem;}
 .filter-toggle-btn.open .filter-chevron{transform:rotate(180deg);}
 
+/* Closer filter panel */
+.filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end;}
+.f-label{display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;}
+.f-input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;font-family:inherit;height:42px;}
+.f-input:focus{outline:none;border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
+.f-actions{display:flex;gap:8px;}
+.f-apply{flex:1;height:42px;padding:0 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.f-apply:disabled{opacity:0.7;cursor:wait;}
+.f-clear{height:42px;padding:0 16px;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;}
+.f-presets{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;}
+.f-presets-label{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#94a3b8;margin-right:4px;}
+.f-presets button{padding:5px 12px;border-radius:999px;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all .15s;}
+.f-presets button:hover{background:#2563EB;color:#fff;border-color:#2563EB;}
+
 /* Compact "Sales by Data Type" list (div rows so it never inherits the results-table CSS) */
 .dt-mini-wrap{width:100%;max-height:260px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px;font-size:0.74rem;}
 .dt-mini-head,.dt-mini-row,.dt-mini-total{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:6px 12px;}
@@ -565,25 +579,53 @@ html{scroll-behavior:smooth;}
         <span class="filter-chevron">▾</span>
       </button>
       <div id="filterPanel" style="display:none;margin-top:14px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;box-shadow:0 12px 34px rgba(0,0,0,0.16);text-align:left;">
-        <div class="filter-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:12px;align-items:end;">
+        <div class="filter-grid">
           <div>
-            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closer Name</label>
-            <input type="text" id="filterCloser" placeholder="Type closer name…" autocomplete="off" onkeydown="if(event.key==='Enter')applyCloserFilter()" style="width:100%;padding:11px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;">
+            <label class="f-label">Closer Name</label>
+            <input type="text" id="filterCloser" class="f-input" list="closerList" placeholder="Type closer name… (or All)" autocomplete="off" onkeydown="if(event.key==='Enter')applyCloserFilter()">
+            <datalist id="closerList"></datalist>
           </div>
           <div>
-            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closed Date — From</label>
-            <input type="date" id="filterFrom" style="width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;">
+            <label class="f-label">Team</label>
+            <select id="filterTeam" class="f-input">
+              <option value="">All Teams</option>
+              <option value="maheen">Team Maheen</option>
+              <option value="khurram">Team Khurram</option>
+            </select>
           </div>
           <div>
-            <label style="display:block;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin-bottom:6px;">Closed Date — To</label>
-            <input type="date" id="filterTo" style="width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.85rem;font-weight:600;color:#1e293b;background:#fff;">
+            <label class="f-label">Data Type</label>
+            <select id="filterType" class="f-input">
+              <option value="">All Data Types</option>
+              <option>New Data</option><option>Paid Lead</option><option>Pop-Up</option><option>Hot Lead</option>
+              <option>Facebook</option><option>Referral</option><option>Email Lead</option><option>Old Data</option>
+              <option>Tawk To</option><option>Web Live Chat</option><option>WhatsApp</option><option>Inbound Lead</option>
+              <option>Existing Client</option><option>Other</option>
+            </select>
           </div>
-          <div style="display:flex;gap:8px;">
-            <button type="button" id="filterApplyBtn" onclick="applyCloserFilter()" style="padding:11px 20px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;white-space:nowrap;">Apply</button>
-            <button type="button" onclick="clearCloserFilter()" style="padding:11px 16px;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;">Clear</button>
+          <div>
+            <label class="f-label">Closed Date — From</label>
+            <input type="date" id="filterFrom" class="f-input">
+          </div>
+          <div>
+            <label class="f-label">Closed Date — To</label>
+            <input type="date" id="filterTo" class="f-input">
+          </div>
+          <div class="f-actions">
+            <button type="button" id="filterApplyBtn" class="f-apply" onclick="applyCloserFilter()">Apply</button>
+            <button type="button" class="f-clear" onclick="clearCloserFilter()">Clear</button>
           </div>
         </div>
-        <div style="margin-top:10px;font-size:0.72rem;color:#94a3b8;">Shows only leads with <strong style="color:#64748b;">Status = Closed</strong>. Leave a field empty to ignore it.</div>
+        <div class="f-presets">
+          <span class="f-presets-label">Quick range:</span>
+          <button type="button" onclick="setDatePreset('today')">Today</button>
+          <button type="button" onclick="setDatePreset('month')">This Month</button>
+          <button type="button" onclick="setDatePreset('lastmonth')">Last Month</button>
+          <button type="button" onclick="setDatePreset('3m')">Last 3 Months</button>
+          <button type="button" onclick="setDatePreset('year')">This Year</button>
+          <button type="button" onclick="setDatePreset('all')">All Time</button>
+        </div>
+        <div id="filterStatus" style="margin-top:10px;font-size:0.72rem;color:#94a3b8;">Shows only leads with <strong style="color:#64748b;">Status = Closed</strong>, newest first. Leave a field empty to ignore it.</div>
       </div>
     </div>
 
@@ -718,6 +760,7 @@ async function checkDeviceStatus(){
         localStorage.removeItem('ds_token');
         localStorage.removeItem('ds_user');
         localStorage.removeItem('ds_device_token');
+        clearDataCache();
         alert('Your device has been reset by admin. Please login again with new device code.');
         window.location.replace('/login.html');
       }
@@ -744,6 +787,27 @@ const DISPLAY_COLS = [
   {key:'Closed Sale',    label:'Closed Sale',    width:'8%', money:true},
   {key:'Upsale',         label:'Upsale',         width:'8%', money:true},
 ];
+// Sheet headers get renamed from time to time (e.g. "Closed Date" became
+// "Closer Date"). Each canonical key resolves to the FIRST header matching
+// any alias, so a rename no longer silently breaks the page.
+const COL_ALIASES = {
+  'Closed Date':    ['Closed Date','Closer Date','Close Date','Closing Date'],
+  'Qualifed ON':    ['Qualifed ON','Qualified ON','Qualified On','Qualifed On'],
+  'Qualified Date': ['Qualified Date','Qualifed Date'],
+  'Closer Name':    ['Closer Name','Closer'],
+  'Closed Sale':    ['Closed Sale','Close Sale','Closed Amount'],
+  'Upsale':         ['Upsale','Up Sale','Upsell'],
+  'Status':         ['Status','Lead Status'],
+  'Data Type':      ['Data Type','Datatype','Data type'],
+  'Lead Qualifier': ['Lead Qualifier','Qualifier'],
+  'Client Name':    ['Client Name','Name'],
+};
+// Closer teams (used by the Team filter and the team sale tables).
+const MAHEEN_TEAM  = ['Maheen Noor','Aqeel Ahmad','Sami Sardar','Huzaifa Ibrar','Irfan Khan','Muhammad Ali','Faisal Humayun','Shahzaib Ahmed'];
+const KHURRAM_TEAM = ['Khurram Gulzar','Ahmed Raza','Ismat Ullah','Jalal Khan','Musharaf Ghouri','Syed Junaid','Sharjeel Anjum','Hussain Muhammed'];
+const normName = s => String(s||'').toLowerCase().replace(/\s+/g,'');
+const MAHEEN_SET  = new Set(MAHEEN_TEAM.map(normName));
+const KHURRAM_SET = new Set(KHURRAM_TEAM.map(normName));
 
 // User setup
 const u = JSON.parse(localStorage.getItem('ds_user')||'{}');
@@ -780,6 +844,7 @@ function doLogout(){
   fetch('/api/logout',{method:'POST',headers:{'authorization':t}});
   localStorage.removeItem('ds_token');
   localStorage.removeItem('ds_user');
+  clearDataCache();
   window.location.replace('/login.html');
 }
 
@@ -854,6 +919,18 @@ function parseSheetResponse(json){
   const data = json.data;
   if(!data || !data[0]) throw new Error('No data in response');
   const headers = data[0].map(h => String(h||'').trim());
+  // Resolve each canonical column to its first matching header index.
+  const lowerHeaders = headers.map(h => h.toLowerCase());
+  const aliasIdx = {};
+  Object.keys(COL_ALIASES).forEach(key => {
+    for(const a of COL_ALIASES[key]){
+      const i = lowerHeaders.indexOf(a.toLowerCase());
+      if(i !== -1){ aliasIdx[key] = i; break; }
+    }
+  });
+  const outHeaders = headers.slice();
+  Object.keys(aliasIdx).forEach(k => { if(!outHeaders.includes(k)) outHeaders.push(k); });
+
   const rows = [];
   for(let i = 1; i < data.length; i++){
     const rowData = data[i];
@@ -861,18 +938,28 @@ function parseSheetResponse(json){
     const row = {};
     const parts = [];
     headers.forEach((h, idx) => {
-      const val = String(rowData[idx]||'').trim();
+      const val = String(rowData[idx]==null?'':rowData[idx]).trim();
       // First occurrence wins — the sheet has a duplicate "Closer Name" header,
       // and the primary one (col 8) must not be clobbered by the later stray column.
       if(h && !(h in row)) row[h] = val;
       if(val) parts.push(val.toLowerCase());
     });
+    // Canonical keys always point at the right column, whatever the header is called now.
+    for(const k in aliasIdx){ row[k] = String(rowData[aliasIdx[k]]==null?'':rowData[aliasIdx[k]]).trim(); }
     // Pre-built lowercase search index so filtering doesn't re-scan every cell each time.
     row._search = parts.join(' // ');
     row._digits = row._search.replace(/\D/g, '');
+    // Pre-computed fields for the closer filter.
+    row._statusLc  = (row['Status']||'').toLowerCase();
+    row._closerLc  = (row['Closer Name']||'').toLowerCase();
+    row._closerKey = normName(row['Closer Name']);
+    if(row._statusLc === 'closed'){
+      row._closedKey = dateKey(row['Closed Date']);
+      row._dtype = canonicalDataType(row['Data Type']);
+    }
     rows.push(row);
   }
-  return { headers, rows };
+  return { headers: outHeaders, rows };
 }
 
 // Single unified fetch function - no duplicates
@@ -910,6 +997,8 @@ async function fetchFromSheet(){
         const parsed = parseSheetResponse(json);
         cachedData = parsed;
         lastFetch = Date.now();
+        // Persist the raw sheet so the next page load can search instantly.
+        idbSet('client_history', { ts: lastFetch, data: json.data }).catch(()=>{});
         return parsed;
       } catch(err){
         clearTimeout(timeoutId);
@@ -923,12 +1012,66 @@ async function fetchFromSheet(){
   }
 }
 
+// ── IndexedDB cache (the sheet is ~5MB — too big for localStorage) ──
+const IDB_NAME = 'ds_cache', IDB_STORE = 'kv';
+function idbOpen(){
+  return new Promise((res, rej) => {
+    if(!window.indexedDB) return rej(new Error('no idb'));
+    const r = indexedDB.open(IDB_NAME, 1);
+    r.onupgradeneeded = () => r.result.createObjectStore(IDB_STORE);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function idbGet(key){
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const q = db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key);
+    q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+  });
+}
+async function idbSet(key, val){
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(val, key);
+    tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+  });
+}
+// Client data is personal info — wipe the on-device copy on logout.
+function clearDataCache(){ try{ indexedDB.deleteDatabase(IDB_NAME); }catch(e){} }
+
+let idbTried = false;
+async function loadFromIdb(){
+  if(idbTried || cachedData) return;
+  idbTried = true;
+  try{
+    const c = await idbGet('client_history');
+    if(c && Array.isArray(c.data) && !cachedData){
+      cachedData = parseSheetResponse({ success:true, data:c.data });
+      lastFetch = c.ts || 0;
+    }
+  }catch(e){ /* no cache yet */ }
+}
+
+const STALE_MAX = 12 * 60 * 60 * 1000; // serve a cached copy up to 12h old while refreshing
 async function getSheetData(forceRefresh = false){
-  const now = Date.now();
-  if(!forceRefresh && cachedData && (now - lastFetch) < CACHE_TTL){
-    return cachedData;
+  await loadFromIdb();
+  const age = Date.now() - lastFetch;
+  if(!forceRefresh && cachedData){
+    if(age < CACHE_TTL) return cachedData;
+    if(age < STALE_MAX){
+      // Stale-while-revalidate: answer instantly, refresh in the background.
+      if(!isFetching) fetchFromSheet().catch(()=>{});
+      return cachedData;
+    }
   }
-  return fetchFromSheet();
+  try{
+    return await fetchFromSheet();
+  }catch(e){
+    if(cachedData) return cachedData;   // endpoint down — fall back to last good copy
+    throw e;
+  }
 }
 
 function filterRows(rows, query){
@@ -1134,7 +1277,10 @@ function dateKey(val){
   const s = String(val||'').trim();
   if(!s || s === '-') return '';
   const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(s) ? s + 'T00:00:00' : s);
-  return isNaN(d) ? '' : d.toLocaleDateString('en-CA');
+  if(isNaN(d)) return '';
+  // Local calendar date as YYYY-MM-DD (much faster than toLocaleDateString).
+  const m = d.getMonth() + 1, day = d.getDate();
+  return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day;
 }
 function toMoneyNum(val){
   const n = parseFloat(String(val==null?'':val).replace(/[$,\s]/g,''));
@@ -1167,12 +1313,39 @@ function toggleFilterPanel(){
   const open = p.style.display === 'block';
   p.style.display = open ? 'none' : 'block';
   btn.classList.toggle('open', !open);
-  if(!open) setTimeout(()=>{ const f=document.getElementById('filterCloser'); if(f) f.focus(); }, 60);
+  if(!open){
+    fillCloserSuggestions();
+    setTimeout(()=>{ const f=document.getElementById('filterCloser'); if(f) f.focus(); }, 60);
+  }
+}
+// Autocomplete for the closer text box: team rosters + any closer seen on closed rows.
+function fillCloserSuggestions(){
+  const names = new Map();
+  ['All Closers', ...MAHEEN_TEAM, ...KHURRAM_TEAM].forEach(n => names.set(normName(n), n));
+  if(cachedData) cachedData.rows.forEach(r => {
+    if(r._statusLc === 'closed' && r['Closer Name'] && r['Closer Name'] !== '-' && !names.has(r._closerKey))
+      names.set(r._closerKey, r['Closer Name']);
+  });
+  document.getElementById('closerList').innerHTML =
+    [...names.values()].map(n => `<option value="${esc(n)}"></option>`).join('');
 }
 function clearCloserFilter(){
-  document.getElementById('filterCloser').value = '';
-  document.getElementById('filterFrom').value = '';
-  document.getElementById('filterTo').value = '';
+  ['filterCloser','filterFrom','filterTo','filterTeam','filterType'].forEach(id => { document.getElementById(id).value = ''; });
+}
+function setDatePreset(p){
+  const pad = n => (n<10?'0':'') + n;
+  const key = d => d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  const now = new Date(), y = now.getFullYear(), m = now.getMonth();
+  let from = '', to = key(now);
+  if(p === 'today')      from = to;
+  else if(p === 'month')      from = key(new Date(y, m, 1));
+  else if(p === 'lastmonth'){ from = key(new Date(y, m-1, 1)); to = key(new Date(y, m, 0)); }
+  else if(p === '3m')         from = key(new Date(y, m-2, 1));
+  else if(p === 'year')       from = key(new Date(y, 0, 1));
+  else { from = ''; to = ''; }
+  document.getElementById('filterFrom').value = from;
+  document.getElementById('filterTo').value = to;
+  applyCloserFilter();
 }
 function statChip(label,val,color){
   return `<div style="flex:1;min-width:150px;background:${color}0d;border:1px solid ${color}33;border-radius:12px;padding:12px 16px;">
@@ -1184,30 +1357,47 @@ async function applyCloserFilter(){
   let closer = document.getElementById('filterCloser').value.trim();
   // Typing "All" / "All Closer" / "All Closers" means: don't filter by closer.
   if(/^all(\s*closers?)?$/i.test(closer)) closer = '';
-  const from = document.getElementById('filterFrom').value; // '' or YYYY-MM-DD
-  const to   = document.getElementById('filterTo').value;
+  let from = document.getElementById('filterFrom').value; // '' or YYYY-MM-DD
+  let to   = document.getElementById('filterTo').value;
+  if(from && to && from > to){ [from, to] = [to, from]; document.getElementById('filterFrom').value = from; document.getElementById('filterTo').value = to; }
+  const team  = document.getElementById('filterTeam').value;   // '' | maheen | khurram
+  const dtype = document.getElementById('filterType').value;   // '' | canonical data type
   const btn = document.getElementById('filterApplyBtn');
+  const status = document.getElementById('filterStatus');
   btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Filtering...';
+  if(!cachedData) status.innerHTML = '<span style="color:#2563EB;font-weight:700;">Loading data… first load can take a few seconds.</span>';
   try{
     const { headers, rows } = await getSheetData();
     // A filter run owns the results — stop the text-search auto-refresh clobbering it.
     if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
     currentQuery = '';
     const closerLc = closer.toLowerCase();
+    const teamSet = team === 'maheen' ? MAHEEN_SET : team === 'khurram' ? KHURRAM_SET : null;
+    const t0 = performance.now();
     const filtered = rows.filter(r => {
-      if(String(r['Status']||'').trim().toLowerCase() !== 'closed') return false;
-      if(closer && !String(r['Closer Name']||'').trim().toLowerCase().includes(closerLc)) return false;
+      if(r._statusLc !== 'closed') return false;
+      if(closerLc && !r._closerLc.includes(closerLc)) return false;
+      if(teamSet && !teamSet.has(r._closerKey)) return false;
+      if(dtype && r._dtype !== dtype) return false;
       if(from || to){
-        const k = dateKey(r['Closed Date']);
+        const k = r._closedKey;
         if(!k) return false;
         if(from && k < from) return false;
         if(to && k > to) return false;
       }
       return true;
     });
-    showResults(filtered, headers, closer || 'All Closers');
+    // Newest closes first.
+    filtered.sort((a,b) => (b._closedKey||'').localeCompare(a._closedKey||''));
+    const ms = Math.round(performance.now() - t0);
+    status.innerHTML = `Shows only leads with <strong style="color:#64748b;">Status = Closed</strong>, newest first. · <span style="color:#16A34A;font-weight:700;">${filtered.length} match${filtered.length!==1?'es':''} in ${ms} ms</span>`;
+    fillCloserSuggestions();
+    const label = [closer || 'All Closers', team ? (team==='maheen'?'Team Maheen':'Team Khurram') : '', dtype].filter(Boolean).join(' · ');
+    showResults(filtered, headers, label);
     // Replace the masked meta line with the active filter criteria.
     const bits = [closer ? esc(closer) : 'All Closers'];
+    if(team) bits.push(team==='maheen' ? 'Team Maheen' : 'Team Khurram');
+    if(dtype) bits.push(esc(dtype));
     if(from || to) bits.push('Closed ' + (from || '…') + ' → ' + (to || '…'));
     document.getElementById('resultsMeta').innerHTML =
       `<span style="font-size:0.78rem;color:#475569;font-weight:600;">Filter · ${bits.join('  ·  ')}</span>`;
@@ -1232,9 +1422,7 @@ async function applyCloserFilter(){
       // Data-type entries.
       const typeEntries = Object.keys(byType).map(k => ({ label:k, total: byType[k].cs + byType[k].up }));
       // Team sales by closer (match names loosely: case + spaces ignored).
-      const MAHEEN = ['Maheen Noor','Aqeel Ahmad','Sami Sardar','Huzaifa Ibrar','Irfan Khan','Muhammad Ali','Faisal Humayun'];
-      const KHURRAM = ['Khurram Gulzar','Ahmed Raza','Ismat Ullah','Jalal Khan','Musharaf Ghouri','Syed Junaid','Sharjeel Anjum','Hussain Muhammed'];
-      const normName = s => String(s||'').toLowerCase().replace(/\s+/g,'').trim();
+      const MAHEEN = MAHEEN_TEAM, KHURRAM = KHURRAM_TEAM;
       const closerTot = {};
       filtered.forEach(r => {
         const k = normName(r['Closer Name']);
@@ -1263,6 +1451,7 @@ async function applyCloserFilter(){
     }
   }catch(e){
     console.error('Filter error:', e.message);
+    status.innerHTML = '<span style="color:#DC2626;font-weight:700;">Could not load data (server slow/unavailable). Please try again.</span>';
     document.getElementById('resultsSection').classList.add('show');
     document.getElementById('resultsBody').innerHTML =
       `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load data. Please try again.</div></div>`;
@@ -1279,10 +1468,10 @@ document.addEventListener('keydown', function(e){
   }
 });
 
-// Prefetch silently on load
+// Warm the data on load: on-device cache first (instant), then refresh in the background.
 setTimeout(() => {
   getSheetData().catch(e => console.log('Prefetch failed silently'));
-}, 1000);
+}, 150);
 
 renderRecent();
 </script>
