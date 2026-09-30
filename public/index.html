@@ -323,6 +323,41 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .f-presets button{padding:5px 12px;border-radius:999px;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all .15s;}
 .f-presets button:hover{background:#2563EB;color:#fff;border-color:#2563EB;}
 
+/* Filter report — colourful gradient stat cards */
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;padding:14px 16px 6px;}
+.stat-chip{flex:1;min-width:170px;border-radius:14px;padding:14px 16px;color:#fff;position:relative;overflow:hidden;}
+.stat-chip::after{content:'';position:absolute;right:-22px;top:-22px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.14);}
+.stat-chip::before{content:'';position:absolute;right:26px;bottom:-34px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.08);}
+.stat-chip-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;opacity:0.92;position:relative;z-index:1;}
+.stat-chip-val{font-size:1.55rem;font-weight:800;font-family:'DM Mono',monospace;margin-top:3px;position:relative;z-index:1;letter-spacing:-0.01em;}
+.stat-chip-sub{font-size:0.68rem;opacity:0.9;margin-top:2px;position:relative;z-index:1;}
+.stat-chip-sub b{font-weight:800;}
+
+/* Team segmented control */
+.f-seg{display:flex;height:42px;border:1.5px solid #cbd5e1;border-radius:10px;overflow:hidden;background:#fff;}
+.f-seg button{flex:1;border:none;background:transparent;font-size:0.76rem;font-weight:700;color:#475569;cursor:pointer;border-left:1px solid #e2e8f0;padding:0 8px;white-space:nowrap;transition:all .15s;font-family:inherit;}
+.f-seg button:first-child{border-left:none;}
+.f-seg button:hover{background:#f1f5f9;}
+.f-seg button.active[data-team=""]{background:linear-gradient(135deg,#475569,#334155);color:#fff;}
+.f-seg button.active[data-team="maheen"]{background:linear-gradient(135deg,#2563EB,#1E40AF);color:#fff;}
+.f-seg button.active[data-team="khurram"]{background:linear-gradient(135deg,#DC2626,#B91C1C);color:#fff;}
+
+/* Colourful mini tables */
+.dt-mini-wrap.colored{border-width:1.5px;box-shadow:0 6px 18px rgba(15,23,42,0.07);margin-top:0;}
+.dt-mini-title{padding:8px 12px;color:#fff;font-size:0.66rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;}
+.dt-mini-wrap.colored .dt-mini-head{top:0;}
+.dt-mini-wrap.colored .dt-mini-row:nth-child(odd){background:#fafbff;}
+.dt-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+.dt-pct{font-style:normal;font-size:0.62rem;color:#94a3b8;margin-left:6px;font-weight:600;}
+
+/* Main results table — zebra rows + status pills */
+tbody tr:nth-child(even){background:#f8fafc;}
+.st-pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:0.72rem;font-weight:700;}
+.st-closed{background:#dcfce7;color:#15803d;}
+.st-existing{background:#dbeafe;color:#1d4ed8;}
+.st-other{background:#f1f5f9;color:#475569;}
+.money-pos{color:#16A34A;font-weight:700;}
+
 /* Single-closer report: closed leads grouped by data type (div rows, no table CSS) */
 .lt-title{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:#7C3AED;margin:2px 0 0;}
 .lt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:8px;}
@@ -467,18 +502,35 @@ html{scroll-behavior:smooth;}
   transition:filter .15s, transform .15s;
 }
 .graph-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
-.graph-modal{position:fixed;inset:0;z-index:3000;background:#0b1220;overflow-y:auto;}
-.graph-modal-head{position:sticky;top:0;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 24px;background:#0b1220;border-bottom:1px solid rgba(255,255,255,0.1);z-index:1;}
-.graph-modal-title{font-size:1.2rem;font-weight:800;color:#fff;}
+.graph-modal{position:fixed;inset:0;z-index:3000;overflow-y:auto;
+  background:radial-gradient(ellipse 60% 40% at 10% 0%,rgba(37,99,235,0.28),transparent 60%),
+             radial-gradient(ellipse 50% 40% at 95% 10%,rgba(220,38,38,0.22),transparent 60%),
+             radial-gradient(ellipse 60% 50% at 50% 100%,rgba(124,58,237,0.18),transparent 60%),#070d1a;}
+.graph-modal-head{position:sticky;top:0;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 24px;background:rgba(7,13,26,0.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:5;}
+.graph-modal-title{font-size:1.25rem;font-weight:800;background:linear-gradient(135deg,#60a5fa,#f87171);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.01em;}
 .graph-modal-meta{font-size:0.8rem;color:#94a3b8;font-weight:600;}
-.graph-close{margin-left:auto;display:flex;align-items:center;gap:6px;padding:9px 18px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.82rem;}
-.graph-close:hover{background:#b91c1c;}
-.graph-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:22px 24px 48px;max-width:1400px;margin:0 auto;}
-.graph-card{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 8px 30px rgba(0,0,0,0.35);}
-.graph-card-title{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#334155;margin-bottom:12px;}
+.graph-close{margin-left:auto;display:flex;align-items:center;gap:6px;padding:9px 18px;background:linear-gradient(135deg,#DC2626,#B91C1C);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.82rem;box-shadow:0 6px 16px rgba(220,38,38,0.35);}
+.graph-close:hover{filter:brightness(1.1);}
+.graph-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:22px 24px 4px;max-width:1400px;margin:0 auto;}
+.graph-kpi{position:relative;overflow:hidden;border-radius:16px;padding:14px 16px;color:#fff;border:1px solid rgba(255,255,255,0.12);box-shadow:0 10px 26px rgba(0,0,0,0.35);animation:gFade .5s ease both;}
+.graph-kpi::after{content:'';position:absolute;right:-24px;top:-24px;width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,0.13);}
+.graph-kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;opacity:0.9;position:relative;}
+.graph-kpi-val{font-size:1.45rem;font-weight:800;font-family:'DM Mono',monospace;margin-top:4px;position:relative;}
+.graph-kpi-sub{font-size:0.66rem;opacity:0.85;margin-top:2px;position:relative;}
+.graph-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:18px 24px 48px;max-width:1400px;margin:0 auto;}
+.graph-card{position:relative;background:#fff;border-radius:18px;padding:18px 18px 14px;box-shadow:0 14px 40px rgba(0,0,0,0.4);overflow:hidden;animation:gFade .55s ease both;}
+.graph-card::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--gc,linear-gradient(90deg,#2563EB,#DC2626));}
+.graph-card-title{display:flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#0f172a;margin-bottom:2px;}
+.graph-card-title i{width:10px;height:10px;border-radius:3px;background:var(--gc,#2563EB);display:inline-block;}
+.graph-card-sub{font-size:0.7rem;color:#64748b;margin:0 0 10px 18px;}
 .graph-canvas-wrap{position:relative;height:300px;}
+.graph-empty{display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.82rem;font-weight:600;}
+@keyframes gFade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@media (max-width:1100px){ .graph-kpis{grid-template-columns:repeat(3,1fr);} }
 @media (max-width:768px){
   .graph-grid{grid-template-columns:1fr;padding:16px 14px 40px;}
+  .graph-kpis{grid-template-columns:repeat(2,1fr);padding:16px 14px 4px;gap:10px;}
+  .graph-card[style*="grid-column"]{grid-column:auto !important;}
   .graph-canvas-wrap{height:270px;}
   .graph-modal-head{padding:14px 16px;}
 }
@@ -604,11 +656,12 @@ html{scroll-behavior:smooth;}
           </div>
           <div>
             <label class="f-label">Team</label>
-            <select id="filterTeam" class="f-input">
-              <option value="">All Teams</option>
-              <option value="maheen">Team Maheen</option>
-              <option value="khurram">Team Khurram</option>
-            </select>
+            <input type="hidden" id="filterTeam" value="">
+            <div class="f-seg" id="teamSeg">
+              <button type="button" data-team="" class="active" onclick="setTeam('')">All</button>
+              <button type="button" data-team="maheen" onclick="setTeam('maheen')">Team Maheen</button>
+              <button type="button" data-team="khurram" onclick="setTeam('khurram')">Team Khurram</button>
+            </div>
           </div>
           <div>
             <label class="f-label">Data Type</label>
@@ -1244,7 +1297,14 @@ function showResults(rows, headers, query){
       ${visibleCols.map(c => {
         const raw = row[c.key]||'';
         const formatted = c.money ? money(raw) : formatDate(raw);
-        return `<td>${formatted?esc(formatted):'<span class="zero">—</span>'}</td>`;
+        if(!formatted) return `<td><span class="zero">—</span></td>`;
+        if(c.key === 'Status'){
+          const s = formatted.toLowerCase();
+          const cls = s === 'closed' ? 'st-closed' : s.includes('existing') ? 'st-existing' : 'st-other';
+          return `<td><span class="st-pill ${cls}">${esc(formatted)}</span></td>`;
+        }
+        if(c.money && formatted.startsWith('$') && formatted !== '$0') return `<td><span class="money-pos">${esc(formatted)}</span></td>`;
+        return `<td>${esc(formatted)}</td>`;
       }).join('')}
     </tr>`;
   });
@@ -1338,7 +1398,7 @@ function toggleFilterPanel(){
 // Autocomplete for the closer text box: team rosters + any closer seen on closed rows.
 function fillCloserSuggestions(){
   const names = new Map();
-  ['All Closers', ...MAHEEN_TEAM, ...KHURRAM_TEAM].forEach(n => names.set(normName(n), n));
+  ['All Closers', 'Team Maheen', 'Team Khurram', ...MAHEEN_TEAM, ...KHURRAM_TEAM].forEach(n => names.set(normName(n), n));
   if(cachedData) cachedData.rows.forEach(r => {
     if(r._statusLc === 'closed' && r['Closer Name'] && r['Closer Name'] !== '-' && !names.has(r._closerKey))
       names.set(r._closerKey, r['Closer Name']);
@@ -1347,7 +1407,13 @@ function fillCloserSuggestions(){
     [...names.values()].map(n => `<option value="${esc(n)}"></option>`).join('');
 }
 function clearCloserFilter(){
-  ['filterCloser','filterFrom','filterTo','filterTeam','filterType'].forEach(id => { document.getElementById(id).value = ''; });
+  ['filterCloser','filterFrom','filterTo','filterType'].forEach(id => { document.getElementById(id).value = ''; });
+  setTeam('');
+}
+// Team segmented control (All / Team Maheen / Team Khurram).
+function setTeam(t){
+  document.getElementById('filterTeam').value = t || '';
+  document.querySelectorAll('#teamSeg button').forEach(b => b.classList.toggle('active', (b.dataset.team||'') === (t||'')));
 }
 function setDatePreset(p){
   const pad = n => (n<10?'0':'') + n;
@@ -1364,16 +1430,25 @@ function setDatePreset(p){
   document.getElementById('filterTo').value = to;
   applyCloserFilter();
 }
-function statChip(label,val,color){
-  return `<div style="flex:1;min-width:150px;background:${color}0d;border:1px solid ${color}33;border-radius:12px;padding:12px 16px;">
-    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;">${label}</div>
-    <div style="font-size:1.5rem;font-weight:800;color:${color};font-family:'DM Mono',monospace;margin-top:2px;">${val}</div>
+// Colourful gradient stat card. grad = [from, to]; sub = small caption line.
+function statChip(label, val, grad, sub){
+  const [c1, c2] = Array.isArray(grad) ? grad : [grad, grad];
+  return `<div class="stat-chip" style="background:linear-gradient(135deg,${c1},${c2});box-shadow:0 8px 22px ${c1}45;">
+    <div class="stat-chip-label">${label}</div>
+    <div class="stat-chip-val">${val}</div>
+    ${sub ? `<div class="stat-chip-sub">${sub}</div>` : ''}
   </div>`;
 }
 async function applyCloserFilter(){
-  let closer = document.getElementById('filterCloser').value.trim();
+  const rawCloser = document.getElementById('filterCloser').value.trim();
+  let closer = rawCloser;
+  // Typing "Team Maheen" / "Team Khurram" in the closer box selects that team.
+  const teamTyped = /^(team\s*)?maheen(\s*team)?$/i.test(closer) ? 'maheen'
+                  : /^(team\s*)?khurram(\s*team)?$/i.test(closer) ? 'khurram' : '';
+  if(teamTyped){ setTeam(teamTyped); closer = ''; document.getElementById('filterCloser').value = ''; }
   // Typing "All" / "All Closer" / "All Closers" means: don't filter by closer.
-  if(/^all(\s*closers?)?$/i.test(closer)) closer = '';
+  const allTyped = /^all(\s*closers?)?$/i.test(closer);
+  if(allTyped) closer = '';
   let from = document.getElementById('filterFrom').value; // '' or YYYY-MM-DD
   let to   = document.getElementById('filterTo').value;
   if(from && to && from > to){ [from, to] = [to, from]; document.getElementById('filterFrom').value = from; document.getElementById('filterTo').value = to; }
@@ -1381,6 +1456,13 @@ async function applyCloserFilter(){
   const dtype = document.getElementById('filterType').value;   // '' | canonical data type
   const btn = document.getElementById('filterApplyBtn');
   const status = document.getElementById('filterStatus');
+  // Nothing chosen → don't dump every record; ask for at least one filter.
+  if(!rawCloser && !team && !dtype && !from && !to){
+    status.innerHTML = '<span style="color:#DC2626;font-weight:700;">⚠ Please select at least one filter — Closer, Team, Data Type or a date range (type "All" for every closer).</span>';
+    const f = document.getElementById('filterCloser'); f.focus();
+    f.style.borderColor = '#DC2626'; setTimeout(() => { f.style.borderColor = ''; }, 1800);
+    return;
+  }
   btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Filtering...';
   if(!cachedData) status.innerHTML = '<span style="color:#2563EB;font-weight:700;">Loading data… first load can take a few seconds.</span>';
   try{
@@ -1431,10 +1513,17 @@ async function applyCloserFilter(){
         b.count++; b.cs += cs; b.up += up;
       });
       const fmt = n => '$' + n.toLocaleString('en-US',{maximumFractionDigits:2});
-      const chips = `<div style="display:flex;gap:12px;flex-wrap:wrap;padding:14px 16px 2px;">
-        ${statChip('Closed Leads', filtered.length, '#2563EB')}
-        ${statChip('Total Closed Sale', fmt(totSale), '#16A34A')}
-        ${statChip('Total Upsale', fmt(totUp), '#DC2626')}
+      // Upsale conversion: how many of these closed clients gave an upsale (> $0).
+      const upClients = filtered.filter(r => toMoneyNum(r['Upsale']) > 0).length;
+      const upRatio   = filtered.length ? (upClients / filtered.length * 100) : 0;
+      const avgUp     = upClients ? totUp / upClients : 0;
+      const avgDeal   = filtered.length ? (totSale + totUp) / filtered.length : 0;
+      const chips = `<div class="stat-row">
+        ${statChip('Closed Leads', filtered.length, ['#2563EB','#1E40AF'], 'Status = Closed')}
+        ${statChip('Total Closed Sale', fmt(totSale), ['#16A34A','#15803D'], 'Front-end sales')}
+        ${statChip('Total Upsale', fmt(totUp), ['#DC2626','#B91C1C'], 'Upsell revenue')}
+        ${statChip('Upsale Clients', `${upClients} / ${filtered.length}`, ['#7C3AED','#5B21B6'], `<b>${upRatio.toFixed(1)}%</b> gave an upsale`)}
+        ${statChip('Avg Upsale / Client', fmt(avgUp), ['#EA580C','#C2410C'], `Avg deal: ${fmt(avgDeal)}`)}
       </div>`;
       // Data-type entries.
       const typeEntries = Object.keys(byType).map(k => ({ label:k, total: byType[k].cs + byType[k].up }));
@@ -1446,23 +1535,27 @@ async function applyCloserFilter(){
         if(k) closerTot[k] = (closerTot[k]||0) + toMoneyNum(r['Closed Sale']) + toMoneyNum(r['Upsale']);
       });
       const teamEntries = roster => roster.map(name => ({ label:name, total: closerTot[normName(name)] || 0 }));
-      function miniTable(title, headLabel, entries, accent){
+      const DOTS = ['#2563EB','#DC2626','#16A34A','#7C3AED','#EA580C','#0891B2','#DB2777','#CA8A04','#0F766E','#4F46E5','#65A30D','#9333EA'];
+      function miniTable(title, headLabel, entries, accent, accent2){
         const total = entries.reduce((s,e)=>s+e.total, 0);
         const rows = entries.slice().sort((a,b)=>b.total-a.total)
-          .map(e => `<div class="dt-mini-row"><span>${esc(e.label)}</span><span>${fmt(e.total)}</span></div>`).join('');
+          .map((e,i) => {
+            const pct = total ? (e.total/total*100) : 0;
+            return `<div class="dt-mini-row"><span><i class="dt-dot" style="background:${DOTS[i%DOTS.length]}"></i>${esc(e.label)}<em class="dt-pct">${pct.toFixed(0)}%</em></span><span>${fmt(e.total)}</span></div>`;
+          }).join('');
         return `<div style="flex:1 1 240px;max-width:460px;">
-          <div style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:${accent};margin:2px 0 0;">${title}</div>
-          <div class="dt-mini-wrap" style="border-top:2.5px solid ${accent};">
-            <div class="dt-mini-head"><span>${headLabel}</span><span>Sale</span></div>
-            ${rows}
-            <div class="dt-mini-total"><span>Total</span><span>${fmt(total)}</span></div>
+          <div class="dt-mini-wrap colored" style="border-color:${accent}55;">
+            <div class="dt-mini-title" style="background:linear-gradient(135deg,${accent},${accent2||accent});">${title}</div>
+            <div class="dt-mini-head" style="background:${accent}14;"><span>${headLabel}</span><span>Sale</span></div>
+            ${rows || '<div class="dt-mini-row"><span style="color:#94a3b8;">No sales</span><span></span></div>'}
+            <div class="dt-mini-total" style="background:${accent}12;border-top-color:${accent}66;"><span>Total</span><span>${fmt(total)}</span></div>
           </div>
         </div>`;
       }
       const tablesRow = `<div style="display:flex;gap:16px;flex-wrap:wrap;padding:4px 16px 16px;">
-        ${miniTable('Sales by Data Type','Data Type', typeEntries, '#475569')}
-        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN).filter(e=>e.total>0), '#2563EB')}
-        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM).filter(e=>e.total>0), '#DC2626')}
+        ${miniTable('Sales by Data Type','Data Type', typeEntries, '#7C3AED', '#4F46E5')}
+        ${miniTable('Sale by Maheen Team','Member', teamEntries(MAHEEN).filter(e=>e.total>0), '#2563EB', '#1E40AF')}
+        ${miniTable('Sale by Khurram Team','Member', teamEntries(KHURRAM).filter(e=>e.total>0), '#DC2626', '#B91C1C')}
       </div>`;
       // Closer report: when a closer is searched, list their closed leads grouped by data type.
       let leadsByType = '';
@@ -1472,6 +1565,7 @@ async function applyCloserFilter(){
         const closerNames = [...new Set(filtered.map(r => r['Closer Name']).filter(Boolean))];
         const multi = closerNames.length > 1;
         const who = multi ? closer : (closerNames[0] || closer);
+        let ci = 0;
         const cards = Object.entries(groups)
           .sort((a,b) => b[1].length - a[1].length)
           .map(([dt, list]) => {
@@ -1481,8 +1575,9 @@ async function applyCloserFilter(){
                 <span class="lt-date">${esc(formatDate(r['Closed Date']) || '—')}</span>
                 <span class="lt-amt">${fmt(toMoneyNum(r['Closed Sale']) + toMoneyNum(r['Upsale']))}</span>
               </div>`).join('');
-            return `<div class="lt-card">
-              <div class="lt-head"><span class="lt-type">${esc(dt)}</span><span class="lt-sum">${list.length} lead${list.length!==1?'s':''} · <b>${fmt(tot)}</b></span></div>
+            const cc = DOTS[ci++ % DOTS.length];
+            return `<div class="lt-card" style="border-top-color:${cc};">
+              <div class="lt-head" style="background:linear-gradient(135deg,${cc}1f,${cc}08);"><span class="lt-type" style="color:${cc};">${esc(dt)}</span><span class="lt-sum">${list.length} lead${list.length!==1?'s':''} · <b>${fmt(tot)}</b></span></div>
               <div class="lt-body">${rowsH}</div>
             </div>`;
           }).join('');
@@ -1530,10 +1625,38 @@ renderRecent();
       Close
     </button>
   </div>
+  <div class="graph-kpis" id="graphKpis"></div>
   <div class="graph-grid">
-    <div class="graph-card"><div class="graph-card-title">Sales by Data Type</div><div class="graph-canvas-wrap" style="height:340px;"><div id="chartType" style="width:100%;height:100%;"></div></div></div>
-    <div class="graph-card"><div class="graph-card-title">Closers by Upsale</div><div class="graph-canvas-wrap"><canvas id="chartCloser"></canvas></div></div>
-    <div class="graph-card" style="grid-column:1/-1;"><div class="graph-card-title">Sales Over Time — Total Sale by Month</div><div class="graph-canvas-wrap" style="height:340px;"><canvas id="chartMonth"></canvas></div></div>
+    <div class="graph-card" style="--gc:linear-gradient(90deg,#7C3AED,#DB2777);">
+      <div class="graph-card-title"><i style="background:#7C3AED;"></i>Sales by Data Type</div>
+      <div class="graph-card-sub">Share of total sale (Closed + Upsale)</div>
+      <div class="graph-canvas-wrap" style="height:340px;"><div id="chartType" style="width:100%;height:100%;"></div></div>
+    </div>
+    <div class="graph-card" style="--gc:linear-gradient(90deg,#DC2626,#EA580C);">
+      <div class="graph-card-title"><i style="background:#DC2626;"></i>Closers by Upsale</div>
+      <div class="graph-card-sub">Upsale revenue per closer</div>
+      <div class="graph-canvas-wrap" style="height:340px;"><canvas id="chartCloser"></canvas></div>
+    </div>
+    <div class="graph-card" style="--gc:linear-gradient(90deg,#2563EB,#DC2626);">
+      <div class="graph-card-title"><i style="background:#2563EB;"></i>Team Comparison</div>
+      <div class="graph-card-sub">Team Maheen vs Team Khurram — Closed Sale &amp; Upsale</div>
+      <div class="graph-canvas-wrap"><canvas id="chartTeam"></canvas></div>
+    </div>
+    <div class="graph-card" style="--gc:linear-gradient(90deg,#16A34A,#0891B2);">
+      <div class="graph-card-title"><i style="background:#16A34A;"></i>Upsale Conversion by Closer</div>
+      <div class="graph-card-sub">% of each closer's closed clients who gave an upsale</div>
+      <div class="graph-canvas-wrap"><canvas id="chartConv"></canvas></div>
+    </div>
+    <div class="graph-card" style="grid-column:1/-1;--gc:linear-gradient(90deg,#7C3AED,#2563EB);">
+      <div class="graph-card-title"><i style="background:#7C3AED;"></i>Top 10 Clients by Sale</div>
+      <div class="graph-card-sub">Highest total sale (Closed + Upsale) per client</div>
+      <div class="graph-canvas-wrap"><canvas id="chartClients"></canvas></div>
+    </div>
+    <div class="graph-card" style="grid-column:1/-1;--gc:linear-gradient(90deg,#2563EB,#60A5FA);">
+      <div class="graph-card-title"><i style="background:#2563EB;"></i>Sales Over Time — Total Sale by Month</div>
+      <div class="graph-card-sub">Monthly bars + blue trend line · orange dashed line = closed leads count (right axis)</div>
+      <div class="graph-canvas-wrap" style="height:360px;"><canvas id="chartMonth"></canvas></div>
+    </div>
   </div>
 </div>
 
@@ -1551,18 +1674,51 @@ function fmtMonthLabel(ym){
 }
 function buildGraphData(){
   const rows = (lastResults && lastResults.rows) || [];
-  const byType = {}, byCloser = {}, byCloserUp = {}, byMonth = {};
-  let totClosed = 0, totUp = 0;
+  const byType = {}, byCloser = {}, byCloserUp = {}, byMonth = {}, byMonthCount = {};
+  const closerLeads = {}, closerUpLeads = {}, clients = [];
+  const team = { maheen:{cs:0,up:0,n:0}, khurram:{cs:0,up:0,n:0} };
+  let totClosed = 0, totUp = 0, upClients = 0;
   rows.forEach(r => {
     const cs = toMoneyNum(r['Closed Sale']), up = toMoneyNum(r['Upsale']);
     totClosed += cs; totUp += up;
+    if(up > 0) upClients++;
     const dt = canonicalDataType(r['Data Type']); byType[dt] = (byType[dt]||0) + cs + up;
     const cl = String(r['Closer Name']||'').trim();
-    if(cl && cl !== '-'){ byCloser[cl] = (byCloser[cl]||0) + cs + up; byCloserUp[cl] = (byCloserUp[cl]||0) + up; }
-    const k = dateKey(r['Closed Date']); if(k){ const m = k.slice(0,7); byMonth[m] = (byMonth[m]||0) + cs + up; }
+    if(cl && cl !== '-'){
+      byCloser[cl] = (byCloser[cl]||0) + cs + up;
+      byCloserUp[cl] = (byCloserUp[cl]||0) + up;
+      closerLeads[cl] = (closerLeads[cl]||0) + 1;
+      if(up > 0) closerUpLeads[cl] = (closerUpLeads[cl]||0) + 1;
+      const key = r._closerKey || normName(cl);
+      const t = MAHEEN_SET.has(key) ? team.maheen : KHURRAM_SET.has(key) ? team.khurram : null;
+      if(t){ t.cs += cs; t.up += up; t.n++; }
+    }
+    const k = dateKey(r['Closed Date']);
+    if(k){ const m = k.slice(0,7); byMonth[m] = (byMonth[m]||0) + cs + up; byMonthCount[m] = (byMonthCount[m]||0) + 1; }
+    if(cs + up > 0) clients.push({ name: r['Client Name'] || '—', total: cs + up, closer: cl });
   });
-  return { byType, byCloser, byCloserUp, byMonth, totClosed, totUp };
+  clients.sort((a,b) => b.total - a.total);
+  return { byType, byCloser, byCloserUp, byMonth, byMonthCount, closerLeads, closerUpLeads, team,
+           topClients: clients.slice(0,10), totClosed, totUp, upClients, n: rows.length };
 }
+// Canvas gradient helpers (scriptable colours for Chart.js).
+function hGrad(c, from, to){ const {chart} = c; const a = chart.chartArea; if(!a) return to;
+  const g = chart.ctx.createLinearGradient(a.left, 0, a.right, 0); g.addColorStop(0, from); g.addColorStop(1, to); return g; }
+function vGrad(c, from, to){ const {chart} = c; const a = chart.chartArea; if(!a) return to;
+  const g = chart.ctx.createLinearGradient(0, a.bottom, 0, a.top); g.addColorStop(0, from); g.addColorStop(1, to); return g; }
+function emptyChart(id, msg){
+  const el = document.getElementById(id); if(!el) return;
+  el.parentElement.innerHTML = `<div class="graph-empty">${msg}</div><canvas id="${id}" style="display:none"></canvas>`;
+}
+// Put fresh canvases back (an earlier "no data" message may have replaced one).
+function resetGraphSlots(){
+  ['chartCloser','chartTeam','chartConv','chartClients','chartMonth'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.parentElement.innerHTML = `<canvas id="${id}"></canvas>`;
+  });
+  const t = document.getElementById('chartType');
+  if(t) t.parentElement.innerHTML = '<div id="chartType" style="width:100%;height:100%;"></div>';
+}
+
 function openGraph(){
   if(typeof Chart === 'undefined'){ alert('Charts are still loading — please try again in a moment.'); return; }
   if(!lastResults || !lastResults.rows || !lastResults.rows.length){ alert('Run a search or filter first, then open the graphs.'); return; }
@@ -1570,19 +1726,44 @@ function openGraph(){
   const g = buildGraphData();
   const PAL = ['#4F46E5','#DC2626','#16A34A','#F59E0B','#0891B2','#7C3AED','#DB2777','#EA580C','#0F766E','#2563EB','#65A30D','#9333EA'];
   const money = v => '$' + Number(v||0).toLocaleString('en-US',{maximumFractionDigits:2});
+  const moneyK = v => { v = Number(v||0); return v >= 1000 ? '$' + (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v); };
+  Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui, sans-serif";
+  Chart.defaults.color = '#475569';
 
   document.getElementById('graphModalMeta').textContent =
     (lastResults.query ? lastResults.query + '  ·  ' : '') + lastResults.rows.length + ' records';
+
+  // KPI strip
+  const upPct = g.n ? g.upClients / g.n * 100 : 0;
+  const kpi = (label, val, sub, c1, c2, delay) =>
+    `<div class="graph-kpi" style="background:linear-gradient(135deg,${c1},${c2});animation-delay:${delay}ms;">
+       <div class="graph-kpi-label">${label}</div><div class="graph-kpi-val">${val}</div><div class="graph-kpi-sub">${sub}</div></div>`;
+  document.getElementById('graphKpis').innerHTML =
+    kpi('Records', g.n, 'In this view', '#2563EB', '#1E40AF', 0) +
+    kpi('Closed Sale', money(g.totClosed), 'Front-end', '#16A34A', '#15803D', 60) +
+    kpi('Upsale', money(g.totUp), 'Upsell revenue', '#DC2626', '#B91C1C', 120) +
+    kpi('Total Revenue', money(g.totClosed + g.totUp), 'Closed + Upsale', '#0891B2', '#0E7490', 180) +
+    kpi('Upsale Clients', `${upPct.toFixed(1)}%`, `${g.upClients} of ${g.n} gave upsale`, '#7C3AED', '#5B21B6', 240) +
+    kpi('Avg / Record', money(g.n ? (g.totClosed + g.totUp) / g.n : 0), 'Average deal size', '#EA580C', '#C2410C', 300);
+
   document.getElementById('graphModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
   destroyGraphs();
+  resetGraphSlots();
+
+  const baseScales = (money$ = true, horiz = false) => {
+    const val = { grid:{ color:'#eef2f7' }, border:{ display:false }, ticks:{ callback: v => money$ ? moneyK(v) : v } };
+    const cat = { grid:{ display:false }, border:{ display:false }, ticks:{ font:{ weight:'600' } } };
+    return horiz ? { x: val, y: cat } : { x: cat, y: val };
+  };
 
   // 1) Sales by Data Type — 3D exploded pie (Highcharts)
-  const te = Object.entries(g.byType).sort((a,b)=>b[1]-a[1]);
+  const te = Object.entries(g.byType).filter(x => x[1] > 0).sort((a,b)=>b[1]-a[1]);
   const top = te.slice(0,10), rest = te.slice(10).reduce((s,x)=>s+x[1],0);
   const pieData = top.map((x,i)=>({ name:x[0], y:x[1], color:PAL[i%PAL.length], sliced:true }))
                      .concat(rest>0 ? [{ name:'Others', y:rest, color:'#94a3b8', sliced:true }] : []);
-  if(window.Highcharts){
+  if(!pieData.length) emptyChart('chartType', 'No sales in this view');
+  else if(window.Highcharts){
     hcPie = Highcharts.chart('chartType', {
       chart:{ type:'pie', backgroundColor:'transparent', options3d:{ enabled:true, alpha:52, beta:0 } },
       title:{ text:null }, credits:{ enabled:false },
@@ -1595,33 +1776,105 @@ function openGraph(){
     });
   }
 
-  // 2) Closers by Upsale (all closers with upsale, multi-colour, adaptive labels)
+  // 2) Closers by Upsale — gradient bars, adaptive value labels
   const ce = Object.entries(g.byCloserUp).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
   const barLen = ctx => { const x=ctx.chart.scales.x, v=ctx.dataset.data[ctx.dataIndex]; return x.getPixelForValue(v)-x.getPixelForValue(0); };
-  graphCharts.push(new Chart(document.getElementById('chartCloser'), {
+  if(!ce.length) emptyChart('chartCloser', 'No upsales in this view');
+  else graphCharts.push(new Chart(document.getElementById('chartCloser'), {
     type:'bar',
-    data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Sale', data:ce.map(x=>x[1]), backgroundColor:ce.map((_,i)=>PAL[i%PAL.length]), borderRadius:4, categoryPercentage:0.86, barPercentage:0.94 }] },
+    data:{ labels:ce.map(x=>x[0]), datasets:[{ label:'Upsale', data:ce.map(x=>x[1]),
+      backgroundColor: c => hGrad(c, PAL[c.dataIndex%PAL.length]+'99', PAL[c.dataIndex%PAL.length]),
+      borderRadius:6, categoryPercentage:0.86, barPercentage:0.94 }] },
     options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:64 } },
-      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' ' + money(c.parsed.x) } },
+      animation:{ duration:900, easing:'easeOutQuart' },
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c => ' Upsale: ' + money(c.parsed.x) } },
         datalabels:{ anchor:'end',
           align: ctx => barLen(ctx) > 66 ? 'start' : 'end',
           color: ctx => barLen(ctx) > 66 ? '#fff' : '#334155',
-          font:{ weight:'400', size:11 }, formatter:v => money(v), clamp:true, clip:false } },
-      scales:{ x:{ grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } }, y:{ grid:{ display:false } } }
+          font:{ weight:'500', size:11 }, formatter:v => money(v), clamp:true, clip:false } },
+      scales: baseScales(true, true)
     }
   }));
 
-  // 3) Sales over time — blue trend line + vertical month bars (total = Closed + Upsale)
+  // 3) Team comparison — grouped Closed Sale vs Upsale
+  const tm = g.team;
+  if(!tm.maheen.n && !tm.khurram.n) emptyChart('chartTeam', 'No team closers in this view');
+  else graphCharts.push(new Chart(document.getElementById('chartTeam'), {
+    type:'bar',
+    data:{ labels:['Team Maheen','Team Khurram'], datasets:[
+      { label:'Closed Sale', data:[tm.maheen.cs, tm.khurram.cs], backgroundColor: c => vGrad(c,'#86efac','#16A34A'), borderRadius:8, maxBarThickness:70 },
+      { label:'Upsale',      data:[tm.maheen.up, tm.khurram.up], backgroundColor: c => vGrad(c,'#fca5a5','#DC2626'), borderRadius:8, maxBarThickness:70 }
+    ] },
+    options:{ responsive:true, maintainAspectRatio:false, animation:{ duration:900, easing:'easeOutQuart' },
+      layout:{ padding:{ top:22 } },
+      plugins:{ legend:{ position:'top', labels:{ usePointStyle:true, pointStyle:'rectRounded', font:{ size:11, weight:'600' } } },
+        tooltip:{ callbacks:{ label:c => ' ' + c.dataset.label + ': ' + money(c.parsed.y),
+          afterBody: items => { const t = items[0].dataIndex === 0 ? tm.maheen : tm.khurram; return 'Closed leads: ' + t.n; } } },
+        datalabels:{ anchor:'end', align:'end', color:'#334155', font:{ weight:'700', size:11 }, formatter:v => v ? moneyK(v) : '' } },
+      scales: baseScales(true, false)
+    }
+  }));
+
+  // 4) Upsale conversion % by closer
+  const conv = Object.keys(g.closerLeads)
+    .map(k => ({ name:k, n:g.closerLeads[k], up:g.closerUpLeads[k]||0 }))
+    .map(o => ({ ...o, pct: o.n ? o.up / o.n * 100 : 0 }))
+    .sort((a,b) => b.pct - a.pct || b.n - a.n);
+  if(!conv.length) emptyChart('chartConv', 'No closers in this view');
+  else graphCharts.push(new Chart(document.getElementById('chartConv'), {
+    type:'bar',
+    data:{ labels:conv.map(o=>o.name), datasets:[{ label:'Upsale conversion', data:conv.map(o=>+o.pct.toFixed(1)),
+      backgroundColor: c => { const p = conv[c.dataIndex] ? conv[c.dataIndex].pct : 0;
+        const col = p >= 50 ? '#16A34A' : p >= 25 ? '#0891B2' : p > 0 ? '#F59E0B' : '#cbd5e1'; return hGrad(c, col+'88', col); },
+      borderRadius:6, categoryPercentage:0.86, barPercentage:0.9 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:70 } },
+      animation:{ duration:900, easing:'easeOutQuart' },
+      plugins:{ legend:{ display:false },
+        tooltip:{ callbacks:{ label:c => { const o = conv[c.dataIndex]; return ` ${o.pct.toFixed(1)}% — ${o.up} of ${o.n} clients gave upsale`; } } },
+        datalabels:{ anchor:'end', align:'end', color:'#334155', font:{ weight:'600', size:11 },
+          formatter:(v,c) => { const o = conv[c.dataIndex]; return `${v}% (${o.up}/${o.n})`; }, clip:false } },
+      scales:{ x:{ min:0, max:100, grid:{ color:'#eef2f7' }, border:{ display:false }, ticks:{ callback:v => v + '%' } },
+               y:{ grid:{ display:false }, border:{ display:false }, ticks:{ font:{ weight:'600' } } } }
+    }
+  }));
+
+  // 5) Top 10 clients by sale
+  const tc = g.topClients;
+  if(!tc.length) emptyChart('chartClients', 'No client sales in this view');
+  else graphCharts.push(new Chart(document.getElementById('chartClients'), {
+    type:'bar',
+    data:{ labels:tc.map(c => c.name.length > 26 ? c.name.slice(0,25)+'…' : c.name), datasets:[{ label:'Total Sale', data:tc.map(c=>c.total),
+      backgroundColor: c => hGrad(c, '#a78bfa', '#4F46E5'), borderRadius:6, categoryPercentage:0.86, barPercentage:0.9 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', layout:{ padding:{ right:70 } },
+      animation:{ duration:900, easing:'easeOutQuart' },
+      plugins:{ legend:{ display:false },
+        tooltip:{ callbacks:{ title:items => tc[items[0].dataIndex].name,
+          label:c => ' ' + money(c.parsed.x) + (tc[c.dataIndex].closer ? '  · closer: ' + tc[c.dataIndex].closer : '') } },
+        datalabels:{ anchor:'end', align:'end', color:'#334155', font:{ weight:'600', size:11 }, formatter:v => money(v), clip:false } },
+      scales: baseScales(true, true)
+    }
+  }));
+
+  // 6) Sales over time — blue trend line + vertical month bars, closed-lead count on right axis
   const me = Object.entries(g.byMonth).sort((a,b)=> a[0] < b[0] ? -1 : 1);
-  graphCharts.push(new Chart(document.getElementById('chartMonth'), {
+  if(!me.length) emptyChart('chartMonth', 'No closed dates in this view');
+  else graphCharts.push(new Chart(document.getElementById('chartMonth'), {
     data:{ labels:me.map(x=>fmtMonthLabel(x[0])),
       datasets:[
-        { type:'bar', label:'Monthly Sale', data:me.map(x=>x[1]), backgroundColor:'rgba(37,99,235,0.22)', borderColor:'rgba(37,99,235,0.4)', borderWidth:1, borderRadius:3, order:2 },
-        { type:'line', label:'Trend', data:me.map(x=>x[1]), borderColor:'#2563EB', borderWidth:3, tension:0.35, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#2563EB', pointBorderColor:'#fff', pointBorderWidth:1.5, fill:false, order:1 }
+        { type:'bar', label:'Monthly Sale', data:me.map(x=>x[1]), yAxisID:'y',
+          backgroundColor: c => vGrad(c,'rgba(37,99,235,0.12)','rgba(37,99,235,0.45)'), borderColor:'rgba(37,99,235,0.45)', borderWidth:1, borderRadius:5, order:3 },
+        { type:'line', label:'Trend', data:me.map(x=>x[1]), yAxisID:'y', borderColor:'#2563EB', borderWidth:3, tension:0.35,
+          pointRadius:4, pointHoverRadius:7, pointBackgroundColor:'#2563EB', pointBorderColor:'#fff', pointBorderWidth:2, fill:false, order:1 },
+        { type:'line', label:'Closed Leads', data:me.map(x=>g.byMonthCount[x[0]]||0), yAxisID:'y1', borderColor:'#F97316', borderWidth:2,
+          borderDash:[6,5], tension:0.3, pointRadius:3, pointBackgroundColor:'#F97316', fill:false, order:2 }
       ] },
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ display:true, position:'top', labels:{ boxWidth:12, font:{size:11} } }, datalabels:{ display:false }, tooltip:{ callbacks:{ label:c => ' ' + c.dataset.label + ': ' + money(c.parsed.y) } } },
-      scales:{ x:{ grid:{ display:true, color:'#e5e7eb' } }, y:{ beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks:{ callback:v => '$'+v } } }
+    options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false },
+      animation:{ duration:1000, easing:'easeOutQuart' },
+      plugins:{ legend:{ display:true, position:'top', labels:{ usePointStyle:true, font:{ size:11, weight:'600' } } }, datalabels:{ display:false },
+        tooltip:{ callbacks:{ label:c => c.dataset.yAxisID === 'y1' ? ` Closed leads: ${c.parsed.y}` : ` ${c.dataset.label}: ${money(c.parsed.y)}` } } },
+      scales:{ x:{ grid:{ display:true, color:'#eef2f7' }, border:{ display:false } },
+               y:{ beginAtZero:true, grid:{ color:'#eef2f7' }, border:{ display:false }, ticks:{ callback:v => moneyK(v) } },
+               y1:{ beginAtZero:true, position:'right', grid:{ display:false }, border:{ display:false }, ticks:{ precision:0, color:'#F97316' } } }
     }
   }));
 }
