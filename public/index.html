@@ -346,6 +346,9 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;min-height:100
 .dt-mini-wrap.colored{border-width:1.5px;box-shadow:0 6px 18px rgba(15,23,42,0.07);margin-top:0;}
 .dt-mini-title{padding:8px 12px;color:#fff;font-size:0.66rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;}
 .dt-mini-wrap.colored .dt-mini-head{top:0;}
+/* Sticky header/total sit above the scrolling rows with a solid background (no bleed-through). */
+.dt-mini-head,.dt-mini-total{z-index:2;}
+.dt-mini-total{box-shadow:0 -4px 10px rgba(15,23,42,0.06);}
 .dt-mini-wrap.colored .dt-mini-row:nth-child(odd){background:#fafbff;}
 .dt-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle;}
 .dt-pct{font-style:normal;font-size:0.62rem;color:#94a3b8;margin-left:6px;font-weight:600;}
@@ -1546,9 +1549,9 @@ async function applyCloserFilter(){
         return `<div style="flex:1 1 240px;max-width:460px;">
           <div class="dt-mini-wrap colored" style="border-color:${accent}55;">
             <div class="dt-mini-title" style="background:linear-gradient(135deg,${accent},${accent2||accent});">${title}</div>
-            <div class="dt-mini-head" style="background:${accent}14;"><span>${headLabel}</span><span>Sale</span></div>
+            <div class="dt-mini-head" style="background:linear-gradient(${accent}14,${accent}14),#ffffff;"><span>${headLabel}</span><span>Sale</span></div>
             ${rows || '<div class="dt-mini-row"><span style="color:#94a3b8;">No sales</span><span></span></div>'}
-            <div class="dt-mini-total" style="background:${accent}12;border-top-color:${accent}66;"><span>Total</span><span>${fmt(total)}</span></div>
+            <div class="dt-mini-total" style="background:linear-gradient(${accent}12,${accent}12),#ffffff;border-top-color:${accent}66;"><span>Total</span><span>${fmt(total)}</span></div>
           </div>
         </div>`;
       }
