@@ -1412,6 +1412,20 @@ function fillCloserSuggestions(){
 function clearCloserFilter(){
   ['filterCloser','filterFrom','filterTo','filterType'].forEach(id => { document.getElementById(id).value = ''; });
   setTeam('');
+  // Reset to a fresh-page state: drop the previous report entirely.
+  if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  currentQuery = '';
+  lastResults = null;
+  if(typeof closeGraph === 'function' && document.getElementById('graphModal').style.display === 'block') closeGraph();
+  document.getElementById('resultsBody').innerHTML = '';
+  document.getElementById('resultsCount').innerHTML = '';
+  document.getElementById('resultsMeta').innerHTML = '';
+  document.getElementById('resultsSection').classList.remove('show');
+  document.getElementById('heroSection').style.paddingBottom = '';
+  document.getElementById('filterStatus').innerHTML =
+    'Shows only leads with <strong style="color:#64748b;">Status = Closed</strong>, newest first. Leave a field empty to ignore it.';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('filterCloser').focus();
 }
 // Team segmented control (All / Team Maheen / Team Khurram).
 function setTeam(t){
